@@ -1,4 +1,4 @@
-# spritesheet-simplify
+# [spritesheet-simplify](https://aljimsondev.github.io/spritesheet-simplify/)
 
 # How it works?
 
