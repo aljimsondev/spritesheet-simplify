@@ -85,8 +85,6 @@ const Modal: Child<ModalProps> = ({ open, toogleState }) => {
     };
   }, [open]);
 
-  //TODO refactor code
-  //?add copy links and text
   return (
     <>
       {open && (
@@ -95,7 +93,6 @@ const Modal: Child<ModalProps> = ({ open, toogleState }) => {
             <div className="modal-content">
               <div className="modal-container">
                 <div className="modal-header">
-                  {/* <h2 className="modal-title">Spritesheet Generator Usage</h2> */}
                   <button className="modal-close-button" onClick={toogleState}>
                     &times;
                   </button>
