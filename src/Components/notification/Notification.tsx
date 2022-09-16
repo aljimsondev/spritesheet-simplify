@@ -22,6 +22,7 @@ const Notification: NODE<NotificationProps> = ({
   const [spanClass, setSpanClass] = React.useState("");
 
   //TODO refactor code and add auto close snackbar
+  //TODO notification wouldnt stack if called consecutively
   //set icon
   const setIconStatus = React.useCallback(() => {
     switch (type) {

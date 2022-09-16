@@ -7,7 +7,8 @@ import Notification from "./Components/notification/Notification";
 import { Context } from "./Store/store";
 
 function App() {
-  const { properties, notification } = React.useContext(Context);
+  const { properties, notification, notificationDispatch } =
+    React.useContext(Context);
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const downloadButtonRef = React.useRef<HTMLAnchorElement>(null);
@@ -113,9 +114,38 @@ function App() {
   //clear state
   const clearSelection = () => {
     //clear selection
-    setImages([]);
-    setImageObserver([]);
-    downloadButtonRef.current!.href = "";
+    if (images.length > 0) {
+      setImages([]);
+      setImageObserver([]);
+      downloadButtonRef.current!.href = "";
+      //dispatch notification
+      notificationDispatch({
+        type: "ADD_NOTIFICATION",
+        payload: {
+          dismissable: true,
+          onClose: () => {
+            notificationDispatch({ type: "RESET_NOTIFICATION" });
+          },
+          open: true,
+          text: "Canvas is cleared successfully!",
+          type: "success",
+        },
+      });
+      return;
+    }
+    //dispatch notification
+    notificationDispatch({
+      type: "ADD_NOTIFICATION",
+      payload: {
+        dismissable: true,
+        onClose: () => {
+          notificationDispatch({ type: "RESET_NOTIFICATION" });
+        },
+        open: true,
+        text: "Canvas is empty, please fill some sprites.",
+        type: "warning",
+      },
+    });
   };
   //draw the image
   function drawImage() {
@@ -193,6 +223,19 @@ function App() {
       downloadButtonRef.current!.href = dt;
       downloadButtonRef.current?.click();
     }
+    //dispatch notification
+    notificationDispatch({
+      type: "ADD_NOTIFICATION",
+      payload: {
+        dismissable: true,
+        onClose: () => {
+          notificationDispatch({ type: "RESET_NOTIFICATION" });
+        },
+        open: true,
+        text: "Opss, looks like you have not created any Spritesheet yet!",
+        type: "warning",
+      },
+    });
     return;
   };
   React.useEffect(() => {
