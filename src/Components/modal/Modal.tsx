@@ -2,6 +2,10 @@ import React from "react";
 import "./Modal.css";
 import { Child } from "../types";
 import { LinkData, ModalFooterButtonProps, ModalProps } from "./types";
+import imgMultiSprites from "../../assets/multiple_sprites1.jpg";
+import imgSingleSprite from "../../assets/single_sprite1.jpg";
+import customSizeSprites from "../../assets/custom_size_sprites.png";
+import logoImg from "../../assets/logo.png";
 import Logo from "../logo/Logo";
 import {
   AiFillGithub,
@@ -100,11 +104,7 @@ const Modal: Child<ModalProps> = ({ open, toogleState }) => {
                   <div className="container">
                     <div className="modal-inline">
                       <div className="logo-base-l mr-1">
-                        <img
-                          className="logo"
-                          src="/assets/logo.png"
-                          alt="logo"
-                        />
+                        <img className="logo" src={logoImg} alt="logo" />
                       </div>
                       <div>
                         <h1>Spritesheet Simplify</h1>
@@ -146,7 +146,7 @@ const Modal: Child<ModalProps> = ({ open, toogleState }) => {
                       </p>
                       <img
                         className="mt-2 mx-600"
-                        src="/assets/multiple_sprites1.jpg"
+                        src={imgMultiSprites}
                         alt="row_sprites"
                       />
                     </section>
@@ -159,7 +159,7 @@ const Modal: Child<ModalProps> = ({ open, toogleState }) => {
                       </p>
                       <img
                         className="mt-2 mx-600"
-                        src="/assets/single_sprite1.jpg"
+                        src={imgSingleSprite}
                         alt="col_sprites"
                       />
                     </section>
@@ -181,7 +181,7 @@ const Modal: Child<ModalProps> = ({ open, toogleState }) => {
                       </div>
                       <img
                         className="mt-2 mx-600"
-                        src="/assets/custom_size_sprites.JPG"
+                        src={customSizeSprites}
                         alt="col_sprites"
                       />
                     </section>
