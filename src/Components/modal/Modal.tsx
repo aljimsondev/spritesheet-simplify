@@ -1,6 +1,6 @@
 import React from "react";
 import "./Modal.css";
-import { Child } from "../types";
+import { NODE } from "../types";
 import { LinkData, ModalFooterButtonProps, ModalProps } from "./types";
 import imgMultiSprites from "../../assets/multiple_sprites1.jpg";
 import imgSingleSprite from "../../assets/single_sprite1.jpg";
@@ -17,7 +17,11 @@ import { FaFacebook } from "react-icons/fa";
 import { Portal } from "../Portal";
 import { Context } from "../../Store/store";
 
-const FooterButton: Child<ModalFooterButtonProps> = ({ data }) => {
+//TODO add some animations
+//? refactor code
+//!Add some alternative to blob when processing images
+
+const FooterButton: NODE<ModalFooterButtonProps> = ({ data }) => {
   const { notificationDispatch } = React.useContext(Context);
   const copyToClipboard = () => {
     navigator.clipboard.writeText(data.link);
@@ -51,7 +55,7 @@ const FooterButton: Child<ModalFooterButtonProps> = ({ data }) => {
   );
 };
 
-const Modal: Child<ModalProps> = ({ open, toogleState }) => {
+const Modal: NODE<ModalProps> = ({ open, toogleState }) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const data: LinkData[] = [
     {
