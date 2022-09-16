@@ -11,7 +11,19 @@ const NavMenuForm: NODE<NavMenuInputProps> = ({}) => {
   const { setProperties, properties } = React.useContext(Context);
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setProperties({ ...properties, [e.target.name]: e.target.value });
+    try {
+      if (e.target.value !== "" && e.target.type === "number") {
+        setProperties({
+          ...properties,
+          [e.target.name]: parseFloat(e.target.value),
+        });
+        return;
+      }
+      setProperties({ ...properties, [e.target.name]: e.target.value });
+      return;
+    } catch (e) {
+      console.warn(e);
+    }
   };
 
   const handleReset = () => {

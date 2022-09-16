@@ -1,7 +1,6 @@
 export type ModalProps = {
   children: JSX.Element;
   open: boolean;
-  toogleState?: () => void;
 };
 
 export type LinkData = {

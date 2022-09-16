@@ -1,6 +1,7 @@
 import React from "react";
 import FabComponent from "./Components/button/FabComponent";
-import Modal from "./Components/modal/Modal";
+import Modal from "./Components/modal";
+import ModalContent from "./Components/modal/ModalContent";
 import Navbar from "./Components/navbar/Navbar";
 import Notification from "./Components/notification/Notification";
 import { Context } from "./Store/store";
@@ -78,7 +79,6 @@ function App() {
     return totalInitalHeight;
   }, [imageObserver, images, properties.height, properties.padding]);
   //handle image selection
-  //! FIXED ME: for some reason when selecting the same image consicutively wont work
   const handleSelectImages = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files!;
 
@@ -119,7 +119,6 @@ function App() {
   };
   //draw the image
   function drawImage() {
-    const props: any = properties;
     const canvas = canvasRef.current!;
     if (canvas) {
       const ctx = canvas.getContext("2d")!;
@@ -132,8 +131,8 @@ function App() {
           for (let column = 0; column < images[row].length; column++) {
             let img = images[row][column];
             let startingPositionX = 0;
-            if (props.width) {
-              startingPositionX = props.width;
+            if (properties.width) {
+              startingPositionX = properties.width;
             } else {
               startingPositionX = img.width;
             }
@@ -150,8 +149,8 @@ function App() {
             );
             if (properties.borderLine) {
               ctx.strokeRect(
-                column * startingPositionX, //position x
-                currentPositionY, // position y
+                column * startingPositionX,
+                currentPositionY,
                 properties.width || img.width,
                 properties.height || img.height
               );
@@ -159,16 +158,15 @@ function App() {
           }
           if (images.length > 0 && imageObserver[row]) {
             //consist of more than 1 columns, add padding  to give space of each column sprites
-            if (props.height) {
-              currentPositionY +=
-                parseFloat(props.height) + parseFloat(props.padding);
+            if (properties.height) {
+              currentPositionY += properties.height + properties.padding;
             } else {
               currentPositionY +=
-                imageObserver[row].height + parseFloat(props.padding);
+                imageObserver[row].height + properties.padding;
             }
           } else if (images.length === 0 && imageObserver[row]) {
-            if (props.height) {
-              currentPositionY += parseFloat(props.height);
+            if (properties.height) {
+              currentPositionY += properties.height;
             } else {
               currentPositionY += imageObserver[row].height;
             }
@@ -181,6 +179,7 @@ function App() {
       }
     }
   }
+
   //handling file input programmatically
   const handleOpenFileInput = () => {
     fileInputRef.current?.click();
@@ -214,7 +213,6 @@ function App() {
     properties.padding,
     properties.borderLine,
   ]);
-  //draw image
 
   return (
     <>
@@ -230,8 +228,9 @@ function App() {
           <input
             id="upload"
             type="file"
-            accept="images/png"
+            accept="image/*"
             onChange={handleSelectImages}
+            onClick={(event) => ((event.target as HTMLInputElement).value = "")}
             multiple
             ref={fileInputRef}
           />
@@ -245,9 +244,8 @@ function App() {
         <canvas id="canvas" ref={canvasRef}></canvas>
       </div>
       <FabComponent onClick={toogleState} />
-      {/** //TODO fix this modal */}
-      <Modal open={openModal} toogleState={toogleState}>
-        <h4>I am a modal</h4>
+      <Modal open={openModal}>
+        <ModalContent toogleState={toogleState} />
       </Modal>
       <Notification
         type={notification.type}
