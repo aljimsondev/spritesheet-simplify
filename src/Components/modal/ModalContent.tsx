@@ -12,6 +12,7 @@ import {
   AiFillTwitterCircle,
   AiFillGoogleCircle,
   AiOutlineCopyright,
+  AiOutlineClose,
 } from "react-icons/ai";
 import { FaFacebook } from "react-icons/fa";
 import { Context } from "../../Store/store";
@@ -143,8 +144,11 @@ const ModalContent: NODE<{ toogleState: () => void }> = ({ toogleState }) => {
   return (
     <>
       <div className="modal-header">
-        <button className="modal-close-button" onClick={toogleState}>
-          &times;
+        <button
+          className="close-button error -sm centered"
+          onClick={toogleState}
+        >
+          <AiOutlineClose />
         </button>
       </div>
       <div className="modal-body">
@@ -158,16 +162,20 @@ const ModalContent: NODE<{ toogleState: () => void }> = ({ toogleState }) => {
               <p>by aljimsondev</p>
             </div>
           </div>
-          {sectionsData.map((data) => {
+          {sectionsData.map((data, index) => {
             return (
-              <section className="mt-5">
+              <section className="mt-5" key={index + data.title}>
                 <h2>{data.title}</h2>
                 {data.paragraph.map((p) => {
-                  return <p className="mt-2">{p}</p>;
-                })}
-                {data.adOns?.paragraph.map((p) => {
                   return (
-                    <div className="note inline-start mt-1">
+                    <p className="mt-2" key={p}>
+                      {p}
+                    </p>
+                  );
+                })}
+                {data.adOns?.paragraph.map((p, index) => {
+                  return (
+                    <div className="note inline-start mt-1" key={index + p}>
                       <p>{p}</p>
                     </div>
                   );

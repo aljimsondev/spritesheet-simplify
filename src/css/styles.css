@@ -159,7 +159,7 @@ h2 {
   min-height: 300px;
 }
 /*THEME FOR DARK MODE*/
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
     /*THEMING*/
     color-scheme: dark;

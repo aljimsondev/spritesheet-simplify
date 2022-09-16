@@ -7,6 +7,42 @@
   border-radius: 0.5rem;
   transition: 0.5s;
 }
+.-xs {
+  width: 1.5rem;
+  height: 1.5rem;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  max-width: 1.5rem;
+  max-height: 1.5rem;
+  font-size: 1rem;
+}
+.-sm {
+  width: 2rem;
+  height: 2rem;
+  min-width: 2rem;
+  min-height: 2rem;
+  font-size: 1.2rem;
+}
+.-md {
+  width: 2.5rem;
+  height: 2.5rem;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  font-size: 1.1rem;
+}
+
+.close-button {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
 .default {
   background: rgba(0, 0, 0, 0.3);
 }
@@ -29,4 +65,11 @@
 }
 .secondary:hover {
   background: var(--SECONDARY-DARK);
+}
+.error {
+  background: var(--ERROR);
+  color: #fff;
+}
+.error:hover {
+  background: var(--ERROR-DARK);
 }

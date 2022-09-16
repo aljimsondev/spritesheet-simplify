@@ -6,44 +6,33 @@ import {
   AiOutlineExclamation,
   AiOutlineQuestion,
   AiOutlineCheck,
+  AiOutlineClose,
 } from "react-icons/ai";
 import { NotificationProps } from "./type";
 
-const Notification: NODE<NotificationProps> = ({
-  type,
-  open,
-  onClose,
-  dismissable,
-  text,
-}) => {
+const Notification: NODE<NotificationProps> = (props) => {
   const [Icon, setIcon] = React.useState<ReactNode | null>(null);
   const spanRef = React.useRef<HTMLSpanElement>(null);
   const duration = 5000;
-  const [spanClass, setSpanClass] = React.useState("");
 
-  //TODO refactor code and add auto close snackbar
-  //TODO notification wouldnt stack if called consecutively
   //set icon
   const setIconStatus = React.useCallback(() => {
-    switch (type) {
+    switch (props.type) {
       case "error":
-        setSpanClass("--error");
         return setIcon(<AiOutlineExclamation />);
       case "success":
-        setSpanClass("--success");
         return setIcon(<AiOutlineCheck />);
       case "warning":
-        setSpanClass("--warning");
         return setIcon(<AiOutlineQuestion />);
       default:
         return null;
     }
-  }, [type]);
+  }, [props.type]);
 
   const timeOut = () => {
     return setTimeout(() => {
-      if (onClose) {
-        onClose();
+      if (props.onClose) {
+        props.onClose();
       }
     }, duration);
   };
@@ -51,36 +40,37 @@ const Notification: NODE<NotificationProps> = ({
   React.useEffect(() => {
     setIconStatus();
     const timer = timeOut();
+
     return () => {
       //clean up
       setIcon(null);
       clearInterval(timer);
     };
-  }, [open]);
+  }, [props]);
 
   return (
     <React.Fragment>
-      {open && (
+      {props.open && (
         <Portal>
           <div className="notification-base">
             <div className="notification">
-              {dismissable && (
-                <button
-                  className="notification-close-btn centered"
-                  onClick={onClose}
-                >
-                  &times;
-                </button>
-              )}
               {Icon && (
                 <span
                   ref={spanRef}
-                  className={`notification-icon ${spanClass}`}
+                  className={`notification-icon --${props.type}`}
                 >
                   {Icon}
                 </span>
               )}
-              <p>{text}</p>
+              <p>{props.text}</p>
+              {props.dismissable && (
+                <button
+                  className="close-button default -xs centered"
+                  onClick={props.onClose}
+                >
+                  <AiOutlineClose />
+                </button>
+              )}
             </div>
           </div>
         </Portal>
@@ -89,4 +79,4 @@ const Notification: NODE<NotificationProps> = ({
   );
 };
 
-export default Notification;
+export default React.memo(Notification);

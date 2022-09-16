@@ -127,7 +127,7 @@ function App() {
             notificationDispatch({ type: "RESET_NOTIFICATION" });
           },
           open: true,
-          text: "Canvas is cleared successfully!",
+          text: "Canvas is cleared successfully! Canvas is cleared successfully!Canvas is cleared successfully!Canvas is cleared successfully!Canvas is cleared successfully!Canvas is cleared successfully!Canvas is cleared successfully!Canvas is cleared successfully!",
           type: "success",
         },
       });
