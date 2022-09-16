@@ -1,0 +1,52 @@
+.notification-base {
+  background: var(--CARD);
+  border-radius: 10px;
+  padding: 1rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 1rem;
+  z-index: 99999999;
+  max-width: 300px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+.notification {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  align-items: flex-start;
+}
+.notification-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+  width: 2rem;
+  min-height: 2rem;
+  min-width: 2rem;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid red;
+}
+.notification p {
+  min-width: 8rem;
+}
+.notification-close-btn {
+  min-height: 1.5rem;
+  min-width: 1.5rem;
+  border-radius: 50%;
+  outline: none;
+  border: none;
+  font-size: 1.5rem;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  color: var(--ERROR);
+  transition: 0.5s;
+  background: none;
+  cursor: pointer;
+}
+.notification-close-btn:hover {
+  color: var(--ERROR-DARK);
+}

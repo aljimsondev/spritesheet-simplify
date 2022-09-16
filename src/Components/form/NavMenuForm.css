@@ -1,0 +1,85 @@
+.form {
+  min-width: 300px;
+  position: relative;
+  display: block;
+}
+.form-group {
+  padding: 1rem;
+}
+.form-label {
+  position: absolute;
+  padding: 0 10px;
+  font-size: 1rem;
+  transform: translateY(0);
+  transition: 0.3s;
+  color: var(--LABEL);
+}
+
+.form-control {
+  flex: 1;
+  padding: 0.5rem;
+}
+.form-input {
+  position: relative;
+}
+.input {
+  width: 100%;
+  padding: 0.5rem;
+  z-index: 2;
+  background: none;
+  font-size: 1rem;
+  outline: none;
+  border-radius: 5px;
+  border: 1px solid var(--BORDER-COLOR);
+}
+.form-input.active .form-label {
+  transform: translateY(-2rem) scale(0.9);
+  padding: 0;
+  z-index: 3;
+}
+.input:focus {
+  outline: 2px auto var(--PRIMARY);
+}
+.with-label {
+  padding-top: 1.5rem;
+}
+
+.form-inline {
+  display: flex;
+  align-items: center;
+}
+#checkbox {
+  cursor: pointer;
+}
+
+.button-base {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.tooltip-base {
+  z-index: 1;
+  position: absolute;
+  padding: 0 10px;
+  background: var(--TOOLTIP);
+  color: var(--TEXT-LIGHT);
+  font-size: 12px;
+  border-radius: 5px;
+  transition: 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
+  transform: translateY(0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  scale: 0;
+  visibility: hidden;
+}
+.button-base:hover .tooltip-base {
+  transition-delay: 0.3s;
+  transform: translateY(25px);
+  opacity: 1;
+  scale: 1;
+  visibility: visible;
+}

@@ -1,0 +1,32 @@
+.button {
+  flex: 1;
+  border: none;
+  width: 100%;
+  padding: 10px 0;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  transition: 0.5s;
+}
+.default {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.default:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.primary {
+  background: var(--PRIMARY);
+  color: #fff;
+}
+.primary:hover {
+  background: var(--PRIMARY-DARK);
+}
+
+.secondary {
+  background: var(--SECONDARY);
+  color: #fff;
+}
+.secondary:hover {
+  background: var(--SECONDARY-DARK);
+}
