@@ -17,28 +17,46 @@ const Notification: NODE<NotificationProps> = ({
   text,
 }) => {
   const [Icon, setIcon] = React.useState<ReactNode | null>(null);
+  const spanRef = React.useRef<HTMLSpanElement>(null);
+  const duration = 5000;
+  const [spanClass, setSpanClass] = React.useState("");
+
   //TODO refactor code and add auto close snackbar
   //set icon
   const setIconStatus = React.useCallback(() => {
     switch (type) {
       case "error":
+        setSpanClass("--error");
         return setIcon(<AiOutlineExclamation />);
       case "success":
+        setSpanClass("--success");
         return setIcon(<AiOutlineCheck />);
       case "warning":
+        setSpanClass("--warning");
         return setIcon(<AiOutlineQuestion />);
       default:
         return null;
     }
   }, [type]);
 
+  const timeOut = () => {
+    return setTimeout(() => {
+      if (onClose) {
+        onClose();
+      }
+    }, duration);
+  };
+
   React.useEffect(() => {
     setIconStatus();
+    const timer = timeOut();
     return () => {
       //clean up
       setIcon(null);
+      clearInterval(timer);
     };
-  }, []);
+  }, [open]);
+
   return (
     <React.Fragment>
       {open && (
@@ -53,7 +71,14 @@ const Notification: NODE<NotificationProps> = ({
                   &times;
                 </button>
               )}
-              {Icon && <span className="notification-icon">{Icon}</span>}
+              {Icon && (
+                <span
+                  ref={spanRef}
+                  className={`notification-icon ${spanClass}`}
+                >
+                  {Icon}
+                </span>
+              )}
               <p>{text}</p>
             </div>
           </div>

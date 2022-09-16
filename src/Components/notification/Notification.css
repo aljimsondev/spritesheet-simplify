@@ -27,10 +27,21 @@
   margin-right: 0.5rem;
   border-radius: 50%;
   overflow: hidden;
-  border: 1px solid red;
 }
 .notification p {
   min-width: 8rem;
+}
+.--success {
+  border: 1px solid var(--SUCCESS);
+  color: var(--SUCCESS);
+}
+.--warning {
+  border: 1px solid var(--WARNING);
+  color: var(--WARNING);
+}
+.--error {
+  border: 1px solid var(--ERROR);
+  color: var(--ERROR);
 }
 .notification-close-btn {
   min-height: 1.5rem;
