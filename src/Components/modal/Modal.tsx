@@ -100,7 +100,11 @@ const Modal: Child<ModalProps> = ({ open, toogleState }) => {
                   <div className="container">
                     <div className="modal-inline">
                       <div className="logo-base-l mr-1">
-                        <img className="logo" src="/logo.png" alt="logo" />
+                        <img
+                          className="logo"
+                          src="/assets/logo.png"
+                          alt="logo"
+                        />
                       </div>
                       <div>
                         <h1>Spritesheet Simplify</h1>
