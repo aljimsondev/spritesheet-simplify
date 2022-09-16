@@ -1,7 +1,7 @@
 import React from "react";
 import "./Modal.css";
 import { NODE } from "../types";
-import { LinkData, ModalFooterButtonProps, ModalProps } from "./types";
+import { LinkData, ModalFooterButtonProps } from "./types";
 import imgMultiSprites from "../../assets/multiple_sprites1.jpg";
 import imgSingleSprite from "../../assets/single_sprite1.jpg";
 import customSizeSprites from "../../assets/custom_size_sprites.png";
@@ -17,6 +17,93 @@ import { FaFacebook } from "react-icons/fa";
 import { Context } from "../../Store/store";
 
 //TODO add some animations
+const data: LinkData[] = [
+  {
+    icon: <AiFillGithub />,
+    link: "https://github.com/aljimsondev",
+    type: "link",
+  },
+  {
+    icon: <AiFillTwitterCircle />,
+    link: "https://twitter.com/aljimsondev",
+    type: "link",
+  },
+  {
+    icon: <AiFillGoogleCircle />,
+    link: "aljimson.megrino@gmail.com",
+    type: "text",
+  },
+  {
+    icon: <FaFacebook />,
+    link: "https://facebook.com/alnstien",
+    type: "link",
+  },
+];
+
+const sectionsData = [
+  {
+    title: "How it works?",
+    paragraph: [
+      `Spritesheet Simplify aims to merge your sprites
+      into one file called Spritesheet. Most 2D asset pack that
+      can be found and purchase online consist of individual sprites. In
+      2D game development, spritesheet is used to animate character
+      behaviour.
+      Spritesheet Generator aim only to merge all your sprites
+      into spritesheet that could be use in your game development
+      engine.`,
+      `I recommended this simple application to those new developers that did not have any software to merge all your 2D sprites because it is easy to use.`,
+      `This may not be as powerful as other tools out there but this tool
+      could do the job to merge your sprites.`,
+    ],
+  },
+  {
+    title: "Creating spritesheet in row",
+    paragraph: [
+      `Select all your sprites behaviour in multiple selection and add it
+      in the canvas.`,
+      `Selected multiple files will be place in 1 row automatically.`,
+    ],
+    image: {
+      className: "mt-2 mx-600",
+      src: imgMultiSprites,
+      alt: "row_sprites",
+    },
+  },
+  {
+    title: "Creating spritesheet in column",
+    paragraph: [
+      ` Instead of selecting multiple sprites, you can select sprites
+      individually and place it in the canvas to display it in column.`,
+    ],
+    image: {
+      className: "mt-2 mx-600",
+      src: imgSingleSprite,
+      alt: "col_sprites",
+    },
+  },
+  {
+    title: "Custom spritesheet image properties",
+    paragraph: [
+      ` You can also customize the Image properties(width, height and
+        padding) of your spritesheet.`,
+    ],
+    adOns: {
+      paragraph: [
+        `Note:I recommend not to use custom sprite size when you
+      have many type of behaviour in your sprites, especially when it
+      has different sizes. Spritesheet Simplify does not
+      support custom size in selected rows and columns. Custom size
+      will be applied to all sprites in the canvas.`,
+      ],
+    },
+    image: {
+      className: "mt-2 mx-600",
+      src: customSizeSprites,
+      alt: "custom_sprites",
+    },
+  },
+];
 
 const FooterButton: NODE<ModalFooterButtonProps> = ({ data }) => {
   const { notificationDispatch } = React.useContext(Context);
@@ -53,29 +140,6 @@ const FooterButton: NODE<ModalFooterButtonProps> = ({ data }) => {
 };
 
 const ModalContent: NODE<{ toogleState: () => void }> = ({ toogleState }) => {
-  const data: LinkData[] = [
-    {
-      icon: <AiFillGithub />,
-      link: "https://github.com/aljimsondev",
-      type: "link",
-    },
-    {
-      icon: <AiFillTwitterCircle />,
-      link: "https://twitter.com/aljimsondev",
-      type: "link",
-    },
-    {
-      icon: <AiFillGoogleCircle />,
-      link: "aljimson.megrino@gmail.com",
-      type: "text",
-    },
-    {
-      icon: <FaFacebook />,
-      link: "https://facebook.com/alnstien",
-      type: "link",
-    },
-  ];
-
   return (
     <>
       <div className="modal-header">
@@ -94,75 +158,30 @@ const ModalContent: NODE<{ toogleState: () => void }> = ({ toogleState }) => {
               <p>by aljimsondev</p>
             </div>
           </div>
-
-          <section className="mt-5">
-            <h2>How it works?</h2>
-            <p className="mt-2">
-              Spritesheet Simplify aims to merge your <b>sprites</b>
-              into one file called <em>Spritesheet</em>. Most 2D asset pack that
-              can be found and purchase online consist of individual sprites. In
-              2D game development, spritesheet is used to animate character
-              behaviour.
-              <b>Spritesheet Generator</b> aim only to merge all your sprites
-              into spritesheet that could be use in your game development
-              engine.
-            </p>
-            <p className="mt-2">
-              I recommended this simple application to those new developers that
-              did not have any software to merge all your 2D sprites because it
-              is easy to use.
-            </p>
-            <p className="mt-2">
-              This may not be as powerful as other tools out there but this tool
-              could do the job to merge your sprites.
-            </p>
-          </section>
-          <section className="mt-5">
-            <h2>Creating spritesheet in row</h2>
-            <p>
-              Select all your sprites behaviour in multiple selection and add it
-              in the canvas.
-            </p>
-            <p>Selected multiple files will be place in 1 row automatically.</p>
-            <img
-              className="mt-2 mx-600"
-              src={imgMultiSprites}
-              alt="row_sprites"
-            />
-          </section>
-          <section className="mt-5">
-            <h2>Creating spritesheet in column</h2>
-            <p>
-              Instead of selecting multiple sprites, you can select sprites
-              individually and place it in the canvas to display it in column.
-            </p>
-            <img
-              className="mt-2 mx-600"
-              src={imgSingleSprite}
-              alt="col_sprites"
-            />
-          </section>
-          <section className="mt-5">
-            <h2>Custom spritesheet image properties</h2>
-            <p>
-              You can also customize the Image properties(width, height and
-              padding) of your spritesheet.
-            </p>
-            <div className="note inline-start mt-1">
-              <p>
-                <b> Note:</b> I recommend not to use custom sprite size when you
-                have many type of behaviour in your sprites, especially when it
-                has different sizes. <b>Spritesheet Simplify</b> does not
-                support custom size in selected rows and columns. Custom size
-                will be applied to all sprites in the canvas.
-              </p>
-            </div>
-            <img
-              className="mt-2 mx-600"
-              src={customSizeSprites}
-              alt="col_sprites"
-            />
-          </section>
+          {sectionsData.map((data) => {
+            return (
+              <section className="mt-5">
+                <h2>{data.title}</h2>
+                {data.paragraph.map((p) => {
+                  return <p className="mt-2">{p}</p>;
+                })}
+                {data.adOns?.paragraph.map((p) => {
+                  return (
+                    <div className="note inline-start mt-1">
+                      <p>{p}</p>
+                    </div>
+                  );
+                })}
+                {data.image && (
+                  <img
+                    className={data.image.className}
+                    src={data.image.src}
+                    alt={data.image.alt}
+                  />
+                )}
+              </section>
+            );
+          })}
         </div>
         <div className="modal-footer-base">
           <div className="modal-footer">
