@@ -17,7 +17,6 @@ const Notification: NODE<NotificationProps> = ({
   text,
 }) => {
   const [Icon, setIcon] = React.useState<ReactNode | null>(null);
-  const [close, setClose] = React.useState<boolean>(false);
   //TODO refactor code and add auto close snackbar
   //set icon
   const setIconStatus = React.useCallback(() => {
