@@ -1,7 +1,4 @@
 .navbar {
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
   height: 10vh;
   width: 100vw;
   display: flex;

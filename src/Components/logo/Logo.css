@@ -1,5 +1,4 @@
 .logo-base {
-  transition: 0.5s;
   height: 3rem;
   width: 3rem;
   position: relative;
@@ -8,9 +7,6 @@
   background: var(--LOGO);
   padding: 10px;
   border-radius: 50%;
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
 }
 .logo-base:hover {
   color: var(--TEXT-LIGHT);
@@ -32,9 +28,6 @@
   background: var(--LOGO);
   padding: 1rem;
   border-radius: 50%;
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
   min-height: 80px;
   min-width: 80px;
 }

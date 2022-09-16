@@ -145,7 +145,7 @@ const ModalContent: NODE<{ toogleState: () => void }> = ({ toogleState }) => {
     <>
       <div className="modal-header">
         <button
-          className="close-button error -sm centered"
+          className="close-button error -sm abs right centered m-0-1 "
           onClick={toogleState}
         >
           <AiOutlineClose />
@@ -154,7 +154,7 @@ const ModalContent: NODE<{ toogleState: () => void }> = ({ toogleState }) => {
       <div className="modal-body">
         <div className="container">
           <div className="modal-inline">
-            <div className="logo-base-l mr-1">
+            <div className="logo-base-l mr-1 no-select">
               <img className="logo" src={logoImg} alt="logo" />
             </div>
             <div>
@@ -191,13 +191,13 @@ const ModalContent: NODE<{ toogleState: () => void }> = ({ toogleState }) => {
             );
           })}
         </div>
-        <div className="modal-footer-base">
+        <div className="modal-footer-base ">
           <div className="modal-footer">
             <div className="footer-left">
               <div className="footer-logo">
                 <Logo />
               </div>
-              <div className="copyright">
+              <div className="copyright no-select">
                 <span>
                   <AiOutlineCopyright />
                 </span>

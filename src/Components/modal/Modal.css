@@ -106,7 +106,6 @@
   border-radius: 50%;
   font-size: 1.7rem;
   cursor: default;
-  transition: 0.5s;
   color: var(--PRIMARY-LIGHT);
   outline: 1px solid var(--PRIMARY-DARK);
 }
