@@ -20,7 +20,9 @@ const SpritesPreview: NODE<SpritesPreviewProps> = ({ toogleState, images }) => {
           <AiOutlineClose />
         </button>
       </div>
-      <div className="modal-body"></div>
+      <div className="modal-body">
+        <div className="container"></div>
+      </div>
     </React.Fragment>
   );
 };
