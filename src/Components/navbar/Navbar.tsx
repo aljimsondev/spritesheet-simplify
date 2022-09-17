@@ -38,7 +38,7 @@ const Navbar: NODE<NavbarProps> = ({
       icon: <AiFillEye size={25} color="#0e0e0e" />,
       onClick: toogleModalPreview,
       tooltip: true,
-      tooltipLabel: "Preview",
+      tooltipLabel: "Sprites Animation Preview",
     },
     {
       icon: <AiOutlineDownload size={25} color="#4c0ab6" />,

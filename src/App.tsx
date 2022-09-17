@@ -311,7 +311,7 @@ function App() {
         <ModalContent toogleState={toogleState} />
       </Modal>
       <Modal open={openModalPreview}>
-        <SpritesPreview toogleState={toogleModalPreview} />
+        <SpritesPreview toogleState={toogleModalPreview} images={images} />
       </Modal>
       <Notification
         type={notification.type}
