@@ -63,7 +63,7 @@ const NavMenuForm: NODE<NavMenuInputProps> = ({}) => {
         </div>
         <div className="form-control">
           <h4>Customize Image Size</h4>
-          <div className="form-inline">
+          <div className="form-inline mt-1">
             <div className="m-r1">
               <FormInput
                 label="Height"

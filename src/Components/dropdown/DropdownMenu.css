@@ -32,3 +32,10 @@
   min-width: 200px;
   min-height: 100px;
 }
+
+@media screen and (max-width: 500px) {
+  .nav-menu {
+    margin: -2px;
+    margin-top: 0.6rem;
+  }
+}

@@ -5,6 +5,7 @@ import {
   AiFillSetting,
   AiOutlineDownload,
   AiOutlinePlus,
+  AiFillEye,
 } from "react-icons/ai";
 import NavbarButton from "../button/NavbarButton";
 import DropdownMenu from "../dropdown/DropdownMenu";
@@ -31,6 +32,12 @@ const Navbar: NODE<NavbarProps> = ({
       onClick: handleOpenFileInput,
       tooltip: true,
       tooltipLabel: "Add Sprites",
+    },
+    {
+      icon: <AiFillEye size={25} color="#0e0e0e" />,
+      onClick: clearSelection,
+      tooltip: true,
+      tooltipLabel: "Preview",
     },
     {
       icon: <AiOutlineDownload size={25} color="#4c0ab6" />,

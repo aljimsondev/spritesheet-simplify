@@ -32,7 +32,7 @@ const Notification: NODE<NotificationProps> = (props) => {
   const timeOut = () => {
     return setTimeout(() => {
       if (props.onClose) {
-        // props.onClose();
+        props.onClose();
       }
     }, duration);
   };
