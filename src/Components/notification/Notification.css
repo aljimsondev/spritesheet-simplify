@@ -14,7 +14,7 @@
   display: flex;
   position: relative;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
 }
 .notification-icon {
   display: flex;
