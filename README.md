@@ -1,5 +1,7 @@
-# [spritesheet-simplify](https://aljimsondev.github.io/spritesheet-simplify/)
 
+
+![ss](https://user-images.githubusercontent.com/108307848/190836555-386dfd4b-b271-4e37-82b0-eb0de20ffacf.jpg)
+# [spritesheet-simplify](https://aljimsondev.github.io/spritesheet-simplify/)
 # How it works?
 
 `Spritesheet Simplify` aims to merge your spritesinto one file called Spritesheet. Most 2D asset pack that can be found and purchase online consist of individual sprites. In 2D game development, spritesheet is used to animate character behaviour.Spritesheet Generator aim only to merge all your sprites into spritesheet that could be use in your game development engine.
