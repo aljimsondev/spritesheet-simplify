@@ -6,6 +6,8 @@ import Navbar from "./Components/navbar/Navbar";
 import Notification from "./Components/notification/Notification";
 import { Context } from "./Store/store";
 
+//TODO add spritesheet preview
+
 function App() {
   const { properties, notification, notificationDispatch } =
     React.useContext(Context);
@@ -17,6 +19,9 @@ function App() {
   const defaultWidth = 0;
   const [images, setImages] = React.useState<HTMLImageElement[][]>([]);
   const [openModal, setModalState] = React.useState<boolean>(false);
+  const [canvasVisibility, setCanvasVisibility] = React.useState<
+    "none" | "block"
+  >("none");
   const [imageObserver, setImageObserver] = React.useState<
     {
       height: number;
@@ -239,6 +244,7 @@ function App() {
     return;
   };
   React.useEffect(() => {
+    setCanvasVisibility("block");
     try {
       drawImage();
     } catch (e) {
@@ -247,6 +253,7 @@ function App() {
 
     return () => {
       //clean up function
+      setCanvasVisibility("none");
     };
   }, [
     imageObserver,
@@ -284,7 +291,11 @@ function App() {
             ref={downloadButtonRef}
           ></a>
         </form>
-        <canvas id="canvas" ref={canvasRef}></canvas>
+        <canvas
+          id="canvas"
+          ref={canvasRef}
+          style={{ display: canvasVisibility }}
+        ></canvas>
       </div>
       <FabComponent onClick={toogleState} />
       <Modal open={openModal}>
