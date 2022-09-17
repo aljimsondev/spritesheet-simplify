@@ -9,6 +9,7 @@ import { defaultStatus } from "../../Store/store";
 
 const NavMenuForm: NODE<NavMenuInputProps> = ({}) => {
   const { setProperties, properties } = React.useContext(Context);
+  const { notificationDispatch } = React.useContext(Context);
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -28,6 +29,18 @@ const NavMenuForm: NODE<NavMenuInputProps> = ({}) => {
 
   const handleReset = () => {
     setProperties(defaultStatus);
+    notificationDispatch({
+      type: "ADD_NOTIFICATION",
+      payload: {
+        dismissable: true,
+        onClose: () => {
+          notificationDispatch({ type: "RESET_NOTIFICATION" });
+        },
+        open: true,
+        text: "Successfully reset to defaults!",
+        type: "success",
+      },
+    });
   };
   const handleToogle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProperties({ ...properties, [e.target.name]: e.target.checked });
