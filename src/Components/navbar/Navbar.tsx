@@ -16,6 +16,7 @@ const Navbar: NODE<NavbarProps> = ({
   clearSelection,
   download,
   handleOpenFileInput,
+  toogleModalPreview,
 }) => {
   const dropdownRef = React.useRef(null);
   const [open, setOpen] = React.useState<boolean>(false);
@@ -35,7 +36,7 @@ const Navbar: NODE<NavbarProps> = ({
     },
     {
       icon: <AiFillEye size={25} color="#0e0e0e" />,
-      onClick: clearSelection,
+      onClick: toogleModalPreview,
       tooltip: true,
       tooltipLabel: "Preview",
     },

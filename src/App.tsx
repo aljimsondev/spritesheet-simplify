@@ -4,6 +4,7 @@ import Modal from "./Components/modal";
 import ModalContent from "./Components/modal/ModalContent";
 import Navbar from "./Components/navbar/Navbar";
 import Notification from "./Components/notification/Notification";
+import SpritesPreview from "./Components/preview/SpritesPreview";
 import { Context } from "./Store/store";
 
 //TODO add spritesheet preview
@@ -19,6 +20,8 @@ function App() {
   const defaultWidth = 0;
   const [images, setImages] = React.useState<HTMLImageElement[][]>([]);
   const [openModal, setModalState] = React.useState<boolean>(false);
+  const [openModalPreview, setModalPreviewState] =
+    React.useState<boolean>(false);
   const [canvasVisibility, setCanvasVisibility] = React.useState<
     "none" | "block"
   >("none");
@@ -264,6 +267,11 @@ function App() {
     properties.borderLine,
   ]);
 
+  //handling of open preview modal
+  const toogleModalPreview = () => {
+    setModalPreviewState((prevState) => !prevState);
+  };
+
   return (
     <>
       <Navbar
@@ -272,6 +280,7 @@ function App() {
         downloadButtonRef={downloadButtonRef}
         download={download}
         handleOpenFileInput={handleOpenFileInput}
+        toogleModalPreview={toogleModalPreview}
       />
       <div id="canvas-wrapper" className="canvas-wrapper">
         <form>
@@ -300,6 +309,9 @@ function App() {
       <FabComponent onClick={toogleState} />
       <Modal open={openModal}>
         <ModalContent toogleState={toogleState} />
+      </Modal>
+      <Modal open={openModalPreview}>
+        <SpritesPreview toogleState={toogleModalPreview} />
       </Modal>
       <Notification
         type={notification.type}
