@@ -43,3 +43,9 @@
   border: 1px solid var(--ERROR);
   color: var(--ERROR);
 }
+
+@media screen and (max-width: 400px) {
+  .notification-base {
+    max-width: 400px;
+  }
+}

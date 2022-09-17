@@ -106,7 +106,7 @@ h2 {
   -webkit-user-select: none;
 }
 /*THEME FOR DARK MODE*/
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   :root {
     /*THEMING*/
     color-scheme: dark;
@@ -128,3 +128,25 @@ h2 {
     --THUMB-SWITCH-ON: #e7e7e7;
   }
 }
+/* @media (prefers-color-scheme: light) {
+  :root {
+
+    color-scheme: dark;
+    --LOGO: #000000;
+    --MAIN: #202020;
+    --PAPER: #161616;
+    --CARD: #0e0e0e;
+    --LABEL: #bbbbbb;
+    --BORDER-COLOR: rgb(78, 78, 78);
+    --BORDER-DARK: rgba(223, 223, 223, 0.1);
+    --TOOLTIP: #2e2d2d;
+    --TEXT-LIGHT: #e0e0e0;
+    --TEXT-DARK: #dbdbdbde;
+    --SWITCH-HEIGHT: 1rem;
+    --SWITCH-WIDTH: 45px;
+    --SWITCH-OFF: #666666;
+    --THUMB-SIZE: 25px;
+    --THUMB-SWITCH-OFF: #000000;
+    --THUMB-SWITCH-ON: #e7e7e7;
+  }
+} */
