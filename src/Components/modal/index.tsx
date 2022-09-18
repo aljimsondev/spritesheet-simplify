@@ -16,13 +16,19 @@ const Modal: NODE<ModalProps> = ({ children, open }) => {
   }, [open]);
 
   return (
-    <Portal>
-      <div ref={ref} className="modal">
-        <div className="modal-content">
-          <div className="modal-container">{children}</div>
-        </div>
-      </div>
-    </Portal>
+    <React.Fragment>
+      {open ? (
+        <Portal>
+          <div ref={ref} className="modal">
+            <div className="modal-content">
+              <div className="modal-container">{children}</div>
+            </div>
+          </div>
+        </Portal>
+      ) : (
+        <></>
+      )}
+    </React.Fragment>
   );
 };
 

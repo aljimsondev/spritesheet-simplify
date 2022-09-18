@@ -24,7 +24,7 @@ const SpritesPreview: NODE<SpritesPreviewProps> = ({ toogleState, images }) => {
       </div>
       <div className="modal-body">
         <div className="container">
-          <PreviewCard />
+          <PreviewCard sprites={images} />
         </div>
       </div>
     </React.Fragment>

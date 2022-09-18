@@ -1,15 +1,27 @@
 import React from "react";
 import FormInput from "../form/FormInput";
-import { FaPlay } from "react-icons/fa";
+import { FaPlay, FaPause } from "react-icons/fa";
+import { NODE } from "../types";
+import { SpritePreviewCardProps } from "./types";
 
-const PreviewCard = () => {
+const PreviewCard: NODE<SpritePreviewCardProps> = ({ sprites }) => {
+  const [play, setPlay] = React.useState<boolean>(false);
+  const [animationEnded, setAnimationEnded] = React.useState(false);
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const [properties, setProperties] = React.useState({
     x: 0,
     y: 0,
     height: 0,
     width: 0,
-    fps: 0,
+    fps: 1,
   });
+
+  const interval = 1000 / properties.fps;
+  let timer = 0;
+  let lastTime = 0;
+  let frameCount = 0;
+  let maxFrame = 5;
+  let animationEndedNow = false;
 
   const handleChange = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,10 +35,47 @@ const PreviewCard = () => {
     []
   );
 
+  function animate(time: number) {
+    const deltaTime = time - lastTime;
+    lastTime = time;
+
+    if (frameCount >= maxFrame) {
+      animationEndedNow = true;
+    } else {
+      if (timer > interval) {
+        timer = 0;
+        frameCount++;
+        //animation here
+      } else {
+        timer += deltaTime;
+      }
+    }
+    console.log(frameCount);
+    if (!animationEndedNow) {
+      requestAnimationFrame(animate);
+    }
+  }
+  const animateSprite = React.useCallback(() => {
+    animate(0);
+  }, []);
+  //TODO load sprites
+  //? process the animations
+  //?add animation controller
+
+  React.useEffect(() => {
+    // const animation =
+    const canvas = canvasRef.current;
+    const ctx = canvasRef.current?.getContext("2d");
+    //handle logic here
+    return () => {
+      setAnimationEnded(false);
+    };
+  }, [play]);
+
   return (
     <div className="card-base ">
       <div className="inline  ">
-        <canvas id="canvas-preview"></canvas>
+        <canvas ref={canvasRef} id="canvas-preview"></canvas>
         <div className="inline ">
           <form>
             <section className="form-group   ">
@@ -94,8 +143,11 @@ const PreviewCard = () => {
                   </div>
                 </div>
                 <div className="card-btn-base">
-                  <div className="card-btn no-select centered">
-                    <FaPlay size={30} />
+                  <div
+                    className="card-btn no-select centered"
+                    onClick={animateSprite}
+                  >
+                    {play ? <FaPause size={30} /> : <FaPlay size={30} />}
                   </div>
                 </div>
               </div>
