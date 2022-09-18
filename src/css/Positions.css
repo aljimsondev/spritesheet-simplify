@@ -9,10 +9,14 @@
   flex-direction: row;
   align-items: center;
 }
-.inlines-tart {
+.inline-start {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+}
+.flex-end {
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 .right {
   right: 0;

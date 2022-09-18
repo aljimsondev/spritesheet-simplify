@@ -1,0 +1,40 @@
+.card-base {
+  box-shadow: 0px 1px 8px 0px var(--TEXT-DARK);
+  padding: 1rem;
+  min-height: 300px;
+  border-radius: 20px;
+  background: linear-gradient(
+    101.96deg,
+    #b35cbb 3.46%,
+    rgba(255, 255, 255, 0) 84.29%
+  );
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
+.b-none {
+  border: none;
+}
+.card-btn-base {
+  min-height: 100%;
+  padding: 0 0 5px 5px;
+}
+.card-btn {
+  height: 5rem;
+  width: 5rem;
+  background: linear-gradient(
+    235.58deg,
+    #7c0699 20.75%,
+    rgba(241, 241, 241, 0) 113.53%
+  );
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  padding: 1rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.card-btn:hover {
+  transform: scale(1.5) rotate(120deg);
+}
+.card-btn:active {
+  background-color: red;
+}

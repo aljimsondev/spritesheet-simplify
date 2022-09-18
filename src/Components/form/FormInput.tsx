@@ -1,4 +1,5 @@
 import React from "react";
+import ClickAwayListener from "../listener/ClickAwayEventListener";
 import { FormInputProps, NODE } from "../types";
 
 const FormInput: NODE<FormInputProps> = ({
@@ -12,45 +13,69 @@ const FormInput: NODE<FormInputProps> = ({
 }) => {
   const ref = React.useRef<HTMLDivElement>(null)!;
   const inputRef = React.useRef<HTMLInputElement>(null)!;
+  let inputClass = "input";
 
   const setActiveState = () => {
     if (ref.current?.classList.contains("active")) {
       return;
     } else {
       ref.current?.classList.add("active");
+      inputRef.current?.focus();
     }
   };
-  const handleClickInput = React.useCallback(
-    (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-      e.preventDefault();
-      //toggle classlist
-      setActiveState();
-    },
-    []
-  );
+
+  const handleClickInput = React.useCallback((e: any) => {
+    //toggle classlist
+    setActiveState();
+  }, []);
+
   React.useEffect(() => {
     if (value !== undefined) {
       setActiveState();
     }
 
+    const handler = new ClickAwayListener(ref, () => {
+      if (ref.current?.classList.contains("active")) {
+        //check the value
+        if (value !== "") {
+          return;
+        }
+        //remove active state
+        ref.current.classList.remove("active");
+      }
+    });
+
     if (classList) {
-      ref.current?.classList.add(classList);
+      inputClass += classList;
     }
     if (label) {
       ref.current?.classList.add("with-label");
     } else {
       ref.current?.classList.add("mt-default");
     }
-    return () => {};
-  }, []);
+
+    return () => {
+      //clean up
+      handler.remove();
+    };
+  }, [value]);
 
   return (
-    <div ref={ref} className="form-input centered-left">
-      {label && <label className="form-label">{label}</label>}
+    <div
+      ref={ref}
+      className="form-input centered-left"
+      aria-hidden
+      aria-label="form-input"
+    >
+      {label && (
+        <label role="textbox" onClick={handleClickInput} className="form-label">
+          {label}
+        </label>
+      )}
       <input
-        name={name}
         ref={inputRef}
-        className="input"
+        name={name}
+        className={inputClass}
         onClick={handleClickInput}
         onChange={onValueChange}
         placeholder={placeholder}

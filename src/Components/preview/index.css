@@ -1,0 +1,19 @@
+/* .ln {
+  background: linear-gradient(
+    235.58deg,
+    #6b0186 20.75%,
+    rgba(217, 217, 217, 0) 113.53%
+  );
+  //card
+  background: linear-gradient(
+    101.96deg,
+    #b35cbb 3.46%,
+    rgba(255, 255, 255, 0) 84.29%
+  );
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+} */
+#canvas-preview {
+  background: red;
+  height: 300px;
+  width: 250px;
+}

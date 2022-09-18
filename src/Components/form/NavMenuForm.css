@@ -10,9 +10,11 @@
   position: absolute;
   padding: 0 10px;
   font-size: 1rem;
-  transform: translateY(0);
+  transform: translateY(6px);
   transition: 0.3s;
   color: var(--LABEL);
+  z-index: 1;
+  cursor: text;
 }
 
 .form-control {
@@ -25,7 +27,7 @@
 .input {
   width: 100%;
   padding: 0.5rem;
-  z-index: 2;
+  z-index: 10;
   background: none;
   font-size: 1rem;
   outline: none;
