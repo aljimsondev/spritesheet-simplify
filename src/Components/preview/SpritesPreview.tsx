@@ -3,7 +3,6 @@ import { NODE } from "../types";
 import { SpritesPreviewProps } from "./types";
 import { AiOutlineClose } from "react-icons/ai";
 import "./index.css";
-import PreviewCard from "../card/PreviewCard";
 
 //TODO handle preview of the sprites
 const SpritesPreview: NODE<SpritesPreviewProps> = ({ toogleState, images }) => {
@@ -23,9 +22,7 @@ const SpritesPreview: NODE<SpritesPreviewProps> = ({ toogleState, images }) => {
         </button>
       </div>
       <div className="modal-body">
-        <div className="container">
-          <PreviewCard sprites={images} />
-        </div>
+        <div className="container"></div>
       </div>
     </React.Fragment>
   );

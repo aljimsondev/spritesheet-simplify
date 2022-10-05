@@ -1,10 +1,12 @@
 import React from "react";
 import FabComponent from "./Components/button/FabComponent";
+import Sidebar from "./Components/menu/Sidebar";
 import Modal from "./Components/modal";
 import ModalContent from "./Components/modal/ModalContent";
 import Navbar from "./Components/navbar/Navbar";
 import Notification from "./Components/notification/Notification";
 import SpritesPreview from "./Components/preview/SpritesPreview";
+import { spriteRenderer } from "./renderer/SpriteRender";
 import { Context } from "./Store/store";
 
 //TODO add spritesheet preview
@@ -36,6 +38,19 @@ function App() {
     setModalState((prevState) => !prevState);
   };
 
+  //getting the total combine with of the highest column
+  function getTotalWidth(index: number) {
+    const totalWidthCombine = images[index].reduce((total, img: any) => {
+      const props: any = properties; //input value returns string to we need to parse it
+      if (props.width) {
+        let propsWidth: any = parseFloat(props.width);
+        return (total += propsWidth);
+      } else {
+        return (total += parseInt(img.width));
+      }
+    }, 0);
+    return totalWidthCombine;
+  }
   //canvas width calculation
   const canvasWidth = React.useMemo(() => {
     let highestWidth = 0;
@@ -45,20 +60,6 @@ function App() {
       if (width > highestWidth) {
         highestWidth = width;
       }
-    }
-
-    //getting the total combine with of the highest column
-    function getTotalWidth(index: number) {
-      const totalWidthCombine = images[index].reduce((total, img: any) => {
-        const props: any = properties; //input value returns string to we need to parse it
-        if (props.width) {
-          let propsWidth: any = parseFloat(props.width);
-          return (total += propsWidth);
-        } else {
-          return (total += parseInt(img.width));
-        }
-      }, 0);
-      return totalWidthCombine;
     }
 
     return highestWidth;
@@ -166,34 +167,14 @@ function App() {
         canvas.width = canvasWidth; //set canvas width to highest instance of sprites
 
         for (let row = 0; row < images.length; row++) {
-          for (let column = 0; column < images[row].length; column++) {
-            let img = images[row][column];
-            let startingPositionX = 0;
-            if (properties.width) {
-              startingPositionX = properties.width;
-            } else {
-              startingPositionX = img.width;
-            }
-            ctx.drawImage(
-              img, //image
-              0, //image source x
-              0, //image source y
-              img.width, //image sprite width
-              img.height, //image sprite height
-              column * startingPositionX, //position x
-              currentPositionY, // position y
-              properties.width || img.width,
-              properties.height || img.height
-            );
-            if (properties.borderLine) {
-              ctx.strokeRect(
-                column * startingPositionX,
-                currentPositionY,
-                properties.width || img.width,
-                properties.height || img.height
-              );
-            }
-          }
+          spriteRenderer({
+            context: ctx,
+            borderLine: properties.borderLine,
+            height: properties.height,
+            width: properties.width,
+            images: images[row],
+            y: currentPositionY,
+          });
           if (images.length > 0 && imageObserver[row]) {
             //consist of more than 1 columns, add padding  to give space of each column sprites
             if (properties.height) {
@@ -274,52 +255,61 @@ function App() {
 
   return (
     <>
-      <Navbar
-        handleSelectImages={handleSelectImages}
-        clearSelection={clearSelection}
-        downloadButtonRef={downloadButtonRef}
-        download={download}
-        handleOpenFileInput={handleOpenFileInput}
-        toogleModalPreview={toogleModalPreview}
-      />
-      <div id="canvas-wrapper" className="canvas-wrapper">
-        <form>
-          <input
-            id="upload"
-            type="file"
-            accept="image/*"
-            onChange={handleSelectImages}
-            onClick={(event) => ((event.target as HTMLInputElement).value = "")}
-            multiple
-            ref={fileInputRef}
+      <div className="main-container">
+        <div className="grow">
+          <Navbar
+            handleSelectImages={handleSelectImages}
+            clearSelection={clearSelection}
+            downloadButtonRef={downloadButtonRef}
+            download={download}
+            handleOpenFileInput={handleOpenFileInput}
+            toogleModalPreview={toogleModalPreview}
           />
-          <a
-            id="download"
-            className="nav-button centered"
-            download={`${properties.fileName + ".png" || "spritesheet.png"}`}
-            ref={downloadButtonRef}
-          ></a>
-        </form>
-        <canvas
-          id="canvas"
-          ref={canvasRef}
-          style={{ display: canvasVisibility }}
-        ></canvas>
+          <div id="canvas-wrapper" className="canvas-wrapper">
+            <form>
+              <input
+                id="upload"
+                type="file"
+                accept="image/*"
+                onChange={handleSelectImages}
+                onClick={(event) =>
+                  ((event.target as HTMLInputElement).value = "")
+                }
+                multiple
+                ref={fileInputRef}
+              />
+              <a
+                id="download"
+                className="nav-button centered"
+                download={`${
+                  properties.fileName + ".png" || "spritesheet.png"
+                }`}
+                ref={downloadButtonRef}
+              ></a>
+            </form>
+            <canvas
+              id="canvas"
+              ref={canvasRef}
+              style={{ display: canvasVisibility }}
+            ></canvas>
+          </div>
+        </div>
+        <Sidebar />
+        <FabComponent onClick={toogleState} />
+        <Modal open={openModal}>
+          <ModalContent toogleState={toogleState} />
+        </Modal>
+        <Modal open={openModalPreview}>
+          <SpritesPreview toogleState={toogleModalPreview} images={images} />
+        </Modal>
+        <Notification
+          type={notification.type}
+          open={notification.open}
+          onClose={notification.onClose}
+          dismissable={notification.dismissable}
+          text={notification.text}
+        />
       </div>
-      <FabComponent onClick={toogleState} />
-      <Modal open={openModal}>
-        <ModalContent toogleState={toogleState} />
-      </Modal>
-      <Modal open={openModalPreview}>
-        <SpritesPreview toogleState={toogleModalPreview} images={images} />
-      </Modal>
-      <Notification
-        type={notification.type}
-        open={notification.open}
-        onClose={notification.onClose}
-        dismissable={notification.dismissable}
-        text={notification.text}
-      />
     </>
   );
 }
