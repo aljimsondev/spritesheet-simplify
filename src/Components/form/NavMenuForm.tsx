@@ -114,4 +114,4 @@ const NavMenuForm: NODE<NavMenuInputProps> = ({}) => {
   );
 };
 
-export default NavMenuForm;
+export default React.memo(NavMenuForm);

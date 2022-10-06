@@ -23,7 +23,7 @@ const Tabs: React.FC<{ children: JSX.Element[] }> = ({ children }) => {
     if (children[activeTab]) {
       return children[activeTab].props.children;
     }
-  }, [activeTab]);
+  }, [children[activeTab].props.children]);
 
   return (
     <div className="sidebar">
@@ -33,4 +33,4 @@ const Tabs: React.FC<{ children: JSX.Element[] }> = ({ children }) => {
   );
 };
 
-export default Tabs;
+export default React.memo(Tabs);

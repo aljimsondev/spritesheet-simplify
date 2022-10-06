@@ -81,3 +81,15 @@ button {
 .error:hover {
   background: var(--ERROR-DARK);
 }
+
+.btn-preview {
+  height: 40px;
+  width: 40px;
+  border: none;
+  outline: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.5s;
+}

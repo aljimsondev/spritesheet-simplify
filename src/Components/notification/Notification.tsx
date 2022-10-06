@@ -6,8 +6,8 @@ import {
   AiOutlineExclamation,
   AiOutlineQuestion,
   AiOutlineCheck,
-  AiOutlineClose,
 } from "react-icons/ai";
+import { FaTimes } from "react-icons/fa";
 import { NotificationProps } from "./type";
 
 const Notification: NODE<NotificationProps> = (props) => {
@@ -68,7 +68,7 @@ const Notification: NODE<NotificationProps> = (props) => {
                   className="close-button default -xs centered"
                   onClick={props.onClose}
                 >
-                  <AiOutlineClose />
+                  <FaTimes />
                 </button>
               )}
             </div>

@@ -1,6 +1,6 @@
 import React from "react";
 import FabComponent from "./Components/button/FabComponent";
-import Sidebar from "./Components/menu/Sidebar";
+import Sidebar from "./Components/sidebar/Sidebar";
 import Modal from "./Components/modal";
 import ModalContent from "./Components/modal/ModalContent";
 import Navbar from "./Components/navbar/Navbar";
@@ -8,6 +8,7 @@ import Notification from "./Components/notification/Notification";
 import SpritesPreview from "./Components/preview/SpritesPreview";
 import { spriteRenderer } from "./renderer/SpriteRender";
 import { Context } from "./Store/store";
+import { CreateBuffer } from "./Components/AnimationEngine/CreateBuffer";
 
 //TODO add spritesheet preview
 
@@ -21,6 +22,7 @@ function App() {
   const defaultHeight = 0;
   const defaultWidth = 0;
   const [images, setImages] = React.useState<HTMLImageElement[][]>([]);
+  const [buffers, setBuffers] = React.useState<HTMLImageElement[]>([]);
   const [openModal, setModalState] = React.useState<boolean>(false);
   const [openModalPreview, setModalPreviewState] =
     React.useState<boolean>(false);
@@ -95,30 +97,25 @@ function App() {
     let arr: any[] = [];
     for (const key in Object.keys(files)) {
       let newblob = URL.createObjectURL(files[key]);
-      arr.push(newblob);
+      const blobImage = new Image();
+      blobImage.src = newblob;
+      blobImage.alt = files[key].name;
+      blobImage.onload = () => {
+        setImageObserver([
+          ...imageObserver,
+          {
+            width: blobImage.width,
+            height: blobImage.height,
+            index: images.length, //index where the image will be place in the images array
+          },
+        ]);
+      };
+
+      arr.push(blobImage);
     }
 
-    const col = arr.map((blob, index) => {
-      const image = new Image();
-
-      image.src = blob;
-      image.onload = () => {
-        if (index === 0) {
-          setImageObserver([
-            ...imageObserver,
-            {
-              width: image.width,
-              height: image.height,
-              index: images.length, //index where the image will be place in the images array
-            },
-          ]);
-        }
-      };
-      return image;
-    });
-
+    setImages([...images, arr]);
     arr = [];
-    setImages([...images, col]);
   };
   //clear state
   const clearSelection = () => {
@@ -231,6 +228,7 @@ function App() {
     setCanvasVisibility("block");
     try {
       drawImage();
+      getBuffers();
     } catch (e) {
       console.warn(e);
     }
@@ -247,6 +245,13 @@ function App() {
     properties.padding,
     properties.borderLine,
   ]);
+
+  //get all buffers
+  const getBuffers = React.useCallback(() => {
+    if (images.length > 0) {
+      setBuffers(CreateBuffer(images));
+    }
+  }, [images]);
 
   //handling of open preview modal
   const toogleModalPreview = () => {
@@ -293,9 +298,9 @@ function App() {
               style={{ display: canvasVisibility }}
             ></canvas>
           </div>
+          <FabComponent onClick={toogleState} />
         </div>
-        <Sidebar />
-        <FabComponent onClick={toogleState} />
+        <Sidebar buffers={buffers} />
         <Modal open={openModal}>
           <ModalContent toogleState={toogleState} />
         </Modal>
