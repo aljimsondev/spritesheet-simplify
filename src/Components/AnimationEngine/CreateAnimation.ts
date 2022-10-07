@@ -26,8 +26,8 @@ const CreateAnimation = (
     spriteProperties.height, //image sprite height
     x, //position x
     y, // position y
-    spriteProperties.width * 0.2, // sprite size width
-    spriteProperties.width * 0.2 //sprite size  height
+    width, // sprite size width
+    height //sprite size  height
   );
 };
 

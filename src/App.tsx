@@ -5,7 +5,6 @@ import Modal from "./Components/modal";
 import ModalContent from "./Components/modal/ModalContent";
 import Navbar from "./Components/navbar/Navbar";
 import Notification from "./Components/notification/Notification";
-import SpritesPreview from "./Components/preview/SpritesPreview";
 import { spriteRenderer } from "./renderer/SpriteRender";
 import { Context } from "./Store/store";
 import { CreateBuffer } from "./Components/AnimationEngine/CreateBuffer";
@@ -13,7 +12,7 @@ import { CreateBuffer } from "./Components/AnimationEngine/CreateBuffer";
 //TODO add spritesheet preview
 
 function App() {
-  const { properties, notification, notificationDispatch } =
+  const { properties, notification, notificationDispatch, setBuffers } =
     React.useContext(Context);
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -22,10 +21,7 @@ function App() {
   const defaultHeight = 0;
   const defaultWidth = 0;
   const [images, setImages] = React.useState<HTMLImageElement[][]>([]);
-  const [buffers, setBuffers] = React.useState<HTMLImageElement[]>([]);
   const [openModal, setModalState] = React.useState<boolean>(false);
-  const [openModalPreview, setModalPreviewState] =
-    React.useState<boolean>(false);
   const [canvasVisibility, setCanvasVisibility] = React.useState<
     "none" | "block"
   >("none");
@@ -204,7 +200,6 @@ function App() {
   const download = () => {
     //handle download
     if (canvasRef.current && images.length > 0) {
-      canvasRef.current.toDataURL("image/png");
       const dt = canvasRef.current.toDataURL("image/png");
       downloadButtonRef.current!.href = dt;
       downloadButtonRef.current?.click();
@@ -224,11 +219,16 @@ function App() {
     });
     return;
   };
+
+  const handleBuffer = React.useCallback(() => {
+    setBuffers(CreateBuffer(images));
+  }, [images]);
+
   React.useEffect(() => {
     setCanvasVisibility("block");
     try {
       drawImage();
-      getBuffers();
+      handleBuffer();
     } catch (e) {
       console.warn(e);
     }
@@ -246,18 +246,6 @@ function App() {
     properties.borderLine,
   ]);
 
-  //get all buffers
-  const getBuffers = React.useCallback(() => {
-    if (images.length > 0) {
-      setBuffers(CreateBuffer(images));
-    }
-  }, [images]);
-
-  //handling of open preview modal
-  const toogleModalPreview = () => {
-    setModalPreviewState((prevState) => !prevState);
-  };
-
   return (
     <>
       <div className="main-container">
@@ -268,7 +256,6 @@ function App() {
             downloadButtonRef={downloadButtonRef}
             download={download}
             handleOpenFileInput={handleOpenFileInput}
-            toogleModalPreview={toogleModalPreview}
           />
           <div id="canvas-wrapper" className="canvas-wrapper">
             <form>
@@ -300,12 +287,9 @@ function App() {
           </div>
           <FabComponent onClick={toogleState} />
         </div>
-        <Sidebar buffers={buffers} />
+        <Sidebar />
         <Modal open={openModal}>
           <ModalContent toogleState={toogleState} />
-        </Modal>
-        <Modal open={openModalPreview}>
-          <SpritesPreview toogleState={toogleModalPreview} images={images} />
         </Modal>
         <Notification
           type={notification.type}

@@ -29,8 +29,8 @@ function CreatePreviewThumbnail(
     spriteProps.height, //image sprite height
     0, //position x
     0, // position y
-    spriteProps.width * 0.2, // sprite size width
-    spriteProps.width * 0.2 //sprite size  height
+    width, // sprite size width
+    height //sprite size  height
   );
 }
 

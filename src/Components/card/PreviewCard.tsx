@@ -1,5 +1,6 @@
 import React from "react";
 import FormInput from "../form/FormInput";
+import "./preview.css";
 import { FaPlay, FaDownload, FaPause } from "react-icons/fa";
 import { BufferDatasetProperties } from "./types";
 import CreateAnimation from "../AnimationEngine/CreateAnimation";
@@ -29,7 +30,7 @@ const PreviewCard: React.FC<{
         const stringProps: string = buffer.dataset.props || "{}";
         const bufferProperties: BufferDatasetProperties =
           JSON.parse(stringProps);
-        maxFrame.current = buffer.width / bufferProperties.width - 1; //getting the maxframe
+        maxFrame.current = buffer.width / bufferProperties.width; //getting the maxframe
         //create thumbnail if preview is not yet played
         if (!playing.current) {
           CreatePreviewThumbnail(
@@ -39,6 +40,9 @@ const PreviewCard: React.FC<{
             defaultScreen.width,
             defaultScreen.height
           );
+          if (frameXTextRef.current) {
+            frameXTextRef.current.textContent = `X: ${frame.current}`;
+          }
         }
 
         //animation logic
@@ -101,12 +105,27 @@ const PreviewCard: React.FC<{
   }, [fps, play]);
 
   const handleChangeFps = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value: number = parseFloat(e.target.value);
-    setFps(value);
+    try {
+      const value: number = parseFloat(e.target.value);
+      setFps(value);
+    } catch (e) {
+      //error handle goes here
+      console.warn(e);
+    }
   };
 
   const handlePlayState = () => {
     playAnimation((prevState) => !prevState);
+  };
+
+  const handleDownload = () => {
+    const a = document.createElement("a");
+    const bufferProps: BufferDatasetProperties = JSON.parse(
+      buffer?.dataset.props || "{}"
+    );
+    a.href = buffer!.src;
+    a.download = bufferProps.name || "spritesheet.png";
+    a.click();
   };
 
   return (
@@ -141,9 +160,7 @@ const PreviewCard: React.FC<{
             <button
               type="button"
               className="btn-preview default"
-              onClick={(e) => {
-                console.log(e);
-              }}
+              onClick={handleDownload}
             >
               <FaDownload />
             </button>

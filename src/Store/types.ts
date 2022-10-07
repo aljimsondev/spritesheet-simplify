@@ -2,7 +2,6 @@ import { NotificationProps } from "../Components/notification/type";
 import {
   ComponentReducerActionType,
   NotificationReducerActions,
-  NotificationReducerType,
 } from "./reducers/types";
 
 export type StoreProps = {
@@ -24,4 +23,9 @@ export type ContextType = {
   notificationDispatch: React.Dispatch<
     ComponentReducerActionType<NotificationReducerActions, NotificationProps>
   >;
+  setBuffers: React.Dispatch<React.SetStateAction<HTMLImageElement[]>>;
+  buffers: HTMLImageElement[];
+  openMenu: boolean;
+  toogleMenu: () => void;
+  sidebarRef: React.RefObject<HTMLDivElement>;
 };

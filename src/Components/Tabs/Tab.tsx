@@ -7,13 +7,17 @@ type TabProps = {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   tabIndex?: number;
   tabLabel: string;
+  ariaSelected?: boolean;
 };
 
 type TabType = (props: TabProps) => JSX.Element;
 
-export const Tab: TabType = ({ onClick, isActive, tabIndex, tabLabel }) => {
+export const Tab: TabType = (props) => {
+  const { onClick, isActive, tabIndex, tabLabel, ariaSelected } = props;
+
   return (
     <button
+      aria-selected={ariaSelected}
       onClick={onClick}
       tabIndex={tabIndex}
       className={isActive ? "sidebar-btn-active" : ""}

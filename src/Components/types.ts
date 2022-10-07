@@ -6,7 +6,6 @@ export type NavbarProps = {
   downloadButtonRef: React.RefObject<HTMLAnchorElement>;
   download: () => void;
   handleOpenFileInput: () => void;
-  toogleModalPreview: () => void;
 };
 
 export type NavMenuInputProps = {};

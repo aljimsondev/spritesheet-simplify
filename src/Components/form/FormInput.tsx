@@ -81,7 +81,7 @@ const FormInput: NODE<FormInputProps> = ({
         placeholder={placeholder}
         min={0}
         type={type || "text"}
-        value={value}
+        value={value ? value : ""}
       />
     </div>
   );
