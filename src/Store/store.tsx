@@ -31,6 +31,8 @@ export const Context = React.createContext<ContextType>({
   openMenu: true,
   toogleMenu: () => {},
   sidebarRef: { current: null },
+  reloadApp: false,
+  handleReload: () => {},
 });
 
 const Store: Child<StoreProps> = ({ children }) => {
@@ -46,12 +48,24 @@ const Store: Child<StoreProps> = ({ children }) => {
   const [buffers, setBuffers] = React.useState<HTMLImageElement[]>([]);
   const [open, setMenuStatus] = React.useState<boolean>(true);
   const sidebarRef = React.useRef<HTMLDivElement>(null);
+  const [reloadApp, setReloadApp] = React.useState(false);
+
   const toogleMenu = React.useCallback(() => {
     setMenuStatus((prevMenuState) => !prevMenuState);
     if (sidebarRef.current) {
       sidebarRef.current.classList.toggle("--close");
     }
   }, [sidebarRef.current]);
+
+  const handleReload = () => {
+    setReloadApp(true);
+  };
+
+  React.useEffect(() => {
+    return () => {
+      setReloadApp(false);
+    };
+  }, [reloadApp]);
 
   return (
     <Context.Provider
@@ -65,6 +79,8 @@ const Store: Child<StoreProps> = ({ children }) => {
         openMenu: open,
         toogleMenu: toogleMenu,
         sidebarRef: sidebarRef,
+        reloadApp: reloadApp,
+        handleReload: handleReload,
       }}
     >
       {children}

@@ -6,6 +6,7 @@ import {
   AiOutlineDownload,
   AiOutlinePlus,
   AiOutlineClose,
+  AiOutlineReload,
 } from "react-icons/ai";
 import { FaBars } from "react-icons/fa";
 import NavbarButton from "../button/NavbarButton";
@@ -21,9 +22,15 @@ const Navbar: NODE<NavbarProps> = ({
 }) => {
   const dropdownRef = React.useRef(null);
   const [open, setOpen] = React.useState<boolean>(false);
-  const { toogleMenu, openMenu } = React.useContext(Context);
+  const { toogleMenu, openMenu, handleReload } = React.useContext(Context);
 
   const navData = [
+    {
+      icon: <AiOutlineReload size={25} color="#fa614d" />,
+      onClick: handleReload,
+      tooltip: true,
+      tooltipLabel: "Reload",
+    },
     {
       icon: <AiOutlinePlus size={25} color="#fa614d" />,
       onClick: clearSelection,

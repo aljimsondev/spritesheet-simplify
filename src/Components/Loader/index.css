@@ -1,0 +1,35 @@
+.loader-base {
+  padding: 10px;
+  position: relative;
+  display: flex;
+}
+
+.loader-base span {
+  min-height: 1rem;
+  min-width: 1rem;
+  margin: 5px;
+  border-radius: 50%;
+  animation: animate 2.25s ease-in-out infinite;
+}
+.loader-base span:nth-child(1) {
+  animation-delay: 250ms;
+}
+.loader-base span:nth-child(2) {
+  animation-delay: 500ms;
+}
+.loader-base span:nth-child(3) {
+  animation-delay: 750ms;
+}
+@keyframes animate {
+  0% {
+    transform: scale(1);
+    background: gray;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1.4);
+    background: blue;
+  }
+}

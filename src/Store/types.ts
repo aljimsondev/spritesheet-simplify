@@ -28,4 +28,6 @@ export type ContextType = {
   openMenu: boolean;
   toogleMenu: () => void;
   sidebarRef: React.RefObject<HTMLDivElement>;
+  reloadApp: boolean;
+  handleReload: () => void;
 };

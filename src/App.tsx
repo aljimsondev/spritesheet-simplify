@@ -8,12 +8,22 @@ import Notification from "./Components/notification/Notification";
 import { spriteRenderer } from "./renderer/SpriteRender";
 import { Context } from "./Store/store";
 import { CreateBuffer } from "./Components/AnimationEngine/CreateBuffer";
+import {
+  fetchToLocalStorage,
+  saveToLocalStorage,
+} from "./Components/helpers/LocalStorageHelper";
+import { ConvertToBase64 } from "./Components/helpers/ToBase64";
 
 //TODO add spritesheet preview
 
 function App() {
-  const { properties, notification, notificationDispatch, setBuffers } =
-    React.useContext(Context);
+  const {
+    properties,
+    notification,
+    notificationDispatch,
+    setBuffers,
+    reloadApp,
+  } = React.useContext(Context);
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const downloadButtonRef = React.useRef<HTMLAnchorElement>(null);
@@ -91,8 +101,11 @@ function App() {
     const files = e.target.files!;
 
     let arr: any[] = [];
+    let blobDatas: any[] = [];
+    let blobData = {};
     for (const key in Object.keys(files)) {
       let newblob = URL.createObjectURL(files[key]);
+      blobData = { src: newblob, blobName: files[key].name };
       const blobImage = new Image();
       blobImage.src = newblob;
       blobImage.alt = files[key].name;
@@ -106,11 +119,13 @@ function App() {
           },
         ]);
       };
-
+      blobDatas.push(blobData);
       arr.push(blobImage);
     }
-
-    setImages([...images, arr]);
+    console.log(blobDatas);
+    setImages([...images, arr]); //setting updated images array
+    ConvertToBase64(arr[0]);
+    saveToLocalStorage("images", {}); //saving of images to local storage
     arr = [];
   };
   //clear state
@@ -227,8 +242,8 @@ function App() {
   React.useEffect(() => {
     setCanvasVisibility("block");
     try {
-      drawImage();
-      handleBuffer();
+      drawImage(); //drawing of images in canvas
+      handleBuffer(); //processing of buffers
     } catch (e) {
       console.warn(e);
     }
@@ -245,6 +260,15 @@ function App() {
     properties.padding,
     properties.borderLine,
   ]);
+
+  React.useEffect(() => {
+    const localImages = fetchToLocalStorage("images");
+    console.log(localImages);
+    // setImages(localImages);
+    return () => {
+      setImages([]); //clean up
+    };
+  }, [reloadApp]);
 
   return (
     <>
