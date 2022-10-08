@@ -7,9 +7,16 @@ export const fetchToLocalStorage = (key: string) => {
 
 export const saveToLocalStorage = (key: string, value: any) => {
   try {
-    console.log(value);
     const stringifyValue = JSON.stringify(value);
     localStorage.setItem(key, stringifyValue);
+  } catch (e) {
+    throw new Error(`${e}`);
+  }
+};
+
+export const removeFromLocalStorage = (key: string) => {
+  try {
+    localStorage.removeItem(key);
   } catch (e) {
     throw new Error(`${e}`);
   }

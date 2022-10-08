@@ -42,3 +42,15 @@ export type FormInputProps = {
   placeholder?: string;
   onValueChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
+
+export type BufferData = {
+  data: string | ArrayBuffer | null;
+  name: File["name"];
+  lastSize: File["size"];
+  arrayBuffer: File["arrayBuffer"];
+  slice: File["slice"];
+  stream: File["stream"];
+  text: File["text"];
+  type: File["type"];
+  webkitRelativePath: File["webkitRelativePath"];
+};

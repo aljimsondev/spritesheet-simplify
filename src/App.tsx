@@ -10,130 +10,62 @@ import { Context } from "./Store/store";
 import { CreateBuffer } from "./Components/AnimationEngine/CreateBuffer";
 import {
   fetchToLocalStorage,
+  removeFromLocalStorage,
   saveToLocalStorage,
 } from "./Components/helpers/LocalStorageHelper";
 import { ConvertToBase64 } from "./Components/helpers/ToBase64";
+import { BufferData } from "./Components/types";
+import LoadBase64Images from "./Components/helpers/LoadBase64Files";
+import Renderer from "./renderer";
 
 //TODO add spritesheet preview
 
 function App() {
-  const {
-    properties,
-    notification,
-    notificationDispatch,
-    setBuffers,
-    reloadApp,
-  } = React.useContext(Context);
+  const { properties, notification, notificationDispatch, reloadApp } =
+    React.useContext(Context);
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const downloadButtonRef = React.useRef<HTMLAnchorElement>(null);
-  const canvasRef = React.useRef<HTMLCanvasElement>(null);
-  const defaultHeight = 0;
-  const defaultWidth = 0;
-  const [images, setImages] = React.useState<HTMLImageElement[][]>([]);
+  const canvasWrapperRef = React.useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [buffers, setBuffers] = React.useState<BufferData[][]>([]);
+
   const [openModal, setModalState] = React.useState<boolean>(false);
   const [canvasVisibility, setCanvasVisibility] = React.useState<
     "none" | "block"
   >("none");
-  const [imageObserver, setImageObserver] = React.useState<
-    {
-      height: number;
-      width: number;
-      index: number;
-    }[]
-  >([]);
+
+  const renderer = new Renderer();
+
+  renderer.setImageSpriteProps({
+    borderLine: properties.borderLine,
+    imageHeight: properties.height,
+    imageWidth: properties.width,
+    padding: properties.padding,
+  });
+
   const toogleState = () => {
     setModalState((prevState) => !prevState);
   };
 
-  //getting the total combine with of the highest column
-  function getTotalWidth(index: number) {
-    const totalWidthCombine = images[index].reduce((total, img: any) => {
-      const props: any = properties; //input value returns string to we need to parse it
-      if (props.width) {
-        let propsWidth: any = parseFloat(props.width);
-        return (total += propsWidth);
-      } else {
-        return (total += parseInt(img.width));
-      }
-    }, 0);
-    return totalWidthCombine;
-  }
-  //canvas width calculation
-  const canvasWidth = React.useMemo(() => {
-    let highestWidth = 0;
-
-    for (let i = 0; i < images.length; i++) {
-      let width = getTotalWidth(i);
-      if (width > highestWidth) {
-        highestWidth = width;
-      }
-    }
-
-    return highestWidth;
-  }, [imageObserver, images, properties.width, properties.height]);
-
-  //canvas height calculation
-  const canvasHeight = React.useMemo(() => {
-    const props: any = properties;
-    //override type to use parsefloat to avoid red warning , yeah i get it im lazy
-    const totalInitalHeight = imageObserver.reduce((total, data) => {
-      if (properties.height) {
-        //custom height
-        if (images.length > 1) {
-          const combinePropsTotal =
-            parseFloat(props.height) + parseFloat(props.padding);
-          return combinePropsTotal * imageObserver.length; //with padding
-        }
-        return parseFloat(props.height) * imageObserver.length; //without padding
-      } else {
-        if (images.length > 1) {
-          return (total += data.height + parseFloat(props.padding)); //with padding
-        } else {
-          return (total += data.height); //without padding
-        }
-      }
-    }, 0);
-    return totalInitalHeight;
-  }, [imageObserver, images, properties.height, properties.padding]);
   //handle image selection
-  const handleSelectImages = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSelectImages = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files!;
 
-    let arr: any[] = [];
-    let blobDatas: any[] = [];
-    let blobData = {};
-    for (const key in Object.keys(files)) {
-      let newblob = URL.createObjectURL(files[key]);
-      blobData = { src: newblob, blobName: files[key].name };
-      const blobImage = new Image();
-      blobImage.src = newblob;
-      blobImage.alt = files[key].name;
-      blobImage.onload = () => {
-        setImageObserver([
-          ...imageObserver,
-          {
-            width: blobImage.width,
-            height: blobImage.height,
-            index: images.length, //index where the image will be place in the images array
-          },
-        ]);
-      };
-      blobDatas.push(blobData);
-      arr.push(blobImage);
-    }
-    console.log(blobDatas);
-    setImages([...images, arr]); //setting updated images array
-    ConvertToBase64(arr[0]);
-    saveToLocalStorage("images", {}); //saving of images to local storage
-    arr = [];
+    const data = await LoadBase64Images(files); // now holds that images
+    setBuffers([...buffers, data]); //append new data in the buffers
+    saveToLocalStorage("blobs", [...buffers, data]); // save to local storage
+    renderer.loadBuffers([...buffers, data]).then((data) => {
+      if (data) {
+        setLoading(true);
+      }
+    });
   };
   //clear state
   const clearSelection = () => {
     //clear selection
-    if (images.length > 0) {
-      setImages([]);
-      setImageObserver([]);
+    if (buffers.length > 0) {
+      removeFromLocalStorage("blobs");
       downloadButtonRef.current!.href = "";
       //dispatch notification
       notificationDispatch({
@@ -164,48 +96,6 @@ function App() {
       },
     });
   };
-  //draw the image
-  function drawImage() {
-    const canvas = canvasRef.current!;
-    if (canvas) {
-      const ctx = canvas.getContext("2d")!;
-      let currentPositionY = 0;
-      if (images.length > 0) {
-        canvas.height = canvasHeight;
-        canvas.width = canvasWidth; //set canvas width to highest instance of sprites
-
-        for (let row = 0; row < images.length; row++) {
-          spriteRenderer({
-            context: ctx,
-            borderLine: properties.borderLine,
-            height: properties.height,
-            width: properties.width,
-            images: images[row],
-            y: currentPositionY,
-          });
-          if (images.length > 0 && imageObserver[row]) {
-            //consist of more than 1 columns, add padding  to give space of each column sprites
-            if (properties.height) {
-              currentPositionY += properties.height + properties.padding;
-            } else {
-              currentPositionY +=
-                imageObserver[row].height + properties.padding;
-            }
-          } else if (images.length === 0 && imageObserver[row]) {
-            if (properties.height) {
-              currentPositionY += properties.height;
-            } else {
-              currentPositionY += imageObserver[row].height;
-            }
-          }
-        }
-      } else {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        canvas.width = defaultWidth;
-        canvas.height = defaultHeight;
-      }
-    }
-  }
 
   //handling file input programmatically
   const handleOpenFileInput = () => {
@@ -214,11 +104,7 @@ function App() {
   //download of spritesheet
   const download = () => {
     //handle download
-    if (canvasRef.current && images.length > 0) {
-      const dt = canvasRef.current.toDataURL("image/png");
-      downloadButtonRef.current!.href = dt;
-      downloadButtonRef.current?.click();
-    }
+    renderer.download(properties.fileName);
     //dispatch notification
     notificationDispatch({
       type: "ADD_NOTIFICATION",
@@ -235,40 +121,45 @@ function App() {
     return;
   };
 
-  const handleBuffer = React.useCallback(() => {
-    setBuffers(CreateBuffer(images));
-  }, [images]);
+  React.useEffect(() => {
+    //fetch blobs to localstorage
+    const localBlobs = fetchToLocalStorage("blobs");
+    if (!localBlobs) return;
+    setBuffers(localBlobs);
+
+    return () => {
+      setBuffers([]); //clean up
+    };
+  }, [reloadApp]);
 
   React.useEffect(() => {
     setCanvasVisibility("block");
     try {
-      drawImage(); //drawing of images in canvas
-      handleBuffer(); //processing of buffers
+      (async () => {
+        await renderer.loadBuffers(buffers).then((data) => {
+          console.log(data + " in useEffect");
+        });
+        if (canvasWrapperRef.current) {
+          await renderer.render(canvasWrapperRef.current);
+        }
+      })();
     } catch (e) {
       console.warn(e);
     }
-
     return () => {
       //clean up function
       setCanvasVisibility("none");
+      setLoading(false);
     };
   }, [
-    imageObserver,
-    images,
+    buffers,
+    loading,
     properties.height,
     properties.width,
     properties.padding,
     properties.borderLine,
+    reloadApp,
   ]);
-
-  React.useEffect(() => {
-    const localImages = fetchToLocalStorage("images");
-    console.log(localImages);
-    // setImages(localImages);
-    return () => {
-      setImages([]); //clean up
-    };
-  }, [reloadApp]);
 
   return (
     <>
@@ -281,34 +172,30 @@ function App() {
             download={download}
             handleOpenFileInput={handleOpenFileInput}
           />
-          <div id="canvas-wrapper" className="canvas-wrapper">
-            <form>
-              <input
-                id="upload"
-                type="file"
-                accept="image/*"
-                onChange={handleSelectImages}
-                onClick={(event) =>
-                  ((event.target as HTMLInputElement).value = "")
-                }
-                multiple
-                ref={fileInputRef}
-              />
-              <a
-                id="download"
-                className="nav-button centered"
-                download={`${
-                  properties.fileName + ".png" || "spritesheet.png"
-                }`}
-                ref={downloadButtonRef}
-              ></a>
-            </form>
-            <canvas
-              id="canvas"
-              ref={canvasRef}
-              style={{ display: canvasVisibility }}
-            ></canvas>
-          </div>
+          <div
+            ref={canvasWrapperRef}
+            id="canvas-wrapper"
+            className="canvas-wrapper"
+          ></div>
+          <form>
+            <input
+              id="upload"
+              type="file"
+              accept="image/*"
+              onChange={handleSelectImages}
+              onClick={(event) =>
+                ((event.target as HTMLInputElement).value = "")
+              }
+              multiple
+              ref={fileInputRef}
+            />
+            <a
+              id="download"
+              className="nav-button centered"
+              download={`${properties.fileName + ".png" || "spritesheet.png"}`}
+              ref={downloadButtonRef}
+            ></a>
+          </form>
           <FabComponent onClick={toogleState} />
         </div>
         <Sidebar />
