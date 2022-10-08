@@ -4,7 +4,6 @@ export function disableZoom(el: HTMLElement) {
     (event) => {
       if (event.ctrlKey) {
         event.preventDefault();
-        console.log("called");
       }
     },
     false

@@ -113,6 +113,7 @@ function App() {
   //runs in first render and reload
   React.useEffect(() => {
     disableZoom(document.getElementById("root")!);
+    renderer.listen(canvasWrapperRef.current!);
     //fetch blobs to localstorage
     const localBlobs = fetchToLocalStorage("blobs");
     if (!localBlobs) return;
@@ -144,6 +145,12 @@ function App() {
     properties.padding,
     properties.borderLine,
   ]);
+
+  window.addEventListener("keyup", (e) => {
+    if (e.code === "ControlLeft") {
+      renderer.resizeEnd();
+    }
+  });
 
   return (
     <>

@@ -12,6 +12,8 @@ interface Renderer {
   buffers: BufferData[][];
   images: HTMLImageElement[][];
   spritesheets: HTMLImageElement[];
+  focus: boolean;
+  _RAF: any;
 }
 
 class Renderer {
@@ -19,6 +21,8 @@ class Renderer {
     this.images = [];
     this.spritesheets = [];
     this.#init();
+    this.focus = false;
+    this._RAF = null;
   }
 
   setImageSpriteProps(args: {
@@ -125,6 +129,27 @@ class Renderer {
     //TODO create here
   }
 
+  resize(e: WheelEvent) {
+    let running = false;
+
+    if (!running) {
+      this.focus = true;
+      this.drawCanvas(0);
+    }
+    running = true;
+  }
+  resizeEnd() {
+    this.focus = false;
+    cancelAnimationFrame(this._RAF);
+  }
+  listen(el: HTMLElement) {
+    el.addEventListener("wheel", (e) => {
+      if (e.ctrlKey) {
+        this.resize(e);
+      }
+    });
+  }
+
   getTotalWidth(imagesArray: HTMLImageElement[]) {
     if (imagesArray.length > 0) {
       const totalWidthCombine = imagesArray.reduce((total, img: any) => {
@@ -140,6 +165,7 @@ class Renderer {
 
     return 0;
   }
+
   getCanvasHeight() {
     let totalHeight = 0;
 
@@ -163,6 +189,7 @@ class Renderer {
     }
     return totalHeight;
   }
+
   async download(fileName: string) {
     return new Promise<boolean>((resolve, reject) => {
       try {
@@ -181,6 +208,45 @@ class Renderer {
       }
     });
   }
+  async drawCanvas(time: number) {
+    if (this.images.length > 0) {
+      this.canvas.width = this.getCanvasWidth();
+      this.canvas.height = this.getCanvasHeight();
+      let currentPositionY = 0;
+      for (let row = 0; row < this.images.length; row++) {
+        this.loadRowData(this.images[row], this.context, currentPositionY, {
+          imageWidth: this.imageSpriteProps.imageWidth,
+          imageHeight: this.imageSpriteProps.imageHeight,
+          borderLine: this.imageSpriteProps.borderLine,
+        });
+
+        if (this.images.length > 0) {
+          //consist of more than 1 row, add padding  to give space of each column sprites
+          if (this.imageSpriteProps.imageHeight) {
+            currentPositionY +=
+              this.imageSpriteProps.imageHeight + this.imageSpriteProps.padding;
+          } else {
+            currentPositionY +=
+              this.images[row][0].height + this.imageSpriteProps.padding;
+          }
+        } else if (this.images.length === 1) {
+          //only 1 row
+          if (this.imageSpriteProps.imageHeight) {
+            currentPositionY += this.imageSpriteProps.imageHeight;
+          } else {
+            currentPositionY += this.images[row][0].height;
+          }
+        }
+      }
+    } else {
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.canvas.width = 0;
+      this.canvas.height = 0;
+    }
+    if (this.focus) {
+      this._RAF = requestAnimationFrame(this.drawCanvas.bind(this));
+    }
+  }
   /**
    * Render the canvas the in the parent element in the DOM
    * @param parentEl - Parent Element
@@ -189,43 +255,7 @@ class Renderer {
   async render(parentEl: HTMLElement) {
     return new Promise<boolean>((resolve, reject) => {
       try {
-        if (this.images.length > 0) {
-          this.canvas.width = this.getCanvasWidth();
-          this.canvas.height = this.getCanvasHeight();
-          let currentPositionY = 0;
-
-          for (let row = 0; row < this.images.length; row++) {
-            this.loadRowData(this.images[row], this.context, currentPositionY, {
-              imageWidth: this.imageSpriteProps.imageWidth,
-              imageHeight: this.imageSpriteProps.imageHeight,
-              borderLine: this.imageSpriteProps.borderLine,
-            });
-
-            if (this.images.length > 0) {
-              //consist of more than 1 row, add padding  to give space of each column sprites
-              if (this.imageSpriteProps.imageHeight) {
-                currentPositionY +=
-                  this.imageSpriteProps.imageHeight +
-                  this.imageSpriteProps.padding;
-              } else {
-                currentPositionY +=
-                  this.images[row][0].height + this.imageSpriteProps.padding;
-              }
-            } else if (this.images.length === 1) {
-              //only 1 row
-              if (this.imageSpriteProps.imageHeight) {
-                currentPositionY += this.imageSpriteProps.imageHeight;
-              } else {
-                currentPositionY += this.images[row][0].height;
-              }
-            }
-          }
-        } else {
-          this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-          this.canvas.width = 0;
-          this.canvas.height = 0;
-        }
-
+        this.drawCanvas(0);
         if (parentEl.childElementCount > 0) {
           for (let key in Object.keys(parentEl.childNodes)) {
             //remove all children there is
