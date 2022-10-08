@@ -11,22 +11,35 @@ interface Renderer {
   };
   buffers: BufferData[][];
   images: HTMLImageElement[][];
+  spritesheets: HTMLImageElement[];
 }
 
 class Renderer {
   constructor() {
     this.images = [];
-    this.init();
+    this.spritesheets = [];
+    this.#init();
   }
 
-  setImageSpriteProps(args: this["imageSpriteProps"]) {
+  setImageSpriteProps(args: {
+    padding: number;
+    imageWidth: number;
+    imageHeight: number;
+    borderLine: boolean;
+  }) {
     this.imageSpriteProps = args;
   }
-  init() {
+  #init() {
     this.canvas = document.createElement("canvas");
+    this.canvas.id = "canvas";
     this.context = this.canvas.getContext("2d")!;
   }
-  async loadBuffers(buffers: this["buffers"]) {
+  /**
+   * Load the base64 data and convert it to HTML images
+   * @param buffers
+   * @returns
+   */
+  async loadBuffers(buffers: BufferData[][]) {
     if (buffers.length <= 0) return;
 
     return new Promise<boolean>((resolve, reject) => {
@@ -52,16 +65,30 @@ class Renderer {
       }
     });
   }
-  async loadRowData(imagesArray: HTMLImageElement[], posY: number) {
+  /**
+   * Loads the images row and render it in the canvas
+   * @param imagesArray
+   * @param posY
+   */
+  async loadRowData(
+    imagesArray: HTMLImageElement[],
+    context: CanvasRenderingContext2D,
+    posY: number,
+    options?: {
+      imageWidth?: number;
+      imageHeight?: number;
+      borderLine?: boolean;
+    }
+  ) {
     let startingPositionX = 0; //entry point of rendering
     for (let i = 0; i < imagesArray.length; i++) {
       const image = imagesArray[i];
-      if (this.imageSpriteProps.imageWidth) {
-        startingPositionX = this.imageSpriteProps.imageWidth;
+      if (options?.imageWidth) {
+        startingPositionX = options.imageWidth;
       } else {
         startingPositionX = image.width;
       }
-      this.context.drawImage(
+      context.drawImage(
         image, //image
         0, //image source x
         0, //image source y
@@ -69,15 +96,15 @@ class Renderer {
         image.height, //image sprite height
         i * startingPositionX, //position x
         posY, // position y
-        this.imageSpriteProps.imageWidth || image.width,
-        this.imageSpriteProps.imageHeight || image.height
+        options?.imageWidth || image.width,
+        options?.imageHeight || image.height
       );
-      if (this.imageSpriteProps.borderLine) {
-        this.context.strokeRect(
+      if (options?.borderLine) {
+        context.strokeRect(
           i * startingPositionX,
           posY,
-          this.imageSpriteProps.imageWidth || image.width,
-          this.imageSpriteProps.imageHeight || image.height
+          options?.imageWidth || image.width,
+          options?.imageHeight || image.height
         );
       }
     }
@@ -94,6 +121,10 @@ class Renderer {
 
     return highestWidth;
   }
+  createAnimationSpriteSheet() {
+    //TODO create here
+  }
+
   getTotalWidth(imagesArray: HTMLImageElement[]) {
     if (imagesArray.length > 0) {
       const totalWidthCombine = imagesArray.reduce((total, img: any) => {
@@ -132,26 +163,43 @@ class Renderer {
     }
     return totalHeight;
   }
-  download(fileName: string) {
-    if (this.images.length > 0) {
-      // const blob = this.canvas.toDataURL("image/png");
-      // const a = document.createElement("a");
-      // a.download = `${fileName || "spritesheet"}.png`;
-      // a.href = blob;
-      // a.click();
-    }
+  async download(fileName: string) {
+    return new Promise<boolean>((resolve, reject) => {
+      try {
+        if (this.images.length > 0) {
+          const blob = this.canvas.toDataURL("image/png");
+          const a = document.createElement("a");
+          a.download = `${fileName || "spritesheet"}.png`;
+          a.href = blob;
+          a.click();
+
+          return resolve(true);
+        }
+        return resolve(false);
+      } catch (e) {
+        reject(e);
+      }
+    });
   }
+  /**
+   * Render the canvas the in the parent element in the DOM
+   * @param parentEl - Parent Element
+   * @returns
+   */
   async render(parentEl: HTMLElement) {
-    return new Promise<HTMLCanvasElement>((resolve, reject) => {
+    return new Promise<boolean>((resolve, reject) => {
       try {
         if (this.images.length > 0) {
           this.canvas.width = this.getCanvasWidth();
           this.canvas.height = this.getCanvasHeight();
-
           let currentPositionY = 0;
 
           for (let row = 0; row < this.images.length; row++) {
-            this.loadRowData(this.images[row], currentPositionY);
+            this.loadRowData(this.images[row], this.context, currentPositionY, {
+              imageWidth: this.imageSpriteProps.imageWidth,
+              imageHeight: this.imageSpriteProps.imageHeight,
+              borderLine: this.imageSpriteProps.borderLine,
+            });
 
             if (this.images.length > 0) {
               //consist of more than 1 row, add padding  to give space of each column sprites
@@ -177,17 +225,22 @@ class Renderer {
           this.canvas.width = 0;
           this.canvas.height = 0;
         }
-        console.log(parentEl.childElementCount);
-        // if(parentEl.childElementCount > 0){
-        //   parentEl.removeChild()
-        // }
-        // resolve(parentEl.appendChild(this.canvas));
+
+        if (parentEl.childElementCount > 0) {
+          for (let key in Object.keys(parentEl.childNodes)) {
+            //remove all children there is
+            parentEl.removeChild(parentEl.childNodes[key]);
+          }
+          parentEl.appendChild(this.canvas);
+          return;
+        }
+        parentEl.appendChild(this.canvas);
+        resolve(true);
       } catch (e) {
         reject(e);
       }
     });
   }
-  async destroy() {}
 }
 
 export default Renderer;

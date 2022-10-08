@@ -1,5 +1,5 @@
 import React from "react";
-import { BufferDatasetProperties } from "../card/types";
+import { BufferDatasetProperties } from "../Components/card/types";
 import { calculateAspectRatioFit } from "./CalculateImageRatio";
 
 function CreatePreviewThumbnail(

@@ -5,20 +5,16 @@ import Modal from "./Components/modal";
 import ModalContent from "./Components/modal/ModalContent";
 import Navbar from "./Components/navbar/Navbar";
 import Notification from "./Components/notification/Notification";
-import { spriteRenderer } from "./renderer/SpriteRender";
 import { Context } from "./Store/store";
-import { CreateBuffer } from "./Components/AnimationEngine/CreateBuffer";
 import {
   fetchToLocalStorage,
   removeFromLocalStorage,
   saveToLocalStorage,
 } from "./Components/helpers/LocalStorageHelper";
-import { ConvertToBase64 } from "./Components/helpers/ToBase64";
 import { BufferData } from "./Components/types";
 import LoadBase64Images from "./Components/helpers/LoadBase64Files";
 import Renderer from "./renderer";
-
-//TODO add spritesheet preview
+import { disableZoom } from "./EventHandler/DisableZoom";
 
 function App() {
   const { properties, notification, notificationDispatch, reloadApp } =
@@ -27,13 +23,9 @@ function App() {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const downloadButtonRef = React.useRef<HTMLAnchorElement>(null);
   const canvasWrapperRef = React.useRef<HTMLDivElement>(null);
-  const [loading, setLoading] = React.useState<boolean>(false);
   const [buffers, setBuffers] = React.useState<BufferData[][]>([]);
 
   const [openModal, setModalState] = React.useState<boolean>(false);
-  const [canvasVisibility, setCanvasVisibility] = React.useState<
-    "none" | "block"
-  >("none");
 
   const renderer = new Renderer();
 
@@ -55,18 +47,14 @@ function App() {
     const data = await LoadBase64Images(files); // now holds that images
     setBuffers([...buffers, data]); //append new data in the buffers
     saveToLocalStorage("blobs", [...buffers, data]); // save to local storage
-    renderer.loadBuffers([...buffers, data]).then((data) => {
-      if (data) {
-        setLoading(true);
-      }
-    });
   };
+
   //clear state
   const clearSelection = () => {
     //clear selection
     if (buffers.length > 0) {
-      removeFromLocalStorage("blobs");
-      downloadButtonRef.current!.href = "";
+      removeFromLocalStorage("blobs"); //remove buffers
+      setBuffers([]);
       //dispatch notification
       notificationDispatch({
         type: "ADD_NOTIFICATION",
@@ -102,26 +90,29 @@ function App() {
     fileInputRef.current?.click();
   };
   //download of spritesheet
-  const download = () => {
-    //handle download
-    renderer.download(properties.fileName);
-    //dispatch notification
-    notificationDispatch({
-      type: "ADD_NOTIFICATION",
-      payload: {
-        dismissable: true,
-        onClose: () => {
-          notificationDispatch({ type: "RESET_NOTIFICATION" });
-        },
-        open: true,
-        text: "Opss, looks like you have not created any Spritesheet yet!",
-        type: "warning",
-      },
+  const download = React.useCallback(async () => {
+    await renderer.download(properties.fileName).then((data) => {
+      if (!data) {
+        //dispatch notification
+        notificationDispatch({
+          type: "ADD_NOTIFICATION",
+          payload: {
+            dismissable: true,
+            onClose: () => {
+              notificationDispatch({ type: "RESET_NOTIFICATION" });
+            },
+            open: true,
+            text: "Opss, looks like you have not created any Spritesheet yet!",
+            type: "warning",
+          },
+        });
+      }
     });
-    return;
-  };
+  }, [buffers]);
 
+  //runs in first render and reload
   React.useEffect(() => {
+    disableZoom(document.getElementById("root")!);
     //fetch blobs to localstorage
     const localBlobs = fetchToLocalStorage("blobs");
     if (!localBlobs) return;
@@ -133,12 +124,9 @@ function App() {
   }, [reloadApp]);
 
   React.useEffect(() => {
-    setCanvasVisibility("block");
     try {
       (async () => {
-        await renderer.loadBuffers(buffers).then((data) => {
-          console.log(data + " in useEffect");
-        });
+        await renderer.loadBuffers(buffers).then((data) => {});
         if (canvasWrapperRef.current) {
           await renderer.render(canvasWrapperRef.current);
         }
@@ -148,17 +136,13 @@ function App() {
     }
     return () => {
       //clean up function
-      setCanvasVisibility("none");
-      setLoading(false);
     };
   }, [
     buffers,
-    loading,
     properties.height,
     properties.width,
     properties.padding,
     properties.borderLine,
-    reloadApp,
   ]);
 
   return (
@@ -189,12 +173,6 @@ function App() {
               multiple
               ref={fileInputRef}
             />
-            <a
-              id="download"
-              className="nav-button centered"
-              download={`${properties.fileName + ".png" || "spritesheet.png"}`}
-              ref={downloadButtonRef}
-            ></a>
           </form>
           <FabComponent onClick={toogleState} />
         </div>

@@ -3,8 +3,8 @@ import FormInput from "../form/FormInput";
 import "./preview.css";
 import { FaPlay, FaDownload, FaPause } from "react-icons/fa";
 import { BufferDatasetProperties } from "./types";
-import CreateAnimation from "../AnimationEngine/CreateAnimation";
-import CreatePreviewThumbnail from "../AnimationEngine/CreatePreviewThumbnail";
+import CreateAnimation from "../../renderer/CreateAnimation";
+import CreatePreviewThumbnail from "../../renderer/CreatePreviewThumbnail";
 import Loader from "../Loader";
 
 //config must be global to allow configuration for the user whatever they desired

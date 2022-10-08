@@ -1,5 +1,4 @@
 import React from "react";
-import { useLocalStorage } from "../storage";
 
 //create buffer from the array of images
 export const useCreateBuffer = (images: HTMLImageElement[][]) => {
