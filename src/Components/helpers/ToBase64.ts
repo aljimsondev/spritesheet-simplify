@@ -16,13 +16,6 @@ export const ConvertToBase64 = async (file: File) => {
         resolve({
           data: reader.result,
           name: file.name,
-          lastSize: file.size,
-          arrayBuffer: file.arrayBuffer,
-          slice: file.slice,
-          stream: file.stream,
-          text: file.text,
-          type: file.type,
-          webkitRelativePath: file.webkitRelativePath,
         });
       };
     } catch (e) {

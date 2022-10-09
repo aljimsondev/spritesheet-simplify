@@ -5,9 +5,25 @@ import NavMenuForm from "../form/NavMenuForm";
 import "./sidebar.css";
 import PreviewCard from "../card/PreviewCard";
 import { Context } from "../../Store/store";
+import Renderer from "../../renderer";
 
 const Sidebar: React.FC<{}> = () => {
   const { buffers, sidebarRef } = React.useContext(Context);
+  const [sprites, setSprites] = React.useState<HTMLImageElement[]>([]);
+
+  React.useEffect(() => {
+    (async () => {
+      //create spritesheets here
+      const renderer = new Renderer();
+      renderer.loadBuffers(buffers).then((d) => {
+        renderer.createSpritesheets().then((spritesData) => {
+          if (spritesData.length > 0) {
+            setSprites(spritesData);
+          }
+        });
+      });
+    })();
+  }, [buffers]);
 
   return (
     <div ref={sidebarRef} className="sidebar-base">
@@ -20,9 +36,12 @@ const Sidebar: React.FC<{}> = () => {
                 <p>Add some sprites in the canvas</p>
               </div>
             ) : (
-              buffers.map((buffer, index) => {
+              sprites.map((spritesheet, index) => {
                 return (
-                  <PreviewCard key={buffer.dataset.props} buffer={buffer} />
+                  <PreviewCard
+                    key={spritesheet.dataset.props}
+                    buffer={spritesheet}
+                  />
                 );
               })
             )}

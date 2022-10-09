@@ -17,14 +17,18 @@ import Renderer from "./renderer";
 import { disableZoom } from "./EventHandler/DisableZoom";
 
 function App() {
-  const { properties, notification, notificationDispatch, reloadApp } =
-    React.useContext(Context);
+  const {
+    properties,
+    notification,
+    notificationDispatch,
+    reloadApp,
+    buffers,
+    setBuffers,
+  } = React.useContext(Context);
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const downloadButtonRef = React.useRef<HTMLAnchorElement>(null);
   const canvasWrapperRef = React.useRef<HTMLDivElement>(null);
-  const [buffers, setBuffers] = React.useState<BufferData[][]>([]);
-
   const [openModal, setModalState] = React.useState<boolean>(false);
 
   const renderer = new Renderer();
@@ -113,7 +117,6 @@ function App() {
   //runs in first render and reload
   React.useEffect(() => {
     disableZoom(document.getElementById("root")!);
-    renderer.listen(canvasWrapperRef.current!);
     //fetch blobs to localstorage
     const localBlobs = fetchToLocalStorage("blobs");
     if (!localBlobs) return;
@@ -146,6 +149,11 @@ function App() {
     properties.borderLine,
   ]);
 
+  window.addEventListener("wheel", (e) => {
+    if (e.ctrlKey) {
+      renderer.resize(e);
+    }
+  });
   window.addEventListener("keyup", (e) => {
     if (e.code === "ControlLeft") {
       renderer.resizeEnd();

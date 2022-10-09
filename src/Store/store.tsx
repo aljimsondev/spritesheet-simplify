@@ -1,6 +1,6 @@
 import React from "react";
 import { NotificationProps } from "../Components/notification/type";
-import { Child } from "../Components/types";
+import { BufferData, Child } from "../Components/types";
 import { NotificationReducer } from "./reducers/NotificationReducers";
 import { NotificationReducerType } from "./reducers/types";
 import { AppProperties, ContextType, StoreProps } from "./types";
@@ -45,7 +45,7 @@ const Store: Child<StoreProps> = ({ children }) => {
 
   const [properties, setProperties] =
     React.useState<AppProperties>(defaultStatus);
-  const [buffers, setBuffers] = React.useState<HTMLImageElement[]>([]);
+  const [buffers, setBuffers] = React.useState<BufferData[][]>([]);
   const [open, setMenuStatus] = React.useState<boolean>(true);
   const sidebarRef = React.useRef<HTMLDivElement>(null);
   const [reloadApp, setReloadApp] = React.useState(false);

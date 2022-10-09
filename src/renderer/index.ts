@@ -1,3 +1,7 @@
+import {
+  fetchToLocalStorage,
+  saveToLocalStorage,
+} from "../Components/helpers/LocalStorageHelper";
 import { BufferData } from "../Components/types";
 
 interface Renderer {
@@ -11,17 +15,21 @@ interface Renderer {
   };
   buffers: BufferData[][];
   images: HTMLImageElement[][];
-  spritesheets: HTMLImageElement[];
+  imagesArray: HTMLImageElement[];
   focus: boolean;
   _RAF: any;
+  buffer: BufferData[];
 }
 
 class Renderer {
+  #MAX_ZOOM = 5;
+  #MIN_ZOOM = 0.1;
+  #ZOOM_SENSITIVITY = 0.0005;
+  #scale = 1;
   constructor() {
-    this.images = [];
-    this.spritesheets = [];
+    this.images = []; //for 2d spritesheet array
+    this.imagesArray = []; //for single row images for animation spritesheet
     this.#init();
-    this.focus = false;
     this._RAF = null;
   }
 
@@ -46,6 +54,12 @@ class Renderer {
   async loadBuffers(buffers: BufferData[][]) {
     if (buffers.length <= 0) return;
 
+    //fetch scale if there is
+    const localScale = fetchToLocalStorage("scale");
+    if (localScale) {
+      this.#scale = JSON.parse(localScale);
+    }
+
     return new Promise<boolean>((resolve, reject) => {
       try {
         let counter = 0;
@@ -61,6 +75,34 @@ class Renderer {
           counter++;
         }
         if (counter >= buffers.length) {
+          resolve(true);
+        }
+        resolve(false);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+  /**
+   * Load the base64 data and convert it to HTML image
+   * @param buffer
+   * @returns
+   */
+  async loadBuffer(buffer: BufferData[]) {
+    if (buffer.length <= 0) return;
+
+    return new Promise<boolean>((resolve, reject) => {
+      try {
+        let counter = 0;
+        this.buffer = buffer;
+        for (let row = 0; row < buffer.length; row++) {
+          const image = new Image();
+          image.src = buffer[row].data as string;
+          image.alt = buffer[row].name;
+          this.imagesArray[row] = image; //assigning image to indexes
+          counter++;
+        }
+        if (counter >= buffer.length) {
           resolve(true);
         }
         resolve(false);
@@ -113,49 +155,65 @@ class Renderer {
       }
     }
   }
-  getCanvasWidth() {
-    let highestWidth = 0;
-    if (this.images.length <= 0) return 0;
-    for (let i = 0; i < this.images.length; i++) {
-      let width = this.getTotalWidth(this.images[i]);
-      if (width > highestWidth) {
-        highestWidth = width;
-      }
+
+  createAnimationSpriteSheet(sprites: HTMLImageElement[]): HTMLImageElement {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d")!;
+    const image = new Image();
+
+    if (sprites.length > 0) {
+      canvas.width = this.getTotalWidth(sprites);
+      canvas.height = sprites[0].height;
+      this.loadRowData(sprites, ctx, 0);
+
+      image.src = canvas.toDataURL();
+      image.alt = sprites[0].alt;
+      image.dataset.props = JSON.stringify({
+        height: sprites[0].height,
+        width: sprites[0].width,
+        name: sprites[0].alt,
+      });
     }
-
-    return highestWidth;
+    return image;
   }
-  createAnimationSpriteSheet() {
-    //TODO create here
-  }
-
-  resize(e: WheelEvent) {
-    let running = false;
-
-    if (!running) {
-      this.focus = true;
-      this.drawCanvas(0);
-    }
-    running = true;
-  }
-  resizeEnd() {
-    this.focus = false;
-    cancelAnimationFrame(this._RAF);
-  }
-  listen(el: HTMLElement) {
-    el.addEventListener("wheel", (e) => {
-      if (e.ctrlKey) {
-        this.resize(e);
-      }
+  async createSpritesheets(): Promise<HTMLImageElement[]> {
+    return this.images.map((row) => {
+      return this.createAnimationSpriteSheet(row);
     });
   }
 
-  getTotalWidth(imagesArray: HTMLImageElement[]) {
+  resize(e: WheelEvent) {
+    let zoomScale = e.deltaY * this.#ZOOM_SENSITIVITY;
+
+    if (this.#scale <= this.#MIN_ZOOM) {
+      this.#scale = this.#MIN_ZOOM;
+    } else if (this.#scale >= this.#MAX_ZOOM) {
+      this.#scale = this.#MAX_ZOOM;
+    }
+    this.#scale += zoomScale;
+    this.canvas.style.transform = `scale(${this.#scale})`;
+  }
+  /**
+   * Save the old scaling in local storage to usage later
+   */
+  resizeEnd() {
+    saveToLocalStorage("scale", JSON.stringify(this.#scale));
+  }
+
+  /**
+   * Get the total occopied width of the images in the canvas
+   * @returns Total Width
+   */
+  getTotalWidth(
+    imagesArray: HTMLImageElement[],
+    options?: {
+      customWidth?: number;
+    }
+  ) {
     if (imagesArray.length > 0) {
       const totalWidthCombine = imagesArray.reduce((total, img: any) => {
-        if (this.imageSpriteProps.imageWidth) {
-          let propsWidth: any = this.imageSpriteProps.imageWidth;
-          return (total += propsWidth);
+        if (options?.customWidth) {
+          return (total += options.customWidth);
         } else {
           return (total += parseFloat(img.width));
         }
@@ -166,6 +224,10 @@ class Renderer {
     return 0;
   }
 
+  /**
+   * Get the total occopied height of the images in the canvas
+   * @returns Totalheight
+   */
   getCanvasHeight() {
     let totalHeight = 0;
 
@@ -189,7 +251,29 @@ class Renderer {
     }
     return totalHeight;
   }
+  /**
+   * Get the highest width of the images in the canvas
+   * @returns Total Width
+   */
+  getCanvasWidth() {
+    let highestWidth = 0;
+    if (this.images.length <= 0) return 0;
+    for (let i = 0; i < this.images.length; i++) {
+      let width = this.getTotalWidth(this.images[i], {
+        customWidth: this.imageSpriteProps.imageWidth,
+      });
+      if (width > highestWidth) {
+        highestWidth = width;
+      }
+    }
 
+    return highestWidth;
+  }
+  /**
+   * Download the spritesheet
+   * @param fileName
+   * @returns
+   */
   async download(fileName: string) {
     return new Promise<boolean>((resolve, reject) => {
       try {
@@ -208,11 +292,17 @@ class Renderer {
       }
     });
   }
-  async drawCanvas(time: number) {
+  /**
+   * Draw the images in the canvas
+   */
+  async drawCanvas() {
     if (this.images.length > 0) {
       this.canvas.width = this.getCanvasWidth();
       this.canvas.height = this.getCanvasHeight();
+      this.canvas.style.transform = `scale(${this.#scale})`;
+
       let currentPositionY = 0;
+
       for (let row = 0; row < this.images.length; row++) {
         this.loadRowData(this.images[row], this.context, currentPositionY, {
           imageWidth: this.imageSpriteProps.imageWidth,
@@ -243,9 +333,6 @@ class Renderer {
       this.canvas.width = 0;
       this.canvas.height = 0;
     }
-    if (this.focus) {
-      this._RAF = requestAnimationFrame(this.drawCanvas.bind(this));
-    }
   }
   /**
    * Render the canvas the in the parent element in the DOM
@@ -255,7 +342,7 @@ class Renderer {
   async render(parentEl: HTMLElement) {
     return new Promise<boolean>((resolve, reject) => {
       try {
-        this.drawCanvas(0);
+        this.drawCanvas();
         if (parentEl.childElementCount > 0) {
           for (let key in Object.keys(parentEl.childNodes)) {
             //remove all children there is
