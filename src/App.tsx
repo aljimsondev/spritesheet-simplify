@@ -136,46 +136,6 @@ function App() {
           await renderer.render(canvasWrapperRef.current);
         }
       })();
-
-      (() => {
-        const container = canvasWrapperRef.current!;
-        if (container) {
-          const instance = Zoomify({
-            minScale: 0.1,
-            maxScale: 30,
-            element: container,
-            scaleSensitivity: 50,
-          });
-          container.addEventListener("wheel", (event) => {
-            if (!event.ctrlKey) {
-              return;
-            }
-            event.preventDefault();
-            instance.zoom({
-              deltaScale: Math.sign(event.deltaY) > 0 ? -1 : 1,
-              x: event.pageX,
-              y: event.pageY,
-            });
-          });
-          container.addEventListener("dblclick", () => {
-            instance.panTo({
-              originX: 0,
-              originY: 0,
-              scale: 1,
-            });
-          });
-          container.addEventListener("mousemove", (event) => {
-            if (!event.shiftKey) {
-              return;
-            }
-            event.preventDefault();
-            instance.panBy({
-              originX: event.movementX,
-              originY: event.movementY,
-            });
-          });
-        }
-      })();
     } catch (e) {
       console.warn(e);
     }
@@ -190,16 +150,50 @@ function App() {
     properties.borderLine,
   ]);
 
-  // window.addEventListener("wheel", (e) => {
-  //   if (e.ctrlKey) {
-  //     renderer.resize(e);
-  //   }
-  // });
-  // window.addEventListener("keyup", (e) => {
-  //   if (e.code === "ControlLeft") {
-  //     renderer.resizeEnd();
-  //   }
-  // });
+  /**
+   * HANDLES THE ZOOMING ANND PANNING
+   */
+  React.useEffect(() => {
+    (() => {
+      const container = canvasWrapperRef.current!;
+      if (container) {
+        const instance = Zoomify({
+          minScale: 0.1,
+          maxScale: 30,
+          element: container,
+          scaleSensitivity: 50,
+        });
+        container.addEventListener("wheel", (event) => {
+          if (!event.ctrlKey) {
+            return;
+          }
+          event.preventDefault();
+          instance.zoom({
+            deltaScale: Math.sign(event.deltaY) > 0 ? -1 : 1,
+            x: event.pageX,
+            y: event.pageY,
+          });
+        });
+        container.addEventListener("dblclick", () => {
+          instance.panTo({
+            originX: 0,
+            originY: 0,
+            scale: 1,
+          });
+        });
+        container.addEventListener("mousemove", (event) => {
+          if (!event.shiftKey) {
+            return;
+          }
+          event.preventDefault();
+          instance.panBy({
+            originX: event.movementX,
+            originY: event.movementY,
+          });
+        });
+      }
+    })();
+  }, []);
 
   return (
     <>

@@ -1,5 +1,5 @@
 .sidebar-base {
-  min-width: 400px;
+  min-width: 350px;
   width: 20vw;
   height: 100vh;
   border-left: 1px solid lightgray;
@@ -73,3 +73,33 @@
 .form-base {
   display: flex;
 }
+
+/* @media screen and (max-width: 1920px) {
+  .sidebar-base {
+    min-width: 400px;
+    width: 20vw;
+    height: 100vh;
+    border-left: 1px solid lightgray;
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    transition: 0.3s;
+    animation: display 1s ease;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .sidebar-base {
+    min-width: 300px;
+    width: 20vw;
+    height: 100vh;
+    border-left: 1px solid lightgray;
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    transition: 0.3s;
+    animation: display 1s ease;
+  }
+} */
