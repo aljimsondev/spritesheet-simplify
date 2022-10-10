@@ -18,7 +18,7 @@ class Animate {
   #frameX = 0;
   #maxFrame = 0;
   #fps = 60;
-  #interval = 1000 / this.#fps;
+  #interval = 1000;
   #timer = 0;
   #_RAF = 0;
   #buttonRef: HTMLElement | null = null;
@@ -105,7 +105,7 @@ class Animate {
   start(time: number) {
     const deltaTime = time - this.#lastTime;
     this.#lastTime = time;
-    if (this.#timer > this.#interval) {
+    if (this.#timer > this.#interval / this.#fps) {
       this.#timer = 0;
       //handling spritesheet animation
       if (this.#frameX >= this.#maxFrame) {
@@ -134,7 +134,12 @@ class Animate {
     this.#frameX = 0;
     this.playState = false;
   }
-  async play(sprite: HTMLImageElement) {
+  async play(
+    sprite: HTMLImageElement,
+    options?: {
+      fps?: number;
+    }
+  ) {
     if (this.#playing) {
       //engine doing some task e.g. animating some sprite
       this.#reset();
@@ -142,6 +147,7 @@ class Animate {
     this.setState();
     this.load(sprite).then((isloaded) => {
       if (isloaded) {
+        this.#fps = options?.fps || 60; // set fps
         this.start(0);
       }
     });

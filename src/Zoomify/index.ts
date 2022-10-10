@@ -4,6 +4,8 @@
  *
  */
 
+//! FIX ME ADD SOME TYPES
+//!REVISE FORMAT
 const hasPositionChanged: (props: {
   pos: number;
   prevPos: number;

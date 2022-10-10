@@ -7,6 +7,7 @@ import PreviewCard from "../card/_test";
 import { Context } from "../../Store/store";
 import Renderer from "../../renderer";
 import Animate from "../../renderer/Animate.test";
+import img from "../../assets/images-removebg-preview.png";
 
 const Sidebar: React.FC<{}> = () => {
   const { buffers, sidebarRef } = React.useContext(Context);
@@ -14,9 +15,11 @@ const Sidebar: React.FC<{}> = () => {
   const anim = new Animate();
   // anim.canvasProperties = { height: 120, width: 120 };
   //! FIX ME - animation rendering class
-  //? fix ui
+  //? fix ui e.g. preview card
   //? optimize performance
   //TODO add panning in the canvas
+  //! NOTICE FIX CUSTOM SIZE AND ADD CONFIGURATION
+  //?
 
   React.useEffect(() => {
     (async () => {
@@ -26,7 +29,6 @@ const Sidebar: React.FC<{}> = () => {
         renderer.createSpritesheets().then(async (spritesData) => {
           if (spritesData.length > 0) {
             await anim.loadSpritesheets(spritesData).then((isloaded) => {
-              console.log(isloaded);
               if (isloaded) {
                 setSprites(spritesData); //set sprites after it was loaded in the animation engine
               }
@@ -39,10 +41,13 @@ const Sidebar: React.FC<{}> = () => {
 
   const handlePlay = async (
     sprite: HTMLImageElement,
-    ref: HTMLCanvasElement
+    ref: HTMLCanvasElement,
+    options?: { fps: number }
   ) => {
     anim.init(ref); //set reference to the target canvas
-    anim.play(sprite);
+    anim.play(sprite, {
+      fps: options?.fps,
+    });
   };
 
   return (
@@ -52,6 +57,7 @@ const Sidebar: React.FC<{}> = () => {
           <div className="preview-base">
             {buffers.length <= 0 ? (
               <div className="centered mt-1 flex flex-col">
+                <img src={img} />
                 <h4>No Available Preview</h4>
                 <p>Add some sprites in the canvas</p>
               </div>

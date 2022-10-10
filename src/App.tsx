@@ -11,7 +11,6 @@ import {
   removeFromLocalStorage,
   saveToLocalStorage,
 } from "./helpers/LocalStorageHelper";
-import { BufferData } from "./Components/types";
 import LoadBase64Images from "./helpers/LoadBase64Files";
 import Renderer from "./renderer";
 import { disableZoom } from "./EventHandler/DisableZoom";
@@ -164,15 +163,13 @@ function App() {
           scaleSensitivity: 30,
         });
         container.addEventListener("wheel", (event) => {
-          event.preventDefault();
-          if (!event.ctrlKey) {
-            return;
+          if (event.ctrlKey) {
+            instance.zoom({
+              deltaScale: Math.sign(event.deltaY) > 0 ? -1 : 1,
+              x: event.pageX,
+              y: event.pageY,
+            });
           }
-          instance.zoom({
-            deltaScale: Math.sign(event.deltaY) > 0 ? -1 : 1,
-            x: event.pageX,
-            y: event.pageY,
-          });
         });
         container.addEventListener("dblclick", () => {
           instance.panTo({
