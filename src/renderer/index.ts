@@ -1,7 +1,7 @@
 import {
   fetchToLocalStorage,
   saveToLocalStorage,
-} from "../Components/helpers/LocalStorageHelper";
+} from "../helpers/LocalStorageHelper";
 import { BufferData } from "../Components/types";
 
 interface Renderer {
@@ -22,7 +22,7 @@ interface Renderer {
 }
 
 class Renderer {
-  #MAX_ZOOM = 5;
+  #MAX_ZOOM = 1;
   #MIN_ZOOM = 0.1;
   #ZOOM_SENSITIVITY = 0.0005;
   #scale = 1;

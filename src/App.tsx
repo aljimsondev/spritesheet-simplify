@@ -10,11 +10,12 @@ import {
   fetchToLocalStorage,
   removeFromLocalStorage,
   saveToLocalStorage,
-} from "./Components/helpers/LocalStorageHelper";
+} from "./helpers/LocalStorageHelper";
 import { BufferData } from "./Components/types";
-import LoadBase64Images from "./Components/helpers/LoadBase64Files";
+import LoadBase64Images from "./helpers/LoadBase64Files";
 import Renderer from "./renderer";
 import { disableZoom } from "./EventHandler/DisableZoom";
+import Zoomify from "./Zoomify";
 
 function App() {
   const {
@@ -135,6 +136,46 @@ function App() {
           await renderer.render(canvasWrapperRef.current);
         }
       })();
+
+      (() => {
+        const container = canvasWrapperRef.current!;
+        if (container) {
+          const instance = Zoomify({
+            minScale: 0.1,
+            maxScale: 30,
+            element: container,
+            scaleSensitivity: 50,
+          });
+          container.addEventListener("wheel", (event) => {
+            if (!event.ctrlKey) {
+              return;
+            }
+            event.preventDefault();
+            instance.zoom({
+              deltaScale: Math.sign(event.deltaY) > 0 ? -1 : 1,
+              x: event.pageX,
+              y: event.pageY,
+            });
+          });
+          container.addEventListener("dblclick", () => {
+            instance.panTo({
+              originX: 0,
+              originY: 0,
+              scale: 1,
+            });
+          });
+          container.addEventListener("mousemove", (event) => {
+            if (!event.shiftKey) {
+              return;
+            }
+            event.preventDefault();
+            instance.panBy({
+              originX: event.movementX,
+              originY: event.movementY,
+            });
+          });
+        }
+      })();
     } catch (e) {
       console.warn(e);
     }
@@ -149,16 +190,16 @@ function App() {
     properties.borderLine,
   ]);
 
-  window.addEventListener("wheel", (e) => {
-    if (e.ctrlKey) {
-      renderer.resize(e);
-    }
-  });
-  window.addEventListener("keyup", (e) => {
-    if (e.code === "ControlLeft") {
-      renderer.resizeEnd();
-    }
-  });
+  // window.addEventListener("wheel", (e) => {
+  //   if (e.ctrlKey) {
+  //     renderer.resize(e);
+  //   }
+  // });
+  // window.addEventListener("keyup", (e) => {
+  //   if (e.code === "ControlLeft") {
+  //     renderer.resizeEnd();
+  //   }
+  // });
 
   return (
     <>
@@ -171,11 +212,9 @@ function App() {
             download={download}
             handleOpenFileInput={handleOpenFileInput}
           />
-          <div
-            ref={canvasWrapperRef}
-            id="canvas-wrapper"
-            className="canvas-wrapper"
-          ></div>
+          <div id="canvas-wrapper" className="canvas-wrapper">
+            <div ref={canvasWrapperRef}></div>
+          </div>
           <form>
             <input
               id="upload"
