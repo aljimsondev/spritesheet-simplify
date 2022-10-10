@@ -65,7 +65,13 @@ const pan: (props: { state: any; originX: number; originY: number }) => any = ({
   });
 };
 
-const makePan = (state: any) => ({
+const makePan: (state: any) => {
+  panBy: (props: {
+    originX: number;
+    originY: number;
+  }) => (props: { state: any; originX: number; originY: number }) => any;
+  panTo: (props: { originX: number; originY: number; scale: number }) => void;
+} = (state: any) => ({
   panBy: ({ originX, originY }) => pan({ state, originX, originY }),
   panTo: ({ originX, originY, scale }) => {
     state.transformation.scale = scale;
@@ -77,7 +83,9 @@ const makePan = (state: any) => ({
   },
 });
 
-const makeZoom = (state: any) => ({
+const makeZoom: (state: any) => {
+  zoom: (props: { x: number; y: number; deltaScale: number }) => void;
+} = (state: any) => ({
   zoom: ({ x, y, deltaScale }) => {
     const { left, top } = state.element.getBoundingClientRect();
     const { minScale, maxScale, scaleSensitivity } = state;
@@ -125,7 +133,19 @@ const renderer: (props: {
   maxScale: number;
   element: HTMLElement;
   scaleSensitivity: number;
-}) => any = ({ minScale, maxScale, element, scaleSensitivity = 10 }) => {
+}) => {
+  zoom: (props: { x: number; y: number; deltaScale: number }) => void;
+  panBy: ({ originX, originY }: { originX: any; originY: any }) => any;
+  panTo: ({
+    originX,
+    originY,
+    scale,
+  }: {
+    originX: any;
+    originY: any;
+    scale: any;
+  }) => void;
+} = ({ minScale, maxScale, element, scaleSensitivity = 10 }) => {
   const state = {
     element,
     minScale,
