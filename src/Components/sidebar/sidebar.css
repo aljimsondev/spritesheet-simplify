@@ -1,5 +1,5 @@
 .sidebar-base {
-  min-width: 300px;
+  min-width: 400px;
   width: 20vw;
   height: 100vh;
   border-left: 1px solid lightgray;
@@ -35,6 +35,7 @@
 }
 .sidebar-heading {
   display: flex;
+  height: 10vh;
 }
 
 .sidebar-heading button {

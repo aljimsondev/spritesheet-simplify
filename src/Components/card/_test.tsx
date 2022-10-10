@@ -34,6 +34,14 @@ const PreviewCard: React.FC<{
     }
   };
 
+  React.useEffect(() => {
+    (() => {
+      if (buffer) {
+        // CreatePreviewThumbnail(buffer,{height:})
+      }
+    })();
+  }, []);
+
   return (
     <div className="preview-card">
       {!readyState ? (
