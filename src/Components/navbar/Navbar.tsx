@@ -26,26 +26,13 @@ const Navbar: NODE<NavbarProps> = ({
 
   const navData = [
     {
-      icon: <AiOutlineReload size={25} color="#fa614d" />,
-      onClick: handleReload,
-      tooltip: true,
-      tooltipLabel: "Reload",
-    },
-    {
-      icon: <AiOutlinePlus size={25} color="#fa614d" />,
-      onClick: clearSelection,
-      classList: "rotated-45deg",
-      tooltip: true,
-      tooltipLabel: "Clear Canvas",
-    },
-    {
-      icon: <AiOutlinePlus size={25} color="#0ea816" />,
+      icon: <AiOutlinePlus size={30} />,
       onClick: handleOpenFileInput,
       tooltip: true,
       tooltipLabel: "Add Sprites",
     },
     {
-      icon: <AiOutlineDownload size={25} color="#4c0ab6" />,
+      icon: <AiOutlineDownload size={30} />,
       onClick: download,
       tooltip: true,
       tooltipLabel: "Download Spritesheet",
@@ -57,8 +44,8 @@ const Navbar: NODE<NavbarProps> = ({
       <div className="nav-title">
         <Logo />
       </div>
-      <div className="flex-grow flex-row">
-        <div className="nav-button-base">
+      <div className="nav-flex-grow">
+        <div className="nav-left-section">
           {navData.map((data, index) => {
             return (
               <NavbarButton
@@ -67,21 +54,20 @@ const Navbar: NODE<NavbarProps> = ({
                 key={index + data.tooltipLabel}
                 tooltip={data.tooltip}
                 tooltipLabel={data.tooltipLabel}
-                classList={data.classList}
               />
             );
           })}
-          <DropdownMenu
-            dropdownRef={dropdownRef}
-            open={open}
-            toggleState={setOpen}
-            icon={<AiFillSetting size={20} />}
-          >
-            <NavMenuForm />
-          </DropdownMenu>
+        </div>
+        <div className="nav-button-base">
+          <button onClick={handleReload} className="reload-btn">
+            Reload
+          </button>
+          <button onClick={clearSelection} className="clear-btn">
+            Clear
+          </button>
           <NavbarButton
             icon={
-              openMenu ? <AiOutlineClose size={25} /> : <FaBars size={25} />
+              openMenu ? <AiOutlineClose size={20} /> : <FaBars size={20} />
             }
             onClick={toogleMenu}
           />

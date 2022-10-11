@@ -195,7 +195,7 @@ function App() {
   return (
     <>
       <div className="main-container">
-        <div className="grow">
+        <div className="container-grow">
           <Navbar
             handleSelectImages={handleSelectImages}
             clearSelection={clearSelection}

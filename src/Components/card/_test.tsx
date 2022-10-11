@@ -99,13 +99,15 @@ const PreviewCard: React.FC<{
           <div className="form-inline">
             <div className="fps-input-base">
               <label>FPS:</label>
-              <input
-                id="fpsRef"
-                value={fps}
-                type="number"
-                onChange={handleChangeFPS}
-              />
+              <p>{fps}</p>
             </div>
+            <input
+              type="range"
+              value={fps}
+              min={1}
+              max={100}
+              onChange={handleChangeFPS}
+            />
           </div>
           <div className="form-inline">
             <div className="flex-1">

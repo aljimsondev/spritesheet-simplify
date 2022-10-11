@@ -4,6 +4,11 @@ module.exports = {
   content: ["./*.{html,js,ts,jsx,tsx}", "./src/**/*.{html,tsx,jsx,js,ts}"],
   darkMode: "class",
   theme: {
+    backgroundColor: ({ theme }) => ({
+      ...theme("colors"),
+      base: "#dbdbdb",
+      navbarBase: "#181818",
+    }),
     screens: {
       // sm: "480px",
       // md: "768px",
