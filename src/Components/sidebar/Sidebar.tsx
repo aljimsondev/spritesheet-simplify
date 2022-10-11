@@ -55,24 +55,39 @@ const Sidebar: React.FC<{}> = () => {
       <Tabs>
         <Tab tabLabel="Preview">
           <div className="preview-base">
-            {buffers.length <= 0 ? (
+            {buffers.length <= 0 && (
               <div className="centered mt-1 flex flex-col">
                 <img src={img} />
                 <h4>No Available Preview</h4>
                 <p>Add some sprites in the canvas</p>
               </div>
-            ) : (
-              sprites.map((spritesheet, index) => {
-                return (
-                  <PreviewCard
-                    key={`${spritesheet.dataset.props! + index}`}
-                    index={index}
-                    buffer={spritesheet}
-                    handleDownload={() => {}}
-                    handlePlayState={handlePlay}
-                  />
-                );
-              })
+            )}
+            {buffers.length > 0 && (
+              <React.Fragment>
+                <div>
+                  <details>
+                    <summary>BACKGROUND</summary>
+                    <div>
+                      <input type="color" />
+                      <label>#DFFFFF</label>
+                    </div>
+                  </details>
+                </div>
+                <div>
+                  <p>ANIMATION PREVIEW</p>
+                </div>
+                {sprites.map((spritesheet, index) => {
+                  return (
+                    <PreviewCard
+                      key={`${spritesheet.dataset.props! + index}`}
+                      index={index}
+                      buffer={spritesheet}
+                      handleDownload={() => {}}
+                      handlePlayState={handlePlay}
+                    />
+                  );
+                })}
+              </React.Fragment>
             )}
           </div>
         </Tab>
