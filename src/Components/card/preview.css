@@ -12,7 +12,7 @@
   bg-white z-[999];
 }
 .preview-canvas-base {
-  @apply relative flex items-end p-2 pl-5 border-r-[1px] border-r-[lightgray];
+  @apply relative flex items-end p-2 pl-5;
 }
 .preview-canvas {
   @apply flex-1 h-[100%] flex items-end;

@@ -1,7 +1,7 @@
 .input-group-base {
-  @apply flex px-1
+  @apply flex flex-grow px-1
   hover:border-[1px] hover:border-[lightgray]
-  border-[1px] border-white rounded-sm;
+  border-[1px] border-white rounded-sm w-[100%] relative;
 }
 .input-group-input {
   @apply border-none pl-1 outline-none ml-2;

@@ -1,7 +1,8 @@
 import React from "react";
-import { FaPlay, FaDownload, FaPause, FaEllipsisH } from "react-icons/fa";
+import { FaPlay, FaDownload, FaPause } from "react-icons/fa";
 import CreatePreviewThumbnail from "../../renderer/CreatePreviewThumbnail";
 import { AiOutlineEllipsis } from "react-icons/ai";
+import { IoPlayOutline, IoPauseOutline } from "react-icons/io5";
 import InlineGroup from "../group/InlineGroup";
 import DropdownMenu from "../dropdown/DropdownMenu";
 import InputGroup from "../input/InputGroup";
@@ -130,10 +131,7 @@ const PreviewCard: React.FC<{
             <p>Spritesheet01_attack</p>
             <div className="preview-controller-label">
               <InlineGroup className="justify-between mt-2">
-                <>
-                  <label>FPS:</label>
-                  <p>{fps}</p>
-                </>
+                <InputGroup label="FPS" id="fps" value={fps} />
               </InlineGroup>
               <input
                 type="range"
@@ -146,10 +144,22 @@ const PreviewCard: React.FC<{
             <InlineGroup className="mt-2">
               <>
                 <div className="flex-1">
-                  <InputGroup id="h-input" onChange={(e) => {}} label="H" />
+                  <InputGroup
+                    id="h-input"
+                    onChange={(e) => {}}
+                    label="H"
+                    type="number"
+                    width={60}
+                  />
                 </div>
                 <div className="flex-1">
-                  <InputGroup id="w-input" onChange={(e) => {}} label="W" />
+                  <InputGroup
+                    id="w-input"
+                    onChange={(e) => {}}
+                    label="W"
+                    type="number"
+                    width={60}
+                  />
                 </div>
               </>
             </InlineGroup>
@@ -165,16 +175,20 @@ const PreviewCard: React.FC<{
             </InlineGroup>
             <InlineGroup className="justify-between items-center mt-2">
               <>
-                <button className="-icon-button" onClick={handleDownload}>
-                  <FaDownload />
-                </button>
-                <button
-                  ref={playStateRef}
-                  className="-icon-button"
-                  onClick={handlePlayingState}
-                >
-                  {play ? <FaPause /> : <FaPlay />}
-                </button>
+                <div className="flex-1">
+                  <button className="-icon-button" onClick={handleDownload}>
+                    <FaDownload />
+                  </button>
+                </div>
+                <div className="flex-1">
+                  <button
+                    ref={playStateRef}
+                    className="-icon-button bg-secondaryBlue text-white"
+                    onClick={handlePlayingState}
+                  >
+                    {play ? <IoPauseOutline /> : <IoPlayOutline />}
+                  </button>
+                </div>
               </>
             </InlineGroup>
           </div>

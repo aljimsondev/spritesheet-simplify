@@ -426,9 +426,6 @@
   position: relative;
   display: flex;
   align-items: flex-end;
-  border-right-width: 1px;
-  --tw-border-opacity: 1;
-  border-right-color: rgb(211 211 211 / var(--tw-border-opacity));
   padding: 0.5rem;
   padding-left: 1.25rem;
 }
@@ -528,7 +525,10 @@
 }
 
 .input-group-base {
+  position: relative;
   display: flex;
+  width: 100%;
+  flex-grow: 1;
   border-radius: 0.125rem;
   border-width: 1px;
   --tw-border-opacity: 1;
@@ -1155,6 +1155,11 @@ video {
   border-width: 1px;
 }
 
+.bg-secondaryBlue {
+  --tw-bg-opacity: 1;
+  background-color: rgb(12 153 255 / var(--tw-bg-opacity));
+}
+
 .px-5 {
   padding-left: 1.25rem;
   padding-right: 1.25rem;
@@ -1163,6 +1168,11 @@ video {
 .py-3 {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
+}
+
+.text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
 .main-container {
