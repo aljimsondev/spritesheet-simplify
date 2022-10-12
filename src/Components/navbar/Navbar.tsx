@@ -1,6 +1,5 @@
 import React from "react";
 import { NavbarProps, NODE } from "../types";
-import "./navbar.css";
 import {
   AiFillSetting,
   AiOutlineDownload,

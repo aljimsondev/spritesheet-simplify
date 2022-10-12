@@ -5,21 +5,23 @@
 @import url("../Components/card/preview.css");
 @import url("../Components/dropdown/DropdownMenu.css");
 @import url("../Components/input/inputgroup.css");
+@import url("../Components/form/Configuration.css");
+@import url("../Components/notification/Notification.css");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 .main-container {
-  @apply w-[100vw] h-[100vh] flex flex-row max-w-[100vw] max-h-[100vh] overflow-hidden;
+  @apply w-[100vw] h-[100vh] flex flex-col max-w-[100vw] max-h-[100vh] overflow-hidden;
 }
 
 .container-grow {
-  @apply grow max-w-[100vw] max-h-[100vh] relative overflow-auto;
+  @apply grow max-w-[100vw] max-h-[100vh] relative  overflow-hidden flex flex-row;
 }
 
 .canvas-wrapper {
-  @apply relative overflow-auto min-h-[93vh] max-h-[93vh] bg-base;
+  @apply relative overflow-auto min-h-[93vh] flex-grow max-h-[93vh] bg-base max-w-[100vw];
 }
 
 .canvas-wrapper::-webkit-scrollbar-track {

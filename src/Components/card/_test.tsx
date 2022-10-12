@@ -39,7 +39,6 @@ const PreviewCard: React.FC<{
   const defaultScreen = { height: 120, width: 120 };
   const canvasWrapperRef = React.useRef<HTMLDivElement>(null);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
-  const frameXTextRef = React.useRef<HTMLParagraphElement>(null);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const handlePlayingState = () => {
     if (buffer) {
@@ -67,13 +66,8 @@ const PreviewCard: React.FC<{
       }
     })();
 
-    // const timer = setTimeout(() => {
-    //   setReadyState(true);
-    // }, 100);
-
     return () => {
       setReadyState(false);
-      // clearTimeout(timer);
     };
   }, [backgroundColor, displayBackgroundColor]);
 
@@ -85,11 +79,9 @@ const PreviewCard: React.FC<{
       console.warn(e);
     }
   };
-  const handleDropdown = () => {
-    setOpenDropdown((prevState) => !prevState);
-  };
 
   //TODO add preview loading in each element
+  //TODO edit configutaion and finalize functionality
   return (
     <>
       <div className="preview-card ">

@@ -1,32 +1,15 @@
 .notification-base {
-  background: var(--CARD);
-  border-radius: 10px;
-  padding: 1rem;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  margin: 1rem;
-  z-index: 99999999;
-  max-width: 300px;
+  @apply rounded-[10px] p-4 absolute
+  bottom-0 left-0 m-4 z-[999] max-w-[300px] bg-white;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 }
 .notification {
-  display: flex;
-  position: relative;
-  flex-direction: row;
-  align-items: center;
+  @apply flex relative flex-row items-start;
 }
 .notification-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 2rem;
-  width: 2rem;
-  min-height: 2rem;
-  min-width: 2rem;
-  margin-right: 0.5rem;
-  border-radius: 50%;
-  overflow: hidden;
+  @apply flex items-center justify-center
+  h-[2rem] w-[2rem] min-w-[2rem] min-h-[2rem]
+  mr-[0.5rem] rounded-full overflow-hidden;
 }
 .notification p {
   min-width: 8rem;

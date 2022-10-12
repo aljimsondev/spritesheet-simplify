@@ -195,14 +195,14 @@ function App() {
   return (
     <>
       <div className="main-container">
+        <Navbar
+          handleSelectImages={handleSelectImages}
+          clearSelection={clearSelection}
+          downloadButtonRef={downloadButtonRef}
+          download={download}
+          handleOpenFileInput={handleOpenFileInput}
+        />
         <div className="container-grow">
-          <Navbar
-            handleSelectImages={handleSelectImages}
-            clearSelection={clearSelection}
-            downloadButtonRef={downloadButtonRef}
-            download={download}
-            handleOpenFileInput={handleOpenFileInput}
-          />
           <div id="canvas-wrapper" className="canvas-wrapper">
             <div ref={canvasWrapperRef}></div>
           </div>
@@ -220,8 +220,9 @@ function App() {
             />
           </form>
           <FabComponent onClick={toogleState} />
+          <Sidebar />
         </div>
-        <Sidebar />
+
         <Modal open={openModal}>
           <ModalContent toogleState={toogleState} />
         </Modal>

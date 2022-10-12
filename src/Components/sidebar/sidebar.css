@@ -1,6 +1,6 @@
 .sidebar-base {
   @apply min-w-[350px] 
-  w-[20vw] h-[100vh] 
+  w-[20vw] h-[93vh] 
   flex flex-col 
   sticky top-0 
   duration-300 
@@ -64,7 +64,7 @@
   @apply font-semibold text-xs text-gray-700;
 }
 .-icon-button {
-  @apply h-7 w-7 flex items-center justify-center hover:border-[1px] hover:border-[lightgray] duration-200 rounded-sm;
+  @apply h-7 w-7 flex items-center justify-center duration-200 rounded-sm border-on-hover;
 }
 .sidebase-bg-summary {
   @apply list-none;
@@ -76,7 +76,7 @@
   @apply flex items-center justify-start 
   py-[2px] px-1 
   border-[1px] border-white
-  hover:border-[1px] hover:border-[lightgray];
+  border-on-hover;
 }
 #bg-color-picker {
   @apply w-7 h-7;
@@ -87,6 +87,7 @@
 .sidebar-anim-preview-base {
   @apply relative;
 }
-.form-base {
-  @apply flex;
+
+.border-on-hover {
+  @apply hover:border-[1px] hover:border-[lightgray];
 }

@@ -1,7 +1,6 @@
 import React, { ReactNode } from "react";
 import { Portal } from "../Portal";
 import { NODE } from "../types";
-import "./Notification.css";
 import {
   AiOutlineExclamation,
   AiOutlineQuestion,

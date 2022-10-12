@@ -13,6 +13,7 @@ import {
   AiOutlineEye,
   AiOutlineEyeInvisible,
 } from "react-icons/ai";
+import Configuration from "../form/Configuration";
 
 const Sidebar: React.FC<{}> = () => {
   const { buffers, sidebarRef } = React.useContext(Context);
@@ -160,9 +161,7 @@ const Sidebar: React.FC<{}> = () => {
           </div>
         </Tab>
         <Tab tabLabel="Configuration">
-          <div className="form-base">
-            <NavMenuForm />
-          </div>
+          <Configuration />
         </Tab>
       </Tabs>
     </div>
