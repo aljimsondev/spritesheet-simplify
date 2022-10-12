@@ -529,10 +529,22 @@
 
 .input-group-base {
   display: flex;
+  border-radius: 0.125rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(255 255 255 / var(--tw-border-opacity));
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+.input-group-base:hover {
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(211 211 211 / var(--tw-border-opacity));
 }
 
 .input-group-input {
-  max-width: 50px;
+  margin-left: 0.5rem;
   border-style: none;
   padding-left: 0.25rem;
   outline: 2px solid transparent;

@@ -1,6 +1,8 @@
 .input-group-base {
-  @apply flex;
+  @apply flex px-1
+  hover:border-[1px] hover:border-[lightgray]
+  border-[1px] border-white rounded-sm;
 }
 .input-group-input {
-  @apply border-none max-w-[50px] pl-1 outline-none;
+  @apply border-none pl-1 outline-none ml-2;
 }

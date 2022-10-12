@@ -4,6 +4,7 @@ import CreatePreviewThumbnail from "../../renderer/CreatePreviewThumbnail";
 import { AiOutlineEllipsis } from "react-icons/ai";
 import InlineGroup from "../group/InlineGroup";
 import DropdownMenu from "../dropdown/DropdownMenu";
+import InputGroup from "../input/InputGroup";
 
 //config must be global to allow configuration for the user whatever they desired
 const config = {
@@ -142,25 +143,27 @@ const PreviewCard: React.FC<{
                 onChange={handleChangeFPS}
               />
             </div>
-            <InlineGroup>
+            <InlineGroup className="mt-2">
               <>
-                <div className="flex-1"></div>
                 <div className="flex-1">
-                  <p>Width: 1</p>
+                  <InputGroup id="h-input" onChange={(e) => {}} label="H" />
+                </div>
+                <div className="flex-1">
+                  <InputGroup id="w-input" onChange={(e) => {}} label="W" />
                 </div>
               </>
             </InlineGroup>
             <InlineGroup>
               <>
                 <div className="flex-1">
-                  <p ref={frameXTextRef}>X: 0</p>
+                  <InputGroup id="h-input" onChange={(e) => {}} label="X" />
                 </div>
                 <div className="flex-1">
-                  <p>y: 1</p>
+                  <InputGroup id="h-input" onChange={(e) => {}} label="Y" />
                 </div>
               </>
             </InlineGroup>
-            <InlineGroup className="justify-between items-center">
+            <InlineGroup className="justify-between items-center mt-2">
               <>
                 <button className="-icon-button" onClick={handleDownload}>
                   <FaDownload />
