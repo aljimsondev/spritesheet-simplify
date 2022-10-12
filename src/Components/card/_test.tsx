@@ -1,7 +1,9 @@
 import React from "react";
-import { FaPlay, FaDownload, FaPause } from "react-icons/fa";
+import { FaPlay, FaDownload, FaPause, FaEllipsisH } from "react-icons/fa";
 import CreatePreviewThumbnail from "../../renderer/CreatePreviewThumbnail";
-import Loader from "../Loader";
+import { AiOutlineEllipsis } from "react-icons/ai";
+import InlineGroup from "../group/InlineGroup";
+import DropdownMenu from "../dropdown/DropdownMenu";
 
 //config must be global to allow configuration for the user whatever they desired
 const config = {
@@ -28,6 +30,7 @@ const PreviewCard: React.FC<{
   displayBackgroundColor,
 }) => {
   const [readyState, setReadyState] = React.useState(false);
+  const [openDropdown, setOpenDropdown] = React.useState(false);
   const [play, playAnimation] = React.useState(false);
   const [fps, setFps] = React.useState<number>(60);
   const playStateRef = React.useRef<HTMLButtonElement>(null);
@@ -35,7 +38,7 @@ const PreviewCard: React.FC<{
   const canvasWrapperRef = React.useRef<HTMLDivElement>(null);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const frameXTextRef = React.useRef<HTMLParagraphElement>(null);
-
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
   const handlePlayingState = () => {
     if (buffer) {
       handlePlayState(buffer, canvasRef.current!, { fps: fps });
@@ -62,13 +65,13 @@ const PreviewCard: React.FC<{
       }
     })();
 
-    const timer = setTimeout(() => {
-      setReadyState(true);
-    }, 500);
+    // const timer = setTimeout(() => {
+    //   setReadyState(true);
+    // }, 100);
 
     return () => {
       setReadyState(false);
-      clearTimeout(timer);
+      // clearTimeout(timer);
     };
   }, [backgroundColor, displayBackgroundColor]);
 
@@ -80,19 +83,24 @@ const PreviewCard: React.FC<{
       console.warn(e);
     }
   };
+  const handleDropdown = () => {
+    setOpenDropdown((prevState) => !prevState);
+  };
+
   //TODO add preview loading in each element
   return (
     <>
-      <div className="preview-card">
-        {!readyState && (
+      <div className="preview-card ">
+        {/* {!readyState && (
           <div className="preview-loading-base">
             <p>Loading Preview</p>
             <Loader />
           </div>
-        )}
+        )} */}
         <React.Fragment>
-          <div ref={canvasWrapperRef} className="prev-canvas-base">
+          <div ref={canvasWrapperRef} className="preview-canvas-base">
             <div
+              className="preview-canvas"
               style={{
                 background: displayBackgroundColor ? backgroundColor : "none",
               }}
@@ -105,11 +113,27 @@ const PreviewCard: React.FC<{
             </div>
           </div>
           <div className="preview-controller-base">
-            <div className="form-inline">
-              <div className="fps-input-base">
-                <label>FPS:</label>
-                <p>{fps}</p>
+            <div className="relative flex-grow flex items-center justify-end">
+              <div ref={dropdownRef}>
+                <DropdownMenu
+                  icon={<AiOutlineEllipsis size={25} />}
+                  buttonClass="-icon-button"
+                  dropdownRef={dropdownRef}
+                  toggleState={setOpenDropdown}
+                  open={openDropdown}
+                >
+                  <div className="dropdown-c-content-base"></div>
+                </DropdownMenu>
               </div>
+            </div>
+            <p>Spritesheet01_attack</p>
+            <div className="preview-controller-label">
+              <InlineGroup className="justify-between mt-2">
+                <>
+                  <label>FPS:</label>
+                  <p>{fps}</p>
+                </>
+              </InlineGroup>
               <input
                 type="range"
                 value={fps}
@@ -118,35 +142,38 @@ const PreviewCard: React.FC<{
                 onChange={handleChangeFPS}
               />
             </div>
-            <div className="form-inline">
-              <div className="flex-1">
-                <p ref={frameXTextRef}></p>
-              </div>
-              <div className="flex-1">
-                <p>y: 1</p>
-              </div>
-            </div>
-            <div className="form-inline">
-              <div className="flex-1">
-                <button
-                  type="button"
-                  className="btn-preview default"
-                  onClick={handleDownload}
-                >
+            <InlineGroup>
+              <>
+                <div className="flex-1"></div>
+                <div className="flex-1">
+                  <p>Width: 1</p>
+                </div>
+              </>
+            </InlineGroup>
+            <InlineGroup>
+              <>
+                <div className="flex-1">
+                  <p ref={frameXTextRef}>X: 0</p>
+                </div>
+                <div className="flex-1">
+                  <p>y: 1</p>
+                </div>
+              </>
+            </InlineGroup>
+            <InlineGroup className="justify-between items-center">
+              <>
+                <button className="-icon-button" onClick={handleDownload}>
                   <FaDownload />
                 </button>
-              </div>
-              <div className="flex-1">
                 <button
-                  type="button"
                   ref={playStateRef}
-                  className="btn-preview primary"
+                  className="-icon-button"
                   onClick={handlePlayingState}
                 >
                   {play ? <FaPause /> : <FaPlay />}
                 </button>
-              </div>
-            </div>
+              </>
+            </InlineGroup>
           </div>
         </React.Fragment>
       </div>

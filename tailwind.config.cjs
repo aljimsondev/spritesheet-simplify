@@ -7,7 +7,12 @@ module.exports = {
     backgroundColor: ({ theme }) => ({
       ...theme("colors"),
       base: "#dbdbdb",
-      navbarBase: "#181818",
+      navbarBase: "#2c2c2c",
+      navbarBaseHover: "#1e1e1e",
+      primaryBlue: "#2b1cd9",
+      primaryBlueHover: "#2114b1",
+      secondaryBlue: "#0c99ff",
+      secondaryBlueHover: "#0c7dce",
     }),
     screens: {
       // sm: "480px",

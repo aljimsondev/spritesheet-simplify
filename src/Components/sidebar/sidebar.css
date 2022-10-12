@@ -85,8 +85,7 @@
   @apply ml-5 text-sm text-gray-700;
 }
 .sidebar-anim-preview-base {
-  @apply px-5 py-3 
-  border-b-[1px] border-b-[lightgray];
+  @apply relative;
 }
 .form-base {
   @apply flex;

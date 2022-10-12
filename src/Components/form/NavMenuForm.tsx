@@ -4,7 +4,6 @@ import Button from "../button/Button";
 import Switch from "../switch/Switch";
 import { NavMenuInputProps, NODE } from "../types";
 import FormInput from "./FormInput";
-import "./NavMenuForm.css";
 import { defaultStatus } from "../../Store/store";
 
 const NavMenuForm: NODE<NavMenuInputProps> = ({}) => {

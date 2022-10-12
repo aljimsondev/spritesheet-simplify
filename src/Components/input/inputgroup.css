@@ -1,0 +1,6 @@
+.input-group-base {
+  @apply flex;
+}
+.input-group-input {
+  @apply border-none max-w-[50px] pl-1 outline-none;
+}

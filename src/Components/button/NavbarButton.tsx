@@ -19,22 +19,16 @@ const NavbarButton: NODE<NavbarButtonProps> = ({
     };
   }, []);
   return (
-    <div className="button-base">
-      <button
-        aria-label="nav-button"
-        className="nav-button centered"
-        type={type || "button"}
-        onClick={onClick}
-        ref={ref}
-      >
-        {icon}
-      </button>
-      {tooltip && (
-        <div className="tooltip-base">
-          <label>{tooltipLabel}</label>
-        </div>
-      )}
-    </div>
+    <button
+      aria-label="nav-button"
+      className="nav-button centered"
+      type={type || "button"}
+      onClick={onClick}
+      data-tooltip={tooltipLabel}
+      ref={ref}
+    >
+      {icon}
+    </button>
   );
 };
 

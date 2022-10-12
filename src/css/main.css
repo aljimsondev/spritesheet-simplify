@@ -3,6 +3,8 @@
 @import url("../Components/logo/Logo.css");
 @import url("../Components/sidebar/sidebar.css");
 @import url("../Components/card/preview.css");
+@import url("../Components/dropdown/DropdownMenu.css");
+@import url("../Components/input/inputgroup.css");
 
 @tailwind base;
 @tailwind components;

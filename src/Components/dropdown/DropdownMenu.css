@@ -1,41 +1,21 @@
 .nav-menu-base {
-  display: inline-block;
-  position: relative;
+  @apply inline-block relative;
 }
 
 .nav-menu {
-  position: absolute;
-  display: none;
-  right: 0;
-  margin: 5px;
-  margin-top: 0.6rem;
-  background: var(--PAPER);
-  border-radius: 10px;
+  @apply absolute hidden right-0 mt-[0.6rem] bg-primaryBlue z-20
+  before:absolute
+  before:bg-primaryBlue
+  before:right-[3px]
+  before:top-[-5px]
+  before:rotate-[45deg]
+  before:h-[20px]
+  before:w-[20px];
 }
 .--active {
-  display: block;
-}
-.nav-menu::before {
-  content: "";
-  position: absolute;
-  background: var(--PAPER);
-  right: 10px;
-  top: -5px;
-  transform: rotate(45deg);
-  height: 30px;
-  width: 30px;
-}
-.nav-menu-content {
-  position: relative;
-  z-index: 1;
-  display: block;
-  min-width: 200px;
-  min-height: 100px;
+  @apply block;
 }
 
-@media screen and (max-width: 500px) {
-  .nav-menu {
-    margin: -2px;
-    margin-top: 0.6rem;
-  }
+.nav-menu-content {
+  @apply relative z-10 block min-w-[200px] min-h-[100px];
 }

@@ -5,17 +5,13 @@
   margin-left: 3rem;
 }
 .span {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 10px;
-  font-size: 1.5rem;
+  @apply flex items-center justify-center mr-[10px];
 }
 .nav-flex-grow {
   @apply flex-grow flex items-center flex-row justify-between;
 }
 .nav-left-section {
-  @apply flex items-center ml-20;
+  @apply flex items-center justify-center ml-20;
 }
 .nav-button-base {
   position: inherit;
@@ -25,6 +21,7 @@
 .nav-button {
   @apply h-[7vh] z-10 w-10 border-none duration-500 text-white hover:bg-black;
 }
+
 .reload-btn {
   @apply bg-blue-700 hover:bg-blue-600 duration-500
   mx-2 my-2 px-3 py-2 text-white rounded-lg text-sm;

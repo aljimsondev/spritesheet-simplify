@@ -1,14 +1,14 @@
 import React from "react";
-import "./DropdownMenu.css";
 import { DropDownProps, NODE } from "../types";
 import ClickAwayListener from "../listener/ClickAwayEventListener";
 
-const DropdownMenu: NODE<DropDownProps> = ({
+const DropdownMenu: React.FC<DropDownProps> = ({
   children,
   icon,
   open,
   dropdownRef,
   toggleState,
+  buttonClass = "",
 }) => {
   React.useEffect(() => {
     const listener = new ClickAwayListener(dropdownRef, () => {
@@ -24,8 +24,8 @@ const DropdownMenu: NODE<DropDownProps> = ({
     toggleState((prevState) => !prevState);
   };
   return (
-    <div ref={dropdownRef} className="nav-menu-base ">
-      <button className="nav-button centered" onClick={toggle}>
+    <div ref={dropdownRef} className="nav-menu-base">
+      <button className={buttonClass} onClick={toggle}>
         {icon}
       </button>
       <div className={open ? `nav-menu --active` : `nav-menu`}>

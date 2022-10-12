@@ -26,8 +26,6 @@ const Sidebar: React.FC<{}> = () => {
     display: true,
     color: "#BFBFBF",
   });
-  const [openBg, setOpenBg] = React.useState(false);
-  const [applyColor, setBackgroundColor] = React.useState(false);
   const anim = new Animate();
   // anim.canvasProperties = { height: 120, width: 120 };
   //! FIX ME - animation rendering class
@@ -142,7 +140,7 @@ const Sidebar: React.FC<{}> = () => {
                   </details>
                 </div>
                 <div className="sidebar-anim-preview-base">
-                  <p className="text-title">ANIMATION PREVIEW</p>
+                  <p className="text-title px-5 py-3 ">ANIMATION PREVIEW</p>
                   {sprites.map((spritesheet, index) => {
                     return (
                       <PreviewCard
