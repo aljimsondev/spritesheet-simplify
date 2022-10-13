@@ -111,6 +111,16 @@ const Navbar: React.FC<NavbarProps> = ({
                         </p>
                       </>
                     </InlineGroup>
+                    <InlineGroup className="items-center mt-2">
+                      <>
+                        <div className="flex-1">
+                          <p className="text-white text-sm">
+                            Reset Canvas Scale
+                          </p>
+                        </div>
+                        <p className="nav-options-btn-label">Doubleclick</p>
+                      </>
+                    </InlineGroup>
                     <InlineGroup className="items-center mt-5 border-t-[1px] border-white py-2">
                       <>
                         <div className="flex-1 flex items-center">
