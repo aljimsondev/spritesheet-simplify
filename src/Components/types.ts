@@ -17,6 +17,8 @@ export type DropDownProps = {
   open: boolean;
   toggleState: React.Dispatch<React.SetStateAction<boolean>>;
   buttonClass?: string;
+  position?: "left" | "right";
+  background?: string;
 };
 export type NavbarButtonProps = {
   icon: JSX.Element;

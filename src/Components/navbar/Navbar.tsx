@@ -5,16 +5,18 @@ import {
   AiOutlineDownload,
   AiOutlinePlus,
   AiOutlineClose,
-  AiOutlineReload,
+  AiFillCaretDown,
+  AiFillFolder,
 } from "react-icons/ai";
 import { FaBars } from "react-icons/fa";
+import { BiImageAdd } from "react-icons/bi";
 import NavbarButton from "../button/NavbarButton";
 import DropdownMenu from "../dropdown/DropdownMenu";
 import NavMenuForm from "../form/NavMenuForm";
 import Logo from "../logo/Logo";
 import { Context } from "../../Store/store";
 
-const Navbar: NODE<NavbarProps> = ({
+const Navbar: React.FC<NavbarProps> = ({
   clearSelection,
   download,
   handleOpenFileInput,
@@ -25,17 +27,17 @@ const Navbar: NODE<NavbarProps> = ({
 
   const navData = [
     {
-      icon: <AiOutlinePlus size={30} />,
+      icon: <BiImageAdd size={30} />,
       onClick: handleOpenFileInput,
       tooltip: true,
       tooltipLabel: "Add Sprites",
     },
-    {
-      icon: <AiOutlineDownload size={30} />,
-      onClick: download,
-      tooltip: true,
-      tooltipLabel: "Download Spritesheet",
-    },
+    // {
+    //   icon: <AiOutlineDownload size={30} />,
+    //   onClick: download,
+    //   tooltip: true,
+    //   tooltipLabel: "Download Spritesheet",
+    // },
   ];
 
   return (
@@ -44,7 +46,18 @@ const Navbar: NODE<NavbarProps> = ({
         <Logo />
       </div>
       <div className="nav-flex-grow">
-        <div className="nav-left-section">
+        <div className="flex h-[7vh] items-center justify-end relative ml-3">
+          <div className="text-white">
+            <p>Guest</p>
+          </div>
+          <DropdownMenu
+            buttonClass="m-1 h-[6vh] text-white"
+            open={true}
+            position="left"
+            icon={<AiFillCaretDown />}
+          >
+            <h1>I am an options</h1>
+          </DropdownMenu>
           {navData.map((data, index) => {
             return (
               <NavbarButton
@@ -58,12 +71,12 @@ const Navbar: NODE<NavbarProps> = ({
           })}
         </div>
         <div className="nav-button-base">
-          <button onClick={handleReload} className="reload-btn">
+          {/* <button onClick={handleReload} className="reload-btn">
             Reload
           </button>
           <button onClick={clearSelection} className="clear-btn">
             Clear
-          </button>
+          </button> */}
           <NavbarButton
             icon={
               openMenu ? <AiOutlineClose size={20} /> : <FaBars size={20} />

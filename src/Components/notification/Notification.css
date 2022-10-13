@@ -1,6 +1,8 @@
 .notification-base {
   @apply rounded-[10px] p-4 absolute
-  bottom-0 left-0 m-4 z-[999] max-w-[300px] bg-white;
+  bottom-0 left-0 m-4 z-[999] 
+  max-w-[300px] xs:max-w-[400px]
+  bg-white;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 }
 .notification {
@@ -12,19 +14,16 @@
   mr-[0.5rem] rounded-full overflow-hidden;
 }
 .notification p {
-  min-width: 8rem;
+  @apply min-w-[8rem];
 }
 .--success {
-  border: 1px solid var(--SUCCESS);
-  color: var(--SUCCESS);
+  @apply border-[2px] border-green-600 text-green-700 text-lg;
 }
 .--warning {
-  border: 1px solid var(--WARNING);
-  color: var(--WARNING);
+  @apply border-[2px] border-orange-600 text-orange-700 text-lg;
 }
 .--error {
-  border: 1px solid var(--ERROR);
-  color: var(--ERROR);
+  @apply border-[2px] border-red-600 text-red-700 text-lg;
 }
 
 @media screen and (max-width: 400px) {

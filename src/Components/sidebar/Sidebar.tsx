@@ -1,7 +1,6 @@
 import React from "react";
 import Tabs from "../Tabs";
 import { Tab } from "../Tabs/Tab";
-import NavMenuForm from "../form/NavMenuForm";
 import PreviewCard from "../card/_test";
 import { Context } from "../../Store/store";
 import Renderer from "../../renderer";
@@ -14,6 +13,7 @@ import {
   AiOutlineEyeInvisible,
 } from "react-icons/ai";
 import Configuration from "../form/Configuration";
+import Export from "../form/Export";
 
 const Sidebar: React.FC<{}> = () => {
   const { buffers, sidebarRef } = React.useContext(Context);
@@ -162,6 +162,9 @@ const Sidebar: React.FC<{}> = () => {
         </Tab>
         <Tab tabLabel="Configuration">
           <Configuration />
+        </Tab>
+        <Tab tabLabel="Export">
+          <Export />
         </Tab>
       </Tabs>
     </div>

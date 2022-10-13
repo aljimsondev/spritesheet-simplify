@@ -9,6 +9,7 @@ const DropdownMenu: React.FC<DropDownProps> = ({
   dropdownRef,
   toggleState,
   buttonClass = "",
+  position = "right",
 }) => {
   React.useEffect(() => {
     const listener = new ClickAwayListener(dropdownRef, () => {
@@ -28,7 +29,19 @@ const DropdownMenu: React.FC<DropDownProps> = ({
       <button className={buttonClass} onClick={toggle}>
         {icon}
       </button>
-      <div className={open ? `nav-menu --active` : `nav-menu`}>
+      <div
+        style={{
+          left: position === "left" ? 0 : "unset",
+          right: position === "right" ? 0 : "unset",
+        }}
+        className={
+          open
+            ? `nav-menu ${
+                position === "left" ? " --left" : " --right"
+              } --active`
+            : `nav-menu`
+        }
+      >
         <div className="nav-menu-content">{children}</div>
       </div>
     </div>

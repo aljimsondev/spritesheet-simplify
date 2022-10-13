@@ -19,7 +19,7 @@
   @apply flex items-center justify-end;
 }
 .nav-button {
-  @apply h-[7vh] z-10 w-10 border-none duration-500 text-white hover:bg-black;
+  @apply h-[7vh] z-10 w-10 border-none duration-500 text-white hover:bg-navbarBaseHover ml-2;
 }
 
 .reload-btn {

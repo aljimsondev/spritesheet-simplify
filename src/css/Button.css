@@ -1,3 +1,6 @@
 .close-button {
-  @apply w-8 h-8 rounded-none outline-none border-none cursor-pointer select-none;
+  @apply outline-none border-none cursor-pointer select-none bg-gray-300 hover:bg-red-600 duration-200
+  w-[25px] h-[25px]
+  min-w-[25px] min-h-[25px]
+  max-w-[25px] max-h-[25px];
 }

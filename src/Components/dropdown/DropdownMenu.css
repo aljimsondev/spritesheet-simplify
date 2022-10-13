@@ -3,14 +3,25 @@
 }
 
 .nav-menu {
-  @apply absolute hidden right-0 mt-[0.4rem] bg-primaryBlue z-20
-  before:absolute
+  @apply absolute hidden mt-[0.4rem] bg-primaryBlue z-20;
+}
+.--right {
+  @apply before:absolute
   before:bg-primaryBlue
+  before:h-[15px]
+  before:w-[15px]
   before:right-[5px]
   before:top-[-5px]
-  before:rotate-[45deg]
+  before:rotate-[45deg];
+}
+.--left {
+  @apply before:absolute
+  before:bg-primaryBlue
   before:h-[15px]
-  before:w-[15px];
+  before:w-[15px]
+  before:left-[5px]
+  before:top-[-5px]
+  before:rotate-[45deg];
 }
 .--active {
   @apply block;
