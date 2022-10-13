@@ -6,6 +6,7 @@ import {
   AiOutlineEye,
   AiOutlineEyeInvisible,
 } from "react-icons/ai";
+import Accordion from "../accordion";
 
 const Configuration = () => {
   const [openBorderOpt, setBorderOpt] = React.useState(true);
@@ -49,73 +50,55 @@ const Configuration = () => {
 
   return (
     <>
-      <div className="configuration-base outline-b">
-        <div className="flex-1 flex items-center justify-between">
-          <p className="text-title">BORDERLINE</p>
-          <button onClick={handleToogleBorderOpt} className="-icon-button">
-            {openBorderOpt ? (
-              <AiOutlineMinus size={20} />
+      <Accordion
+        activeIcon={<AiOutlinePlus size={20} />}
+        inactiveIcon={<AiOutlineMinus size={20} />}
+        hidden
+        open={openBorderOpt}
+        title="BORDERLINE"
+        toogle={handleToogleBorderOpt}
+      >
+        <figure className="note-base">
+          <span className="note-icon">
+            <AiOutlineQuestion />
+          </span>
+          <p className="note-text">
+            Note: Turn this off when exporting the spritesheets.
+          </p>
+        </figure>
+        <div className="flex-1 flex items-center">
+          <input type="checkbox" className="input-check mr-3" />
+          <label className="text-sm">Show borderline</label>
+        </div>
+      </Accordion>
+      <Accordion
+        activeIcon={<AiOutlinePlus size={20} />}
+        inactiveIcon={<AiOutlineMinus size={20} />}
+        hidden
+        open={backgroundProps.open}
+        title="BACKGROUND"
+        toogle={handleClickBgPropsOpen}
+      >
+        <div className="bg-color-picker-base">
+          <label htmlFor="bg-color-picker" className="bg-color-picker-wrapper">
+            <input
+              type="color"
+              value={backgroundProps.color}
+              onChange={handleChangeBgPropsColor}
+              name="color"
+              id="bg-color-picker"
+            />
+            <p className="bg-text-color-label">{backgroundProps.color}</p>
+          </label>
+          <button onClick={handleClickBgPropsDisplay} className="-icon-button">
+            {backgroundProps.display ? (
+              <AiOutlineEye size={20} />
             ) : (
-              <AiOutlinePlus size={20} />
+              <AiOutlineEyeInvisible size={20} />
             )}
           </button>
         </div>
-        <details open={openBorderOpt}>
-          <summary className="hidden"></summary>
-          <figure className="note-base">
-            <span className="note-icon">
-              <AiOutlineQuestion />
-            </span>
-            <p className="note-text">
-              Note: Turn this off when exporting the spritesheets.
-            </p>
-          </figure>
-          <div className="flex-1 flex items-center">
-            <input type="checkbox" className="input-check mr-3" />
-            <label className="text-sm">Show borderline</label>
-          </div>
-        </details>
-      </div>
-      <div className="configuration-base outline-b">
-        <div className="flex-1 flex items-center justify-between">
-          <p className="text-title">BACKGROUND</p>
-          <button onClick={handleClickBgPropsOpen} className="-icon-button">
-            {backgroundProps.open ? (
-              <AiOutlineMinus size={20} />
-            ) : (
-              <AiOutlinePlus size={20} />
-            )}
-          </button>
-        </div>
-        <details open={backgroundProps.open}>
-          <summary className="hidden"></summary>
-          <div className="bg-color-picker-base">
-            <label
-              htmlFor="bg-color-picker"
-              className="bg-color-picker-wrapper"
-            >
-              <input
-                type="color"
-                value={backgroundProps.color}
-                onChange={handleChangeBgPropsColor}
-                name="color"
-                id="bg-color-picker"
-              />
-              <p className="bg-text-color-label">{backgroundProps.color}</p>
-            </label>
-            <button
-              onClick={handleClickBgPropsDisplay}
-              className="-icon-button"
-            >
-              {backgroundProps.display ? (
-                <AiOutlineEye size={20} />
-              ) : (
-                <AiOutlineEyeInvisible size={20} />
-              )}
-            </button>
-          </div>
-        </details>
-      </div>
+      </Accordion>
     </>
   );
 };
