@@ -15,6 +15,8 @@ import DropdownMenu from "../dropdown/DropdownMenu";
 import NavMenuForm from "../form/NavMenuForm";
 import Logo from "../logo/Logo";
 import { Context } from "../../Store/store";
+import InlineGroup from "../group/InlineGroup";
+import Switch from "../switch/Switch";
 
 const Navbar: React.FC<NavbarProps> = ({
   clearSelection,
@@ -24,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({
   const dropdownRef = React.useRef(null);
   const [open, setOpen] = React.useState<boolean>(false);
   const { toogleMenu, openMenu, handleReload } = React.useContext(Context);
-
+  const [dark, setDarkMode] = React.useState(false);
   const navData = [
     {
       icon: <BiImageAdd size={30} />,
@@ -32,13 +34,10 @@ const Navbar: React.FC<NavbarProps> = ({
       tooltip: true,
       tooltipLabel: "Add Sprites",
     },
-    // {
-    //   icon: <AiOutlineDownload size={30} />,
-    //   onClick: download,
-    //   tooltip: true,
-    //   tooltipLabel: "Download Spritesheet",
-    // },
   ];
+  const toogleTheme = () => {
+    setDarkMode((prevMode) => !prevMode);
+  };
 
   return (
     <div className="navbar">
@@ -59,7 +58,75 @@ const Navbar: React.FC<NavbarProps> = ({
               dropdownRef={dropdownRef}
               icon={<AiFillCaretDown />}
             >
-              <h1>I am an options</h1>
+              <>
+                <div className="nav-options-form-base">
+                  <form className="nav-options-form">
+                    <InlineGroup className="items-center mt-2">
+                      <>
+                        <div className="flex-1">
+                          <button className="nav-options-btn">
+                            Reload App
+                          </button>
+                        </div>
+                        <p className="nav-options-btn-label">Ctrl + R</p>
+                      </>
+                    </InlineGroup>
+                    <InlineGroup className="items-center mt-2">
+                      <>
+                        <div className="flex-1">
+                          <button className="nav-options-btn">
+                            Clear Canvas
+                          </button>
+                        </div>
+                        <p className="nav-options-btn-label">Ctrl + X</p>
+                      </>
+                    </InlineGroup>
+                    <InlineGroup className="items-center mt-2">
+                      <>
+                        <div className="flex-1">
+                          <p className="text-white text-sm">Zoom in</p>
+                        </div>
+                        <p className="nav-options-btn-label">
+                          Ctrl + MouseWheelUp
+                        </p>
+                      </>
+                    </InlineGroup>
+                    <InlineGroup className="items-center mt-2">
+                      <>
+                        <div className="flex-1">
+                          <p className="text-white text-sm">Zoom out</p>
+                        </div>
+                        <p className="nav-options-btn-label">
+                          Ctrl + MouseWheelDown
+                        </p>
+                      </>
+                    </InlineGroup>
+                    <InlineGroup className="items-center mt-2">
+                      <>
+                        <div className="flex-1">
+                          <p className="text-white text-sm">Drag Canvas</p>
+                        </div>
+                        <p className="nav-options-btn-label">
+                          Shift + Mousemove
+                        </p>
+                      </>
+                    </InlineGroup>
+                    <InlineGroup className="items-center mt-5 border-t-[1px] border-white py-2">
+                      <>
+                        <div className="flex-1 flex items-center">
+                          <Switch
+                            name="theme"
+                            onSwitch={toogleTheme}
+                            id="theme"
+                            checked={dark}
+                          />
+                        </div>
+                        <p className="nav-options-btn-label">Toogle Theme</p>
+                      </>
+                    </InlineGroup>
+                  </form>
+                </div>
+              </>
             </DropdownMenu>
           </div>
           {navData.map((data, index) => {

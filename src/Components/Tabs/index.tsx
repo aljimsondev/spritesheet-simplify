@@ -1,14 +1,23 @@
 import React from "react";
 
-const Tabs: React.FC<{ children: any }> = ({ children }) => {
+const Tabs: React.FC<{ children: any; defaultTabIndex?: number }> = ({
+  children,
+  defaultTabIndex = 1,
+}) => {
   const [activeTab, setActiveTab] = React.useState(0);
   const childCount = React.Children.count(children);
-  const currentFocusChild = React.useRef(null);
   const handleChangeActiveTab = (tabIndex: number) => {
     setActiveTab(tabIndex);
   };
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    //set active tab
+    setActiveTab(defaultTabIndex);
+
+    return () => {
+      setActiveTab(defaultTabIndex);
+    };
+  }, []);
 
   const renderTab = React.useCallback(() => {
     if (childCount === 1) {

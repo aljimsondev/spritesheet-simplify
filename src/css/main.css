@@ -7,6 +7,7 @@
 @import url("../Components/input/inputgroup.css");
 @import url("../Components/form/Configuration.css");
 @import url("../Components/notification/Notification.css");
+@import url("../Components/switch/Switch.css");
 
 @tailwind base;
 @tailwind components;

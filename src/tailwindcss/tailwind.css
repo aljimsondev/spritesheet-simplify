@@ -61,7 +61,6 @@
 }
 
 .nav-button-base {
-  position: inherit;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -141,19 +140,40 @@
   transform: rotate(45deg);
 }
 
-@media screen and (max-width: 500px) {
-  .nav-button {
-    height: 2rem;
-    width: 2rem;
-  }
+.nav-options-form-base {
+  position: relative;
+  min-width: 300px;
+  padding: 0.5rem;
+}
 
-  .navbar {
-    height: 7vh;
-  }
+.nav-options-form {
+  display: flex;
+  flex-direction: column;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
 
-  .nav-title {
-    margin-left: 1rem;
-  }
+.nav-options-btn {
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(255 255 255 / var(--tw-border-opacity));
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.nav-options-btn-label {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
 .logo-base {
@@ -735,9 +755,73 @@
   }
 }
 
-/*
-! tailwindcss v3.1.8 | MIT License | https://tailwindcss.com
-*/
+.switch-base {
+  position: relative;
+  display: flex;
+  height: 28px;
+  width: 60px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 30px;
+  border-width: 2px;
+  --tw-border-opacity: 1;
+  border-color: rgb(80 80 80 / var(--tw-border-opacity));
+  --tw-bg-opacity: 1;
+  background-color: rgb(44 44 44 / var(--tw-bg-opacity));
+  transition-delay: 200ms;
+  transition-duration: 500ms;
+}
+
+.switch-base.switch-active {
+  --tw-bg-opacity: 1;
+  background-color: rgb(199 199 199 / var(--tw-bg-opacity));
+  transition-delay: 200ms;
+}
+
+.switch-base span {
+  position: absolute;
+  left: -2px;
+  height: 30px;
+  width: 30px;
+  --tw-translate-x: 0px;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  border-radius: 9999px;
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+  transition-duration: 500ms;
+}
+
+.switch-active span {
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 115 22 / var(--tw-bg-opacity));
+  /* translate-x-[w-switchBase - w-swithThumb]; */
+  transform: translateX(calc(60px - 30px + 1px));
+}
+
+.switch {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  overflow: hidden;
+}
+
+.switch-input {
+  margin: 0px;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  padding: 10px;
+  opacity: 0;
+}
+
+.switch-label {
+  margin-left: 1rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+/* ! tailwindcss v3.1.8 | MIT License | https://tailwindcss.com */
 
 /*
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
@@ -1377,9 +1461,23 @@ video {
   border-width: 1px;
 }
 
+.border-t-\[1px\] {
+  border-top-width: 1px;
+}
+
+.border-white {
+  --tw-border-opacity: 1;
+  border-color: rgb(255 255 255 / var(--tw-border-opacity));
+}
+
 .bg-secondaryBlue {
   --tw-bg-opacity: 1;
   background-color: rgb(12 153 255 / var(--tw-bg-opacity));
+}
+
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .px-5 {

@@ -83,7 +83,7 @@ const Sidebar: React.FC<{}> = () => {
   };
   return (
     <div ref={sidebarRef} className="sidebar-base">
-      <Tabs>
+      <Tabs defaultTabIndex={1}>
         <Tab tabLabel="Preview">
           <div className="preview-base">
             {buffers.length <= 0 && (

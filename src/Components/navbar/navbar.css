@@ -14,8 +14,6 @@
   @apply flex items-center justify-center ml-20;
 }
 .nav-button-base {
-  position: inherit;
-  display: flex;
   @apply flex items-center justify-end;
 }
 .nav-button {
@@ -37,16 +35,15 @@
 .rotated-45deg {
   transform: rotate(45deg);
 }
-
-@media screen and (max-width: 500px) {
-  .nav-button {
-    height: 2rem;
-    width: 2rem;
-  }
-  .navbar {
-    height: 7vh;
-  }
-  .nav-title {
-    margin-left: 1rem;
-  }
+.nav-options-form-base {
+  @apply min-w-[300px] p-2 relative;
+}
+.nav-options-form {
+  @apply flex flex-col py-3 px-3;
+}
+.nav-options-btn {
+  @apply px-3 py-1 border-white border-[1px] text-white text-sm;
+}
+.nav-options-btn-label {
+  @apply text-xs text-white;
 }

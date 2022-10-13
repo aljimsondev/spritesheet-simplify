@@ -190,6 +190,13 @@ function App() {
         });
       }
     })();
+
+    (() => {
+      window.addEventListener("keydown", (e) => {
+        e.preventDefault();
+        console.log(e);
+      });
+    })();
   }, []);
 
   return (

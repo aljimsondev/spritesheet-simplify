@@ -1,52 +1,26 @@
 .switch-base {
-  transition-delay: 0.2s;
-  height: var(--SWITCH-HEIGHT);
-  width: var(--SWITCH-WIDTH);
-  background: var(--SWITCH-OFF);
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 30px;
-  transition: 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+  @apply delay-200 h-switchBase w-switchBase bg-switchInActive relative flex items-center justify-center rounded-[30px] duration-500 border-[2px] border-switchBorderColor;
 }
 
 .switch-base.switch-active {
-  transition-delay: 0.2s;
-  background: var(--PRIMARY-LIGHT);
+  @apply delay-200 bg-switchActive;
 }
 .switch-base span {
-  transition: 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
-  position: absolute;
-  height: var(--THUMB-SIZE);
-  width: var(--THUMB-SIZE);
-  background: var(--THUMB-SWITCH-OFF);
-  border-radius: 50%;
-  left: -1px;
-  transform: translateX(0px);
+  @apply duration-500 absolute h-switchThumb w-swithThumb bg-black rounded-full left-[-2px] translate-x-0;
 }
 
-.switch-base.switch-active span {
-  background: var(--THUMB-SWITCH-ON);
-  transform: translateX(calc(var(--SWITCH-WIDTH) - var(--THUMB-SIZE) + 3px));
+.switch-active span {
+  @apply bg-orange-500;
+  /* translate-x-[w-switchBase - w-swithThumb]; */
+  transform: translateX(calc(60px - 30px + 1px));
 }
 
 .switch {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
+  @apply w-[100%] h-[100%] overflow-hidden flex items-center;
 }
-.switch-base input[type="checkbox"] {
-  margin: 0;
-  padding: 10px;
-  width: 100% !important;
-  height: 100% !important;
-  cursor: pointer;
-  opacity: 0;
+.switch-input {
+  @apply m-0 p-[10px] w-[100%] h-[100%] cursor-pointer opacity-0;
 }
 .switch-label {
-  margin-left: 1rem;
-  font-size: 1rem;
+  @apply ml-4 text-base;
 }

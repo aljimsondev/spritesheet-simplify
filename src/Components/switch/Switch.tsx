@@ -1,6 +1,5 @@
 import React from "react";
 import { NODE } from "../types";
-import "./Switch.css";
 import { SwitchProps } from "./type";
 
 const Switch: NODE<SwitchProps> = ({ onSwitch, checked, name }) => {
@@ -23,6 +22,7 @@ const Switch: NODE<SwitchProps> = ({ onSwitch, checked, name }) => {
           name={name}
           checked={checked}
           type="checkbox"
+          className="switch-input"
         />
       </div>
     </div>
