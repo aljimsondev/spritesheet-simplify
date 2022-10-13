@@ -50,14 +50,18 @@ const Navbar: React.FC<NavbarProps> = ({
           <div className="text-white">
             <p>Guest</p>
           </div>
-          <DropdownMenu
-            buttonClass="m-1 h-[6vh] text-white"
-            open={true}
-            position="left"
-            icon={<AiFillCaretDown />}
-          >
-            <h1>I am an options</h1>
-          </DropdownMenu>
+          <div ref={dropdownRef}>
+            <DropdownMenu
+              buttonClass="m-1 h-[6vh] text-white"
+              open={open}
+              position="left"
+              toggleState={setOpen}
+              dropdownRef={dropdownRef}
+              icon={<AiFillCaretDown />}
+            >
+              <h1>I am an options</h1>
+            </DropdownMenu>
+          </div>
           {navData.map((data, index) => {
             return (
               <NavbarButton

@@ -203,8 +203,8 @@ function App() {
           handleOpenFileInput={handleOpenFileInput}
         />
         <div className="container-grow">
-          <div id="canvas-wrapper" className="canvas-wrapper">
-            <div ref={canvasWrapperRef}></div>
+          <div className="canvas-wrapper">
+            <div ref={canvasWrapperRef} id="canvas-root"></div>
           </div>
           <form>
             <input
