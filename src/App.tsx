@@ -33,13 +33,6 @@ function App() {
 
   const renderer = new Renderer();
 
-  renderer.setImageSpriteProps({
-    borderLine: properties.borderLine,
-    imageHeight: properties.height,
-    imageWidth: properties.width,
-    padding: properties.padding,
-  });
-
   const toogleState = () => {
     setModalState((prevState) => !prevState);
   };
@@ -130,10 +123,18 @@ function App() {
   React.useEffect(() => {
     try {
       (async () => {
-        await renderer.loadBuffers(buffers).then((data) => {});
-        if (canvasWrapperRef.current) {
-          await renderer.render(canvasWrapperRef.current);
-        }
+        renderer.setImageSpriteProps({
+          borderLine: properties.borderLine,
+          imageHeight: properties.height,
+          imageWidth: properties.width,
+          padding: properties.padding,
+          borderWidth: properties.borderWidth,
+        });
+        await renderer.loadBuffers(buffers).then(async (data) => {
+          if (canvasWrapperRef.current && data) {
+            await renderer.render(canvasWrapperRef.current);
+          }
+        });
       })();
     } catch (e) {
       console.warn(e);
@@ -147,14 +148,15 @@ function App() {
     properties.width,
     properties.padding,
     properties.borderLine,
+    properties.borderWidth,
   ]);
 
   /**
    * HANDLES THE ZOOMING ANND PANNING
    */
   React.useEffect(() => {
+    const container = canvasWrapperRef.current!;
     (() => {
-      const container = canvasWrapperRef.current!;
       if (container) {
         const instance = Zoomify({
           minScale: 0.1,
@@ -188,14 +190,11 @@ function App() {
             originY: event.movementY,
           });
         });
+        container.addEventListener("keydown", (e) => {
+          e.preventDefault();
+          console.log(e);
+        });
       }
-    })();
-
-    (() => {
-      window.addEventListener("keydown", (e) => {
-        e.preventDefault();
-        console.log(e);
-      });
     })();
   }, []);
 

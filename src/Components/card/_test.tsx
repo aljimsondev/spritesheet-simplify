@@ -1,5 +1,5 @@
 import React from "react";
-import { FaPlay, FaDownload, FaPause } from "react-icons/fa";
+import { FaDownload } from "react-icons/fa";
 import CreatePreviewThumbnail from "../../renderer/CreatePreviewThumbnail";
 import { AiOutlineEllipsis } from "react-icons/ai";
 import { IoPlayOutline, IoPauseOutline } from "react-icons/io5";
@@ -22,18 +22,14 @@ const PreviewCard: React.FC<{
     ref: HTMLCanvasElement,
     options?: { fps: number }
   ) => void;
-  index: number;
 }> = ({
   buffer,
   handleDownload,
   handlePlayState,
-  index,
   backgroundColor,
   displayBackgroundColor,
 }) => {
-  const [readyState, setReadyState] = React.useState(false);
   const [openDropdown, setOpenDropdown] = React.useState(false);
-  const [play, playAnimation] = React.useState(false);
   const [fps, setFps] = React.useState<number>(60);
   const playStateRef = React.useRef<HTMLButtonElement>(null);
   const defaultScreen = { height: 120, width: 120 };
@@ -66,9 +62,7 @@ const PreviewCard: React.FC<{
       }
     })();
 
-    return () => {
-      setReadyState(false);
-    };
+    return () => {};
   }, [backgroundColor, displayBackgroundColor]);
 
   const handleChangeFPS = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,12 +79,6 @@ const PreviewCard: React.FC<{
   return (
     <>
       <div className="preview-card ">
-        {/* {!readyState && (
-          <div className="preview-loading-base">
-            <p>Loading Preview</p>
-            <Loader />
-          </div>
-        )} */}
         <React.Fragment>
           <div ref={canvasWrapperRef} className="preview-canvas-base">
             <div
@@ -123,7 +111,7 @@ const PreviewCard: React.FC<{
             <p>Spritesheet01_attack</p>
             <div className="preview-controller-label">
               <InlineGroup className="justify-between mt-2">
-                <InputGroup label="FPS" id="fps" value={fps} />
+                <InputGroup label="FPS" value={fps} />
               </InlineGroup>
               <input
                 type="range"
@@ -137,7 +125,6 @@ const PreviewCard: React.FC<{
               <>
                 <div className="flex-1">
                   <InputGroup
-                    id="h-input"
                     onChange={(e) => {}}
                     label="H"
                     type="number"
@@ -146,7 +133,6 @@ const PreviewCard: React.FC<{
                 </div>
                 <div className="flex-1">
                   <InputGroup
-                    id="w-input"
                     onChange={(e) => {}}
                     label="W"
                     type="number"
@@ -158,10 +144,10 @@ const PreviewCard: React.FC<{
             <InlineGroup>
               <>
                 <div className="flex-1">
-                  <InputGroup id="h-input" onChange={(e) => {}} label="X" />
+                  <InputGroup onChange={(e) => {}} label="X" />
                 </div>
                 <div className="flex-1">
-                  <InputGroup id="h-input" onChange={(e) => {}} label="Y" />
+                  <InputGroup onChange={(e) => {}} label="Y" />
                 </div>
               </>
             </InlineGroup>
@@ -178,7 +164,7 @@ const PreviewCard: React.FC<{
                     className="-icon-button bg-secondaryBlue text-white"
                     onClick={handlePlayingState}
                   >
-                    {play ? <IoPauseOutline /> : <IoPlayOutline />}
+                    <IoPlayOutline />
                   </button>
                 </div>
               </>

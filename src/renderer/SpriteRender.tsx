@@ -5,6 +5,7 @@ type SpriteRenderer = (props: {
   images: any[];
   y: number;
   borderLine: boolean;
+  borderWidth: number;
 }) => void;
 
 export const spriteRenderer: SpriteRenderer = ({
@@ -14,6 +15,7 @@ export const spriteRenderer: SpriteRenderer = ({
   context,
   y,
   borderLine,
+  borderWidth,
 }) => {
   for (let column = 0; column < images.length; column++) {
     let img = images[column];
@@ -35,6 +37,7 @@ export const spriteRenderer: SpriteRenderer = ({
       height || img.height
     );
     if (borderLine) {
+      context.lineWidth = borderWidth;
       context.strokeRect(
         column * startingPositionX,
         y,

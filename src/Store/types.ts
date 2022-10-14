@@ -15,6 +15,7 @@ export type AppProperties = {
   padding: number;
   fileName: string;
   borderLine: boolean;
+  borderWidth: number;
 };
 
 export type ContextType = {
@@ -31,4 +32,6 @@ export type ContextType = {
   sidebarRef: React.RefObject<HTMLDivElement>;
   reloadApp: boolean;
   handleReload: () => void;
+  onChangeBorderline: () => void;
+  onUpdateProperties: (key: any, value: any) => void;
 };

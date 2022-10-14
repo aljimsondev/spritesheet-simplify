@@ -1,7 +1,7 @@
 import React from "react";
 import Tabs from "../Tabs";
 import { Tab } from "../Tabs/Tab";
-import PreviewCard from "../card/_test";
+import PreviewCard from "../card/PreviewCard";
 import { Context } from "../../Store/store";
 import Renderer from "../../renderer";
 import Animate from "../../renderer/Animate.test";
@@ -75,6 +75,7 @@ const Sidebar: React.FC<{}> = () => {
       display: !backgroundProps.display,
     });
   };
+
   return (
     <div ref={sidebarRef} className="sidebar-base">
       <Tabs defaultTabIndex={1}>
@@ -131,7 +132,6 @@ const Sidebar: React.FC<{}> = () => {
                     return (
                       <PreviewCard
                         key={`${spritesheet.dataset.props! + index}`}
-                        index={index}
                         backgroundColor={backgroundProps.color}
                         displayBackgroundColor={backgroundProps.display}
                         buffer={spritesheet}

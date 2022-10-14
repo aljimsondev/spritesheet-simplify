@@ -12,6 +12,7 @@ interface Renderer {
     imageWidth: number;
     imageHeight: number;
     borderLine: boolean;
+    borderWidth: number;
   };
   buffers: BufferData[][];
   images: HTMLImageElement[][];
@@ -38,6 +39,7 @@ class Renderer {
     imageWidth: number;
     imageHeight: number;
     borderLine: boolean;
+    borderWidth: number;
   }) {
     this.imageSpriteProps = args;
   }
@@ -124,6 +126,7 @@ class Renderer {
       imageWidth?: number;
       imageHeight?: number;
       borderLine?: boolean;
+      borderWidth: number;
     }
   ) {
     let startingPositionX = 0; //entry point of rendering
@@ -146,6 +149,7 @@ class Renderer {
         options?.imageHeight || image.height
       );
       if (options?.borderLine) {
+        context.lineWidth = options.borderWidth;
         context.strokeRect(
           i * startingPositionX,
           posY,
@@ -308,6 +312,7 @@ class Renderer {
           imageWidth: this.imageSpriteProps.imageWidth,
           imageHeight: this.imageSpriteProps.imageHeight,
           borderLine: this.imageSpriteProps.borderLine,
+          borderWidth: this.imageSpriteProps.borderWidth,
         });
 
         if (this.images.length > 0) {

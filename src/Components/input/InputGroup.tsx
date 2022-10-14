@@ -3,27 +3,26 @@ import React from "react";
 const InputGroup = React.forwardRef<
   HTMLInputElement,
   {
-    width?: any;
-    onChange?: React.ChangeEventHandler<HTMLInputElement>;
-    id?: string;
+    inputProps: React.DetailedHTMLProps<
+      React.InputHTMLAttributes<HTMLInputElement>,
+      HTMLInputElement
+    >;
+    width?: number;
     label: string;
-    value?: any;
-    type?: React.HTMLInputTypeAttribute;
   }
->(({ width = 50, onChange = () => {}, id, label, value, type }, ref) => {
+>(({ inputProps, width = 40, label }, ref) => {
+  const inputRef = React.useRef<HTMLInputElement>(null);
   return (
-    <label htmlFor={id} className="input-group-base">
+    <label htmlFor={inputRef.current?.id} className="input-group-base">
       <p ref={ref}>{label}</p>
       <input
-        onChange={onChange}
-        type={type}
-        id={id}
+        {...inputProps}
+        id={inputRef.current?.id}
         style={{ maxWidth: width }}
         className="input-group-input"
-        value={value}
       />
     </label>
   );
 });
 
-export default InputGroup;
+export default React.memo(InputGroup);

@@ -1,210 +1,226 @@
 import React from "react";
-import FormInput from "../form/FormInput";
-import "./preview.css";
-import { FaPlay, FaDownload, FaPause } from "react-icons/fa";
-import { BufferDatasetProperties } from "./types";
-import CreateAnimation from "../../renderer/CreateAnimation";
+import { FaDownload } from "react-icons/fa";
 import CreatePreviewThumbnail from "../../renderer/CreatePreviewThumbnail";
-import Loader from "../Loader";
+import { AiOutlineEllipsis } from "react-icons/ai";
+import { IoPlayOutline, IoPauseOutline } from "react-icons/io5";
+import InlineGroup from "../group/InlineGroup";
+import DropdownMenu from "../dropdown/DropdownMenu";
+import InputGroup from "../input/InputGroup";
 
 //config must be global to allow configuration for the user whatever they desired
 const config = {
   animationFrameOffset: 0, //offset in animation frame rendering
 };
 
+const defaultProperty = {
+  height: 0,
+  width: 0,
+  x: 0,
+  y: 0,
+  name: "",
+};
+
 const PreviewCard: React.FC<{
   buffer: HTMLImageElement | undefined;
-}> = ({ buffer }) => {
-  const [readyState, setReadyState] = React.useState(false);
-  const [play, playAnimation] = React.useState(false);
-  const playing = React.useRef<boolean>(false);
+  backgroundColor: string;
+  displayBackgroundColor: boolean;
+  handleDownload: () => void;
+  handlePlayState: (
+    sprite: HTMLImageElement,
+    ref: HTMLCanvasElement,
+    options?: { fps: number }
+  ) => void;
+}> = ({
+  buffer,
+  handleDownload,
+  handlePlayState,
+  backgroundColor,
+  displayBackgroundColor,
+}) => {
+  const [openDropdown, setOpenDropdown] = React.useState(false);
   const [fps, setFps] = React.useState<number>(60);
-  let RAF = React.useRef<number>(0);
+  const playStateRef = React.useRef<HTMLButtonElement>(null);
   const defaultScreen = { height: 120, width: 120 };
+  const canvasWrapperRef = React.useRef<HTMLDivElement>(null);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
-  const frameXTextRef = React.useRef<HTMLParagraphElement>(null);
-  const maxFrame = React.useRef<number>(0);
-  const frame = React.useRef<number>(0);
-  let interval = 1000 / fps;
-  let timer = 0;
-  let lastTime = 0;
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+  const [properties, setProperties] = React.useState<{
+    name: string;
+    height: number;
+    width: number;
+    x: number;
+    y: number;
+  }>(defaultProperty);
 
-  //should run in first render
+  const handlePlayingState = () => {
+    if (buffer) {
+      handlePlayState(buffer, canvasRef.current!, { fps: fps });
+    }
+  };
+
   React.useEffect(() => {
-    setTimeout(() => {
+    (() => {
+      const ctx = canvasRef.current?.getContext("2d")!;
       if (buffer) {
-        setReadyState(true);
+        const props: { name: string; height: number; width: number } =
+          JSON.parse(buffer.dataset.props!);
+
+        CreatePreviewThumbnail(
+          buffer,
+          {
+            height: props.height,
+            width: props.width,
+            name: props.name,
+          },
+          ctx,
+          defaultScreen.width,
+          defaultScreen.height
+        );
+        setProperties({
+          ...properties,
+          width: props.width,
+          height: props.height,
+          name: props.name,
+        });
       }
-    }, 2000);
+    })();
+
     return () => {
       //clean up
-      setReadyState(false);
+      setProperties(defaultProperty);
     };
-  }, []);
+  }, [backgroundColor, displayBackgroundColor]);
 
-  React.useEffect(() => {
+  const handleChangeFPS = (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
-      const ctx = canvasRef.current?.getContext("2d");
-      if (buffer && ctx) {
-        const stringProps: string = buffer.dataset.props || "{}";
-        const bufferProperties: BufferDatasetProperties =
-          JSON.parse(stringProps);
-        maxFrame.current = buffer.width / bufferProperties.width - 1; //getting the maxframe
-        //create thumbnail if preview is not yet played
-        if (!playing.current) {
-          CreatePreviewThumbnail(
-            buffer,
-            bufferProperties,
-            ctx,
-            defaultScreen.width,
-            defaultScreen.height
-          );
-          if (frameXTextRef.current) {
-            frameXTextRef.current.textContent = `X: ${frame.current}`;
-          }
-        }
-
-        //animation logic
-
-        const animate = (time: number) => {
-          const deltatime = time - lastTime;
-          lastTime = time;
-          ctx.clearRect(0, 0, defaultScreen.width, defaultScreen.height);
-
-          if (buffer?.src === "data:,") return; //broken state cant proceed to  animation
-
-          //handle animation here
-          if (play) {
-            playing.current = true; //set as the thumbnail observer when false renders the thumbnail
-            if (
-              frame.current >
-              maxFrame.current + config.animationFrameOffset
-            ) {
-              //to avoid flickering of the animation, current frame must not be allowed to increment higher than the maxframe set `>=` as statement above
-              frame.current = 0; //reset current frame
-              playAnimation(false);
-            } else {
-              if (timer > interval) {
-                frame.current++; //increment frame
-                timer = 0; //reset timer
-              } else {
-                timer += deltatime;
-              }
-            }
-          }
-          //playing the animation
-          CreateAnimation(
-            buffer,
-            bufferProperties,
-            ctx,
-            frame.current,
-            0,
-            defaultScreen.width,
-            defaultScreen.height
-          );
-          if (frameXTextRef.current) {
-            frameXTextRef.current.textContent = `X: ${frame.current}`;
-          }
-
-          RAF.current = requestAnimationFrame(animate);
-        };
-        //runs animation when play state is true
-        if (play) {
-          animate(0);
-        }
-      }
+      const val = e.target.value as string;
+      setFps(parseFloat(val));
     } catch (e) {
       console.warn(e);
     }
-
-    return () => {
-      //clean up;
-      cancelAnimationFrame(RAF.current);
-    };
-  }, [fps, play, readyState]);
-
-  const handleChangeFps = (e: React.ChangeEvent<HTMLInputElement>) => {
-    try {
-      const value: number = parseFloat(e.target.value);
-      setFps(value);
-    } catch (e) {
-      //error handle goes here
-      console.warn(e);
-    }
   };
 
-  const handlePlayState = () => {
-    playAnimation((prevState) => !prevState);
-  };
-
-  const handleDownload = () => {
-    const a = document.createElement("a");
-    const bufferProps: BufferDatasetProperties = JSON.parse(
-      buffer?.dataset.props || "{}"
-    );
-    a.href = buffer!.src;
-    a.download = bufferProps.name || "spritesheet.png";
-    a.click();
-  };
-
+  //TODO add preview loading in each element
+  //TODO edit configutaion and finalize functionality
   return (
-    <div className="preview-card">
-      {!readyState ? (
-        <div className="preview-loading-base">
-          <p>Loading Preview</p>
-          <Loader />
-        </div>
-      ) : (
+    <>
+      <div className="preview-card ">
         <React.Fragment>
-          <div className="preview-canvas-base">
-            <canvas
-              ref={canvasRef}
-              id="preview-canvas"
-              width={defaultScreen.width}
-              height={defaultScreen.height}
-            ></canvas>
+          <div ref={canvasWrapperRef} className="preview-canvas-base">
+            <div
+              className="preview-canvas"
+              style={{
+                background: displayBackgroundColor ? backgroundColor : "none",
+              }}
+            >
+              <canvas
+                ref={canvasRef}
+                height={defaultScreen.height}
+                width={defaultScreen.width}
+              ></canvas>
+            </div>
           </div>
           <div className="preview-controller-base">
-            <div className="form-inline">
-              <FormInput
-                label="FPS"
+            <div className="relative flex-grow flex items-center justify-end">
+              <div ref={dropdownRef}>
+                <DropdownMenu
+                  icon={<AiOutlineEllipsis size={25} />}
+                  buttonClass="-icon-button"
+                  dropdownRef={dropdownRef}
+                  toggleState={setOpenDropdown}
+                  open={openDropdown}
+                >
+                  <div className="dropdown-c-content-base"></div>
+                </DropdownMenu>
+              </div>
+            </div>
+            <p>{properties.name}</p>
+            <div className="preview-controller-label">
+              <InlineGroup className="justify-between mt-2">
+                <InputGroup
+                  label="FPS"
+                  inputProps={{
+                    value: fps,
+                    onChange: () => {},
+                  }}
+                />
+              </InlineGroup>
+              <input
+                type="range"
                 value={fps}
-                type="number"
-                onValueChange={handleChangeFps}
+                min={1}
+                max={100}
+                onChange={handleChangeFPS}
               />
             </div>
-            <div className="form-inline">
-              <div className="flex-1">
-                <p ref={frameXTextRef}></p>
-              </div>
-              <div className="flex-1">
-                <p>y: 1</p>
-              </div>
-            </div>
-            <div className="form-inline">
-              <div className="flex-1">
-                <button
-                  type="button"
-                  className="btn-preview default"
-                  onClick={handleDownload}
-                >
-                  <FaDownload />
-                </button>
-              </div>
-              <div className="flex-1">
-                <button
-                  type="button"
-                  className="btn-preview primary"
-                  onClick={handlePlayState}
-                >
-                  {play ? <FaPause /> : <FaPlay />}
-                </button>
-              </div>
-            </div>
+            <InlineGroup className="mt-2">
+              <>
+                <div className="flex-1">
+                  <InputGroup
+                    label="H"
+                    inputProps={{
+                      width: 60,
+                      value: properties.height,
+                      onChange: (e) => {},
+                    }}
+                  />
+                </div>
+                <div className="flex-1">
+                  <InputGroup
+                    label="W"
+                    width={60}
+                    inputProps={{
+                      onChange: (e) => {},
+                      value: properties.width,
+                    }}
+                  />
+                </div>
+              </>
+            </InlineGroup>
+            <InlineGroup>
+              <>
+                <div className="flex-1">
+                  <InputGroup
+                    label="X"
+                    inputProps={{
+                      onChange: (e) => {},
+                      value: properties.x,
+                    }}
+                  />
+                </div>
+                <div className="flex-1">
+                  <InputGroup
+                    label="Y"
+                    inputProps={{
+                      onChange: (e) => {},
+                      value: properties.y,
+                    }}
+                  />
+                </div>
+              </>
+            </InlineGroup>
+            <InlineGroup className="justify-between items-center mt-2">
+              <>
+                <div className="flex-1">
+                  <button className="-icon-button" onClick={handleDownload}>
+                    <FaDownload />
+                  </button>
+                </div>
+                <div className="flex-1">
+                  <button
+                    ref={playStateRef}
+                    className="-icon-button bg-secondaryBlue text-white"
+                    onClick={handlePlayingState}
+                  >
+                    <IoPlayOutline />
+                  </button>
+                </div>
+              </>
+            </InlineGroup>
           </div>
         </React.Fragment>
-      )}
-    </div>
+      </div>
+    </>
   );
 };
 

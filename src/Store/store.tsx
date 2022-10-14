@@ -11,6 +11,7 @@ export const defaultStatus = {
   padding: 20,
   fileName: "spritesheet",
   borderLine: false,
+  borderWidth: 1,
 };
 
 export const defaultNotification: NotificationProps = {
@@ -33,6 +34,8 @@ export const Context = React.createContext<ContextType>({
   sidebarRef: { current: null },
   reloadApp: false,
   handleReload: () => {},
+  onChangeBorderline: () => {},
+  onUpdateProperties: (key: any, value: any) => {},
 });
 
 const Store: Child<StoreProps> = ({ children }) => {
@@ -60,6 +63,13 @@ const Store: Child<StoreProps> = ({ children }) => {
   const handleReload = () => {
     setReloadApp(true);
   };
+  const onChangeBorderline = () => {
+    setProperties({ ...properties, borderLine: !properties.borderLine });
+  };
+
+  const onUpdateProperties = (key: keyof AppProperties, value: any) => {
+    setProperties({ ...properties, [key]: value });
+  };
 
   React.useEffect(() => {
     return () => {
@@ -81,6 +91,8 @@ const Store: Child<StoreProps> = ({ children }) => {
         sidebarRef: sidebarRef,
         reloadApp: reloadApp,
         handleReload: handleReload,
+        onChangeBorderline,
+        onUpdateProperties: onUpdateProperties,
       }}
     >
       {children}
