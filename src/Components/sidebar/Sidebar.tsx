@@ -28,6 +28,8 @@ const Sidebar: React.FC<{}> = () => {
     display: true,
     color: "#BFBFBF",
   });
+  const deferredColorValue = React.useDeferredValue(backgroundProps.color);
+  const bgColorRef = React.useRef<HTMLInputElement>(null);
   const anim = new Animate();
 
   React.useEffect(() => {
@@ -59,9 +61,15 @@ const Sidebar: React.FC<{}> = () => {
     });
   };
 
-  const handleChangeBgPropsColor = (e: any) => {
-    setBackGroundProps({ ...backgroundProps, [e.target.name]: e.target.value });
-  };
+  const handleChangeBgPropsColor = React.useCallback(
+    (e: any) => {
+      setBackGroundProps({
+        ...backgroundProps,
+        [e.target.name]: e.target.value,
+      });
+    },
+    [deferredColorValue]
+  );
   const handleClickBgPropsOpen = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -105,10 +113,10 @@ const Sidebar: React.FC<{}> = () => {
                     >
                       <input
                         type="color"
-                        value={backgroundProps.color}
                         onChange={handleChangeBgPropsColor}
                         name="color"
                         id="bg-color-picker"
+                        ref={bgColorRef}
                       />
                       <p className="bg-text-color-label">
                         {backgroundProps.color}

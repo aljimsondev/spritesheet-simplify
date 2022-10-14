@@ -10,7 +10,6 @@ import { Context } from "../../Store/store";
 import Accordion from "../accordion";
 import InputGroup from "../input/InputGroup";
 import TextInput from "../input/TextInput";
-import FormInput from "./FormInput";
 
 const Configuration = () => {
   const [openBorderOpt, setBorderOpt] = React.useState(true);
@@ -97,7 +96,14 @@ const Configuration = () => {
           <div className="flex-1 my-2">
             <p className="text-xs font-semibold text-gray-700">BORDER WIDTH</p>
           </div>
-          <TextInput type="number" placeholder="Border Width" />
+          <TextInput
+            type="number"
+            name="borderWidth"
+            placeholder="Border Width"
+            value={properties.borderWidth}
+            onChange={updateProperties}
+            min={1}
+          />
         </div>
       </Accordion>
       <Accordion
@@ -144,8 +150,9 @@ const Configuration = () => {
               name: "padding",
               type: "number",
               value: properties.padding,
+              min: 0,
             }}
-            width={100}
+            width={148}
           />
         </div>
       </Accordion>

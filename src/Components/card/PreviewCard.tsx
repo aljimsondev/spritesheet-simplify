@@ -44,6 +44,7 @@ const PreviewCard: React.FC<{
   const canvasWrapperRef = React.useRef<HTMLDivElement>(null);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
+  const deferredBgColor = React.useDeferredValue(backgroundColor);
   const [properties, setProperties] = React.useState<{
     name: string;
     height: number;
@@ -110,7 +111,7 @@ const PreviewCard: React.FC<{
             <div
               className="preview-canvas"
               style={{
-                background: displayBackgroundColor ? backgroundColor : "none",
+                background: displayBackgroundColor ? deferredBgColor : "none",
               }}
             >
               <canvas

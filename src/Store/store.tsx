@@ -12,6 +12,7 @@ export const defaultStatus = {
   fileName: "spritesheet",
   borderLine: false,
   borderWidth: 1,
+  canvasBackground: "#f3f3f3",
 };
 
 export const defaultNotification: NotificationProps = {
