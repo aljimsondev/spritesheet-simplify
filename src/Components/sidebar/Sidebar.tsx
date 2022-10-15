@@ -4,7 +4,7 @@ import { Tab } from "../Tabs/Tab";
 import PreviewCard from "../card/PreviewCard";
 import { Context } from "../../Store/store";
 import Renderer from "../../renderer";
-import Animate from "../../renderer/Animate.test";
+import Animate from "../../renderer/Animate";
 import img from "../../assets/images-removebg-preview.png";
 import {
   AiOutlineMinus,
@@ -83,6 +83,7 @@ const Sidebar: React.FC<{}> = () => {
       display: !backgroundProps.display,
     });
   };
+  //TODO FINALIZE EXPORT
 
   return (
     <div ref={sidebarRef} className="sidebar-base">

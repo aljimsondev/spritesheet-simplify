@@ -1,18 +1,10 @@
 import React from "react";
-import { NavbarProps, NODE } from "../types";
-import {
-  AiFillSetting,
-  AiOutlineDownload,
-  AiOutlinePlus,
-  AiOutlineClose,
-  AiFillCaretDown,
-  AiFillFolder,
-} from "react-icons/ai";
+import { NavbarProps } from "../types";
+import { AiOutlineClose, AiFillCaretDown } from "react-icons/ai";
 import { FaBars } from "react-icons/fa";
 import { BiImageAdd } from "react-icons/bi";
 import NavbarButton from "../button/NavbarButton";
 import DropdownMenu from "../dropdown/DropdownMenu";
-import NavMenuForm from "../form/NavMenuForm";
 import Logo from "../logo/Logo";
 import { Context } from "../../Store/store";
 import InlineGroup from "../group/InlineGroup";
@@ -38,7 +30,7 @@ const Navbar: React.FC<NavbarProps> = ({
   const toogleTheme = () => {
     setDarkMode((prevMode) => !prevMode);
   };
-
+  //TODO refactor static element
   return (
     <div className="navbar">
       <div className="nav-title">
