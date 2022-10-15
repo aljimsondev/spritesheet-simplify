@@ -180,22 +180,26 @@ const Configuration = () => {
         inactiveIcon={<AiOutlineMinus size={20} />}
         hidden
         open={paddingOpen}
-        title="PADDING"
+        title="SPRITESHEET PADDING"
         toogle={handleOpenPaddingOption}
       >
         <div className="flex-1">
-          <InputGroup
-            label="Spritesheet Padding"
-            inputProps={{
-              onChange: handleChangeState,
-              name: "padding",
-              type: "number",
-              value: localState.padding,
-              min: 0,
-            }}
-            width={148}
+          <TextInput
+            onChange={handleChangeState}
+            name="padding"
+            type="number"
+            value={localState.padding}
+            min={0}
           />
         </div>
+        <figure className="note-base my-3">
+          <span className="note-icon">
+            <AiOutlineQuestion />
+          </span>
+          <p className="note-text">
+            Note: Padding will be applied when there is more than 1 column.
+          </p>
+        </figure>
       </Accordion>
     </>
   );
