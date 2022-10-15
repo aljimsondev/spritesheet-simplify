@@ -16,8 +16,7 @@ const Configuration = () => {
   const [paddingOpen, setPaddingOpen] = React.useState(true);
   const { properties, onUpdateProperties } = React.useContext(Context);
   const [isPending, startTranstition] = React.useTransition();
-  //to make input much responsive we need to implement useTransitionHook
-  //keeping the value in local before updating the global value should ease the pain of lagging color picker input
+
   const [localState, setLocalState] = React.useState({
     borderColor: "#f3f3f3",
     canvasBackground: "#000000",

@@ -15,10 +15,7 @@ import LoadBase64Images from "./helpers/LoadBase64Files";
 import Renderer from "./renderer";
 import { disableZoom } from "./EventHandler/DisableZoom";
 import Zoomify from "./Zoomify";
-
-function useDeferredObject<T = {}>(obj: T, key: keyof T) {
-  return React.useDeferredValue(obj[key]);
-}
+import { useDeferredObject } from "./helpers/UseDeferredObject";
 
 function App() {
   const {
@@ -28,6 +25,7 @@ function App() {
     reloadApp,
     buffers,
     setBuffers,
+    handleReload,
   } = React.useContext(Context);
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -39,7 +37,10 @@ function App() {
   const deferredPadding = useDeferredObject(properties, "padding");
   const deferredBorderWidth = useDeferredObject(properties, "borderWidth");
   const deferredBorderLine = useDeferredObject(properties, "borderLine");
+  const [reload, setReload] = React.useState(false);
   const renderer = new Renderer();
+
+  disableZoom(document.getElementById("root")!);
 
   const toogleState = () => {
     setModalState((prevState) => !prevState);
@@ -55,8 +56,7 @@ function App() {
   };
 
   //clear state
-  const clearSelection = () => {
-    //clear selection
+  const clearSelection = React.useCallback(() => {
     if (buffers.length > 0) {
       removeFromLocalStorage("blobs"); //remove buffers
       setBuffers([]);
@@ -88,7 +88,7 @@ function App() {
         type: "warning",
       },
     });
-  };
+  }, [buffers]);
 
   //handling file input programmatically
   const handleOpenFileInput = () => {
@@ -117,20 +117,37 @@ function App() {
 
   //runs in first render and reload
   React.useEffect(() => {
-    disableZoom(document.getElementById("root")!);
     //fetch blobs to localstorage
     const localBlobs = fetchToLocalStorage("blobs");
-    if (!localBlobs) return;
-    setBuffers(localBlobs);
+
+    if (localBlobs) {
+      setBuffers(localBlobs);
+    }
 
     return () => {
       setBuffers([]); //clean up
     };
   }, [reloadApp]);
 
+  //renderer initialization
   React.useEffect(() => {
     try {
       (async () => {
+        window.addEventListener("keydown", (e) => {
+          if (e.ctrlKey) {
+            e.preventDefault();
+            switch (e.code) {
+              case "KeyR":
+                //reload app
+                handleReload();
+                return;
+              case "KeyX":
+                return clearSelection(); //clear canvas
+              default:
+                return;
+            }
+          }
+        });
         renderer.setImageSpriteProps({
           borderLine: deferredBorderLine as boolean,
           imageHeight: properties.height,
@@ -140,7 +157,7 @@ function App() {
           borderColor: deferredBorderColor as string,
         });
         await renderer.loadBuffers(buffers).then(async (data) => {
-          if (canvasWrapperRef.current && data) {
+          if (canvasWrapperRef.current) {
             await renderer.render(canvasWrapperRef.current);
           }
         });
@@ -154,6 +171,7 @@ function App() {
     };
   }, [
     buffers,
+    reloadApp,
     deferredBorderColor,
     deferredBorderLine,
     deferredBorderWidth,
@@ -162,7 +180,7 @@ function App() {
   ]);
 
   /**
-   * HANDLES THE ZOOMING ANND PANNING
+   * HANDLES THE EVENTs
    */
   React.useEffect(() => {
     const container = canvasWrapperRef.current!;
@@ -199,10 +217,6 @@ function App() {
             originX: event.movementX,
             originY: event.movementY,
           });
-        });
-        container.addEventListener("keydown", (e) => {
-          e.preventDefault();
-          console.log(e);
         });
       }
     })();

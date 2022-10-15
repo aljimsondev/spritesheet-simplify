@@ -64,7 +64,11 @@ const Navbar: React.FC<NavbarProps> = ({
                     <InlineGroup className="items-center mt-2">
                       <>
                         <div className="flex-1">
-                          <button className="nav-options-btn">
+                          <button
+                            type="button"
+                            className="nav-options-btn"
+                            onClick={handleReload}
+                          >
                             Reload App
                           </button>
                         </div>
@@ -74,7 +78,11 @@ const Navbar: React.FC<NavbarProps> = ({
                     <InlineGroup className="items-center mt-2">
                       <>
                         <div className="flex-1">
-                          <button className="nav-options-btn">
+                          <button
+                            type="button"
+                            className="nav-options-btn"
+                            onClick={clearSelection}
+                          >
                             Clear Canvas
                           </button>
                         </div>
@@ -152,12 +160,6 @@ const Navbar: React.FC<NavbarProps> = ({
           })}
         </div>
         <div className="nav-button-base">
-          {/* <button onClick={handleReload} className="reload-btn">
-            Reload
-          </button>
-          <button onClick={clearSelection} className="clear-btn">
-            Clear
-          </button> */}
           <NavbarButton
             icon={
               openMenu ? <AiOutlineClose size={20} /> : <FaBars size={20} />

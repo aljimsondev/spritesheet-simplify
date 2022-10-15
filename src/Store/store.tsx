@@ -65,6 +65,9 @@ const Store: Child<StoreProps> = ({ children }) => {
 
   const handleReload = () => {
     setReloadApp(true);
+    setTimeout(() => {
+      setReloadApp(false);
+    }, 3000);
   };
   const onChangeBorderline = () => {
     setProperties({ ...properties, borderLine: !properties.borderLine });
