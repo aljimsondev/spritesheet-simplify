@@ -49,7 +49,7 @@ class Renderer {
   }
   #init() {
     this.canvas = document.createElement("canvas");
-    this.canvas.id = "canvas";
+    this.canvas.id = "renderer-canvas";
     this.context = this.canvas.getContext("2d")!;
   }
   /**

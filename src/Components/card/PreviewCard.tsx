@@ -98,7 +98,7 @@ const PreviewCard: React.FC<{
 
   //TODO add preview loading in each element
   //TODO edit configutaion and finalize functionality
-
+  //TODO add preview properties update
   const handleDownloadingSpriteSheet = () => {
     if (buffer) {
       SpriteSheetDownload(buffer, {

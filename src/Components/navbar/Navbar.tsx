@@ -47,8 +47,8 @@ const Navbar: React.FC<NavbarProps> = ({
               dropdownRef={dropdownRef}
               icon={
                 <div className="flex items-center justify-end">
-                  <p>Guest</p>
                   <AiFillCaretDown />
+                  <p>Guest</p>
                 </div>
               }
             >

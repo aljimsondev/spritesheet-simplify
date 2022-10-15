@@ -16,6 +16,7 @@ import Renderer from "./renderer";
 import { disableZoom } from "./EventHandler/DisableZoom";
 import Zoomify from "./Zoomify";
 import { useDeferredObject } from "./helpers/UseDeferredObject";
+import AnimatedLoader from "./Components/Loader/AnimatedLoader";
 
 function App() {
   const {
@@ -37,6 +38,7 @@ function App() {
   const deferredPadding = useDeferredObject(properties, "padding");
   const deferredBorderWidth = useDeferredObject(properties, "borderWidth");
   const deferredBorderLine = useDeferredObject(properties, "borderLine");
+  const [loading, setLoading] = React.useState(true);
   const renderer = new Renderer();
   disableZoom(document.getElementById("root")!);
 
@@ -55,7 +57,7 @@ function App() {
 
   //clear state
   const clearSelection = React.useCallback(() => {
-    if (buffers.length > 0) {
+    if (buffers.length > 0 && !loading) {
       removeFromLocalStorage("blobs"); //remove buffers
       setBuffers([]);
       //dispatch notification
@@ -133,58 +135,68 @@ function App() {
   React.useEffect(() => {
     //fetch blobs to localstorage
     const localBlobs = fetchToLocalStorage("blobs");
-
     if (localBlobs) {
       setBuffers(localBlobs);
     }
+    //optional but i love to view this before rending :)
+    const loadingTimer = setTimeout(() => {
+      setLoading(false);
+    }, Math.random() * 2000);
 
     return () => {
       setBuffers([]); //clean up
+      setLoading(true);
+      clearTimeout(loadingTimer);
     };
   }, [reloadApp]);
+
+  //load the renderer
+  const load = React.useCallback(async () => {
+    window.addEventListener("keydown", (e) => {
+      if (e.ctrlKey) {
+        e.preventDefault();
+        switch (e.code) {
+          case "KeyR":
+            //reload app
+            handleReload();
+            return;
+          case "KeyX":
+            return clearSelection(); //clear canvas
+          default:
+            return;
+        }
+      }
+    });
+    renderer.setImageSpriteProps({
+      borderLine: deferredBorderLine as boolean,
+      imageHeight: properties.height,
+      imageWidth: properties.width,
+      padding: deferredPadding as number,
+      borderWidth: deferredBorderWidth as number,
+      borderColor: deferredBorderColor as string,
+    });
+    await renderer.loadBuffers(buffers).then(async (data) => {
+      if (canvasWrapperRef.current && !loading) {
+        await renderer.render(canvasWrapperRef.current);
+      }
+    });
+  }, [loading, buffers]);
 
   //renderer initialization
   React.useEffect(() => {
     try {
-      (async () => {
-        window.addEventListener("keydown", (e) => {
-          if (e.ctrlKey) {
-            e.preventDefault();
-            switch (e.code) {
-              case "KeyR":
-                //reload app
-                handleReload();
-                return;
-              case "KeyX":
-                return clearSelection(); //clear canvas
-              default:
-                return;
-            }
-          }
-        });
-        renderer.setImageSpriteProps({
-          borderLine: deferredBorderLine as boolean,
-          imageHeight: properties.height,
-          imageWidth: properties.width,
-          padding: deferredPadding as number,
-          borderWidth: deferredBorderWidth as number,
-          borderColor: deferredBorderColor as string,
-        });
-        await renderer.loadBuffers(buffers).then(async (data) => {
-          if (canvasWrapperRef.current) {
-            await renderer.render(canvasWrapperRef.current);
-          }
-        });
-      })();
+      load();
     } catch (e) {
       console.warn(e);
     }
 
     return () => {
       //clean up function
+      document.getElementById("renderer-canvas")?.remove();
     };
   }, [
     buffers,
+    loading,
     reloadApp,
     deferredBorderColor,
     deferredBorderLine,
@@ -237,8 +249,9 @@ function App() {
   }, []);
 
   //TODO add dialog
-  //TODO add custom loader
-
+  //TODO fix modal
+  //?add dialog
+  //?create getPosition handler for spritesheets
   return (
     <>
       <div className="main-container">
@@ -250,6 +263,7 @@ function App() {
           handleOpenFileInput={handleOpenFileInput}
         />
         <div className="container-grow">
+          {loading && <AnimatedLoader />}
           <div className="canvas-wrapper">
             <div
               ref={canvasWrapperRef}

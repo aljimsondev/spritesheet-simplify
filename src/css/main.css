@@ -10,6 +10,7 @@
 @import url("../Components/switch/Switch.css");
 @import url("../Components/input/TextInput.css");
 @import url("../Components/tooltip/tooltip.css");
+@import url("../Components/Loader/AnimatedLoader.css");
 
 @tailwind base;
 @tailwind components;
