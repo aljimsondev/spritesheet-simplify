@@ -1,7 +1,6 @@
 import React from "react";
 import { NavbarProps } from "../types";
-import { AiOutlineClose, AiFillCaretDown } from "react-icons/ai";
-import { FaBars } from "react-icons/fa";
+import { AiFillCaretDown } from "react-icons/ai";
 import { BiImageAdd } from "react-icons/bi";
 import NavbarButton from "../button/NavbarButton";
 import DropdownMenu from "../dropdown/DropdownMenu";
@@ -15,7 +14,6 @@ import AnimatedMenuIcon from "../button/AnimatedIcon";
 
 const Navbar: React.FC<NavbarProps> = ({
   clearSelection,
-  download,
   handleOpenFileInput,
 }) => {
   const dropdownRef = React.useRef(null);
@@ -50,7 +48,6 @@ const Navbar: React.FC<NavbarProps> = ({
     setDarkMode((prevMode) => !prevMode);
   };
 
-  //TODO refactor static element
   return (
     <div className="navbar">
       <div className="nav-title">
