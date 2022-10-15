@@ -15,30 +15,39 @@ const Configuration = () => {
   const [openBorderOpt, setBorderOpt] = React.useState(true);
   const [paddingOpen, setPaddingOpen] = React.useState(true);
   const { properties, onUpdateProperties } = React.useContext(Context);
+  const [isPending, startTranstition] = React.useTransition();
+  //to make input much responsive we need to implement useTransitionHook
+  //keeping the value in local before updating the global value should ease the pain of lagging color picker input
+  const [localState, setLocalState] = React.useState({
+    borderColor: "#f3f3f3",
+    canvasBackground: "#000000",
+    borderWidth: 1,
+    borderLine: false,
+    padding: 0,
+  });
   const [backgroundProps, setBackGroundProps] = React.useState<{
     open: boolean;
     display: boolean;
-    color: string;
   }>({
     open: true,
     display: true,
-    color: "#BFBFBF",
   });
 
-  const handleChangeBgPropsColor = (e: any) => {
-    setBackGroundProps({ ...backgroundProps, [e.target.name]: e.target.value });
-  };
   const handleClickBgPropsOpen = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     setBackGroundProps({ ...backgroundProps, open: !backgroundProps.open });
   };
+
   const handleClickBgPropsDisplay = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     setBackGroundProps({
       ...backgroundProps,
       display: !backgroundProps.display,
+    });
+    startTranstition(() => {
+      onUpdateProperties("displayCanvasBackground", !backgroundProps.display);
     });
   };
 
@@ -49,20 +58,38 @@ const Configuration = () => {
   const handleOpenPaddingOption = () => {
     setPaddingOpen((prevState) => !prevState);
   };
-  //TODO add canvas configuration
-  /**
-   * 1. background
-   * 2. view canvas properties
-   * 3. canvas clear
-   */
-
   const updateProperties = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val: any = parseFloat(e.target.value);
-    console.log(val);
 
-    if (!isNaN(val)) {
-      onUpdateProperties([e.target.name], val);
+    if (!isNaN(val) && e.target.type === "number") {
+      onUpdateProperties([e.target.name] as any, val);
+    } else {
+      onUpdateProperties([e.target.name] as any, e.target.value);
     }
+  };
+
+  React.useEffect(() => {
+    (() => {
+      setBackGroundProps({
+        ...backgroundProps,
+        display: properties.displayCanvasBackground,
+      });
+      setLocalState({
+        ...localState,
+        borderLine: properties.borderLine,
+        borderColor: properties.borderColor,
+        borderWidth: properties.borderWidth,
+        padding: properties.padding,
+        canvasBackground: properties.canvasBackground,
+      });
+    })();
+  }, []);
+
+  const handleChangeState = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalState({ ...localState, [e.target.name]: e.target.value });
+    startTranstition(() => {
+      updateProperties(e);
+    });
   };
 
   return (
@@ -100,10 +127,25 @@ const Configuration = () => {
             type="number"
             name="borderWidth"
             placeholder="Border Width"
-            value={properties.borderWidth}
-            onChange={updateProperties}
+            value={localState.borderWidth}
+            onChange={handleChangeState}
             min={1}
           />
+        </div>
+        <div className="flex-1 flex flex-col mt-3">
+          <div className="flex-1 my-2">
+            <p className="text-xs font-semibold text-gray-700">BORDER COLOR</p>
+          </div>
+          <label htmlFor="bg-color-picker" className="bg-color-picker-wrapper">
+            <input
+              type="color"
+              value={localState.borderColor}
+              onChange={handleChangeState}
+              name="borderColor"
+              id="bg-color-picker"
+            />
+            <p className="bg-text-color-label">{properties.borderColor}</p>
+          </label>
         </div>
       </Accordion>
       <Accordion
@@ -118,12 +160,12 @@ const Configuration = () => {
           <label htmlFor="bg-color-picker" className="bg-color-picker-wrapper">
             <input
               type="color"
-              value={backgroundProps.color}
-              onChange={handleChangeBgPropsColor}
-              name="color"
+              value={properties.canvasBackground}
+              onChange={handleChangeState}
+              name="canvasBackground"
               id="bg-color-picker"
             />
-            <p className="bg-text-color-label">{backgroundProps.color}</p>
+            <p className="bg-text-color-label">{localState.canvasBackground}</p>
           </label>
           <button onClick={handleClickBgPropsDisplay} className="-icon-button">
             {backgroundProps.display ? (
@@ -146,10 +188,10 @@ const Configuration = () => {
           <InputGroup
             label="Spritesheet Padding"
             inputProps={{
-              onChange: updateProperties,
+              onChange: handleChangeState,
               name: "padding",
               type: "number",
-              value: properties.padding,
+              value: localState.padding,
               min: 0,
             }}
             width={148}

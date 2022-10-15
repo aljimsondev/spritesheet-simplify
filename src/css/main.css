@@ -32,7 +32,7 @@
   max-w-[100vw] block;
 }
 #canvas-root {
-  @apply bg-red-500 absolute;
+  @apply absolute;
 }
 .canvas-wrapper::-webkit-scrollbar-track {
   @apply bg-[#f5f5f5] rounded-lg;

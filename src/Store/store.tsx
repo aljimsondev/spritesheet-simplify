@@ -12,7 +12,9 @@ export const defaultStatus = {
   fileName: "spritesheet",
   borderLine: false,
   borderWidth: 1,
-  canvasBackground: "#f3f3f3",
+  borderColor: "#000000",
+  canvasBackground: "#F3F3F3",
+  displayCanvasBackground: true,
 };
 
 export const defaultNotification: NotificationProps = {
@@ -68,9 +70,12 @@ const Store: Child<StoreProps> = ({ children }) => {
     setProperties({ ...properties, borderLine: !properties.borderLine });
   };
 
-  const onUpdateProperties = (key: keyof AppProperties, value: any) => {
+  function onUpdateProperties<AppProperties>(
+    key: keyof AppProperties,
+    value: any
+  ) {
     setProperties({ ...properties, [key]: value });
-  };
+  }
 
   React.useEffect(() => {
     return () => {

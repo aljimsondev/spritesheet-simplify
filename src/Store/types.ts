@@ -16,6 +16,9 @@ export type AppProperties = {
   fileName: string;
   borderLine: boolean;
   borderWidth: number;
+  borderColor: string;
+  canvasBackground: string;
+  displayCanvasBackground: boolean;
 };
 
 export type ContextType = {
@@ -33,5 +36,5 @@ export type ContextType = {
   reloadApp: boolean;
   handleReload: () => void;
   onChangeBorderline: () => void;
-  onUpdateProperties: (key: any, value: any) => void;
+  onUpdateProperties: (key: keyof AppProperties, value: any) => void;
 };

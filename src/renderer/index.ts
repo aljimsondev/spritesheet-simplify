@@ -13,6 +13,7 @@ interface Renderer {
     imageHeight: number;
     borderLine: boolean;
     borderWidth: number;
+    borderColor: string;
   };
   buffers: BufferData[][];
   images: HTMLImageElement[][];
@@ -20,18 +21,20 @@ interface Renderer {
   focus: boolean;
   _RAF: any;
   buffer: BufferData[];
+  maxPadding: number;
+  defaultBorderWidth: number;
+  defaultBorderColor: string;
 }
 
 class Renderer {
-  #MAX_ZOOM = 1;
-  #MIN_ZOOM = 0.1;
-  #ZOOM_SENSITIVITY = 0.0005;
-  #scale = 1;
   constructor() {
     this.images = []; //for 2d spritesheet array
     this.imagesArray = []; //for single row images for animation spritesheet
     this.#init();
     this._RAF = null;
+    this.maxPadding = 100;
+    this.defaultBorderColor = "#000000";
+    this.defaultBorderWidth = 1;
   }
 
   setImageSpriteProps(args: {
@@ -40,6 +43,7 @@ class Renderer {
     imageHeight: number;
     borderLine: boolean;
     borderWidth: number;
+    borderColor: string;
   }) {
     this.imageSpriteProps = args;
   }
@@ -55,12 +59,6 @@ class Renderer {
    */
   async loadBuffers(buffers: BufferData[][]) {
     if (buffers.length <= 0) return;
-
-    //fetch scale if there is
-    const localScale = fetchToLocalStorage("scale");
-    if (localScale) {
-      this.#scale = JSON.parse(localScale);
-    }
 
     return new Promise<boolean>((resolve, reject) => {
       try {
@@ -126,7 +124,8 @@ class Renderer {
       imageWidth?: number;
       imageHeight?: number;
       borderLine?: boolean;
-      borderWidth: number;
+      borderWidth?: number;
+      borderColor?: string;
     }
   ) {
     let startingPositionX = 0; //entry point of rendering
@@ -149,7 +148,8 @@ class Renderer {
         options?.imageHeight || image.height
       );
       if (options?.borderLine) {
-        context.lineWidth = options.borderWidth;
+        context.lineWidth = options?.borderWidth || this.defaultBorderWidth;
+        context.strokeStyle = options?.borderColor || this.defaultBorderColor;
         context.strokeRect(
           i * startingPositionX,
           posY,
@@ -186,24 +186,6 @@ class Renderer {
     });
   }
 
-  resize(e: WheelEvent) {
-    let zoomScale = e.deltaY * this.#ZOOM_SENSITIVITY;
-
-    if (this.#scale <= this.#MIN_ZOOM) {
-      this.#scale = this.#MIN_ZOOM;
-    } else if (this.#scale >= this.#MAX_ZOOM) {
-      this.#scale = this.#MAX_ZOOM;
-    }
-    this.#scale += zoomScale;
-    this.canvas.style.transform = `scale(${this.#scale})`;
-  }
-  /**
-   * Save the old scaling in local storage to usage later
-   */
-  resizeEnd() {
-    saveToLocalStorage("scale", JSON.stringify(this.#scale));
-  }
-
   /**
    * Get the total occopied width of the images in the canvas
    * @returns Total Width
@@ -234,6 +216,16 @@ class Renderer {
    */
   getCanvasHeight() {
     let totalHeight = 0;
+    let padding = 0;
+    if (
+      isNaN(this.imageSpriteProps.padding) ||
+      typeof this.imageSpriteProps.padding !== "number" ||
+      this.imageSpriteProps.padding > this.maxPadding
+    ) {
+      padding = 0;
+    } else {
+      padding = this.imageSpriteProps.padding;
+    }
 
     for (let col = 0; col < this.images.length; col++) {
       let imageHeight = this.images[col][0].height; //first index of the array
@@ -241,10 +233,9 @@ class Renderer {
       if (this.images.length > 0) {
         //more than 1 column
         if (this.imageSpriteProps.imageHeight) {
-          totalHeight +=
-            this.imageSpriteProps.imageHeight + this.imageSpriteProps.padding; //custom height
+          totalHeight += this.imageSpriteProps.imageHeight + padding; //custom height
         }
-        totalHeight += imageHeight + this.imageSpriteProps.padding; //original image height
+        totalHeight += imageHeight + padding; //original image height
       } else if (this.images.length === 1) {
         //only 1 column means no padding applied
         if (this.imageSpriteProps.imageHeight) {
@@ -303,8 +294,7 @@ class Renderer {
     if (this.images.length > 0) {
       this.canvas.width = this.getCanvasWidth();
       this.canvas.height = this.getCanvasHeight();
-      this.canvas.style.transform = `scale(${this.#scale})`;
-
+      let colPadding = 0;
       let currentPositionY = 0;
 
       for (let row = 0; row < this.images.length; row++) {
@@ -313,16 +303,24 @@ class Renderer {
           imageHeight: this.imageSpriteProps.imageHeight,
           borderLine: this.imageSpriteProps.borderLine,
           borderWidth: this.imageSpriteProps.borderWidth,
+          borderColor: this.imageSpriteProps.borderColor,
         });
+        if (
+          isNaN(this.imageSpriteProps.padding) ||
+          typeof this.imageSpriteProps.padding !== "number" ||
+          this.imageSpriteProps.padding > this.maxPadding
+        ) {
+          colPadding = 0;
+        } else {
+          colPadding = this.imageSpriteProps.padding;
+        }
 
         if (this.images.length > 0) {
           //consist of more than 1 row, add padding  to give space of each column sprites
           if (this.imageSpriteProps.imageHeight) {
-            currentPositionY +=
-              this.imageSpriteProps.imageHeight + this.imageSpriteProps.padding;
+            currentPositionY += this.imageSpriteProps.imageHeight + colPadding;
           } else {
-            currentPositionY +=
-              this.images[row][0].height + this.imageSpriteProps.padding;
+            currentPositionY += this.images[row][0].height + colPadding;
           }
         } else if (this.images.length === 1) {
           //only 1 row

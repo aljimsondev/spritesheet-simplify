@@ -16,6 +16,10 @@ import Renderer from "./renderer";
 import { disableZoom } from "./EventHandler/DisableZoom";
 import Zoomify from "./Zoomify";
 
+function useDeferredObject<T = {}>(obj: T, key: keyof T) {
+  return React.useDeferredValue(obj[key]);
+}
+
 function App() {
   const {
     properties,
@@ -30,7 +34,11 @@ function App() {
   const downloadButtonRef = React.useRef<HTMLAnchorElement>(null);
   const canvasWrapperRef = React.useRef<HTMLDivElement>(null);
   const [openModal, setModalState] = React.useState<boolean>(false);
-
+  const deferredCanvasBg = useDeferredObject(properties, "canvasBackground");
+  const deferredBorderColor = useDeferredObject(properties, "borderColor");
+  const deferredPadding = useDeferredObject(properties, "padding");
+  const deferredBorderWidth = useDeferredObject(properties, "borderWidth");
+  const deferredBorderLine = useDeferredObject(properties, "borderLine");
   const renderer = new Renderer();
 
   const toogleState = () => {
@@ -124,11 +132,12 @@ function App() {
     try {
       (async () => {
         renderer.setImageSpriteProps({
-          borderLine: properties.borderLine,
+          borderLine: deferredBorderLine as boolean,
           imageHeight: properties.height,
           imageWidth: properties.width,
-          padding: properties.padding,
-          borderWidth: properties.borderWidth,
+          padding: deferredPadding as number,
+          borderWidth: deferredBorderWidth as number,
+          borderColor: deferredBorderColor as string,
         });
         await renderer.loadBuffers(buffers).then(async (data) => {
           if (canvasWrapperRef.current && data) {
@@ -139,16 +148,17 @@ function App() {
     } catch (e) {
       console.warn(e);
     }
+
     return () => {
       //clean up function
     };
   }, [
     buffers,
-    properties.height,
-    properties.width,
-    properties.padding,
-    properties.borderLine,
-    properties.borderWidth,
+    deferredBorderColor,
+    deferredBorderLine,
+    deferredBorderWidth,
+    deferredCanvasBg,
+    deferredPadding,
   ]);
 
   /**
@@ -210,7 +220,15 @@ function App() {
         />
         <div className="container-grow">
           <div className="canvas-wrapper">
-            <div ref={canvasWrapperRef} id="canvas-root"></div>
+            <div
+              ref={canvasWrapperRef}
+              id="canvas-root"
+              style={{
+                background: properties.displayCanvasBackground
+                  ? properties.canvasBackground
+                  : "transparent",
+              }}
+            ></div>
           </div>
           <form>
             <input
