@@ -140,7 +140,11 @@ const PreviewCard: React.FC<{
                 </DropdownMenu>
               </div>
             </div>
-            <p>{properties.name}</p>
+            <div className="max-w-[150px] text-ellipsis relative overflow-hidden">
+              <p className="max-w-[100%] overflow-hidden text-ellipsis">
+                {properties.name}
+              </p>
+            </div>
             <div className="preview-controller-label">
               <InlineGroup className="justify-between mt-2">
                 <InputGroup

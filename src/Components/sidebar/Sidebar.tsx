@@ -89,8 +89,6 @@ const Sidebar: React.FC<SidebarProps> = ({ exportSpritesheet }) => {
       display: !backgroundProps.display,
     });
   };
-  //TODO FINALIZE EXPORT
-  //TODO FINALIZE PREVIEW
 
   return (
     <div ref={sidebarRef} className="sidebar-base">

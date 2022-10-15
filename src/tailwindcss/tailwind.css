@@ -1521,6 +1521,26 @@ video {
   height: 6vh;
 }
 
+.w-\[100\%\] {
+  width: 100%;
+}
+
+.max-w-\[100px\] {
+  max-width: 100px;
+}
+
+.max-w-\[100\%\] {
+  max-width: 100%;
+}
+
+.max-w-\[120px\] {
+  max-width: 120px;
+}
+
+.max-w-\[150px\] {
+  max-width: 150px;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -1552,6 +1572,14 @@ video {
 
 .justify-between {
   justify-content: space-between;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.text-ellipsis {
+  text-overflow: ellipsis;
 }
 
 .rounded-full {
