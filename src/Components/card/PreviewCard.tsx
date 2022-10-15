@@ -6,6 +6,7 @@ import { IoPlayOutline, IoPauseOutline } from "react-icons/io5";
 import InlineGroup from "../group/InlineGroup";
 import DropdownMenu from "../dropdown/DropdownMenu";
 import InputGroup from "../input/InputGroup";
+import { SpriteSheetDownload } from "../../helpers/SpriteSheetDownloader";
 
 //config must be global to allow configuration for the user whatever they desired
 const config = {
@@ -24,19 +25,12 @@ const PreviewCard: React.FC<{
   buffer: HTMLImageElement | undefined;
   backgroundColor: string;
   displayBackgroundColor: boolean;
-  handleDownload: () => void;
   handlePlayState: (
     sprite: HTMLImageElement,
     ref: HTMLCanvasElement,
     options?: { fps: number }
   ) => void;
-}> = ({
-  buffer,
-  handleDownload,
-  handlePlayState,
-  backgroundColor,
-  displayBackgroundColor,
-}) => {
+}> = ({ buffer, handlePlayState, backgroundColor, displayBackgroundColor }) => {
   const [openDropdown, setOpenDropdown] = React.useState(false);
   const [fps, setFps] = React.useState<number>(60);
   const playStateRef = React.useRef<HTMLButtonElement>(null);
@@ -103,6 +97,16 @@ const PreviewCard: React.FC<{
 
   //TODO add preview loading in each element
   //TODO edit configutaion and finalize functionality
+
+  const handleDownloadingSpriteSheet = () => {
+    if (buffer) {
+      SpriteSheetDownload(buffer, {
+        fileName: properties.name,
+        fileType: "png",
+      });
+    }
+  };
+
   return (
     <>
       <div className="preview-card ">
@@ -203,7 +207,10 @@ const PreviewCard: React.FC<{
             <InlineGroup className="justify-between items-center mt-2">
               <>
                 <div className="flex-1">
-                  <button className="-icon-button" onClick={handleDownload}>
+                  <button
+                    className="-icon-button"
+                    onClick={handleDownloadingSpriteSheet}
+                  >
                     <FaDownload />
                   </button>
                 </div>

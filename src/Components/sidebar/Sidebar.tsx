@@ -145,7 +145,6 @@ const Sidebar: React.FC<{}> = () => {
                         backgroundColor={deferredColorValue}
                         displayBackgroundColor={backgroundProps.display}
                         buffer={spritesheet}
-                        handleDownload={() => {}}
                         handlePlayState={handlePlay}
                       />
                     );

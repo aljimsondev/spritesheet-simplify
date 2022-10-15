@@ -38,9 +38,6 @@ const Navbar: React.FC<NavbarProps> = ({
       </div>
       <div className="nav-flex-grow">
         <div className="flex h-[7vh] items-center justify-end relative ml-3">
-          <div className="text-white">
-            <p>Guest</p>
-          </div>
           <div ref={dropdownRef}>
             <DropdownMenu
               buttonClass="m-1 h-[6vh] text-white"
@@ -48,7 +45,12 @@ const Navbar: React.FC<NavbarProps> = ({
               position="left"
               toggleState={setOpen}
               dropdownRef={dropdownRef}
-              icon={<AiFillCaretDown />}
+              icon={
+                <div className="flex items-center justify-end">
+                  <p>Guest</p>
+                  <AiFillCaretDown />
+                </div>
+              }
             >
               <>
                 <div className="nav-options-form-base">
