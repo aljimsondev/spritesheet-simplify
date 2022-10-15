@@ -9,6 +9,7 @@
 @import url("../Components/notification/Notification.css");
 @import url("../Components/switch/Switch.css");
 @import url("../Components/input/TextInput.css");
+@import url("../Components/tooltip/tooltip.css");
 
 @tailwind base;
 @tailwind components;

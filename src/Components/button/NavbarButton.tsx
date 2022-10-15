@@ -1,4 +1,5 @@
 import React from "react";
+import ToolTip from "../tooltip";
 import { NavbarButtonProps, NODE } from "../types";
 
 const NavbarButton: NODE<NavbarButtonProps> = ({
@@ -19,16 +20,18 @@ const NavbarButton: NODE<NavbarButtonProps> = ({
     };
   }, []);
   return (
-    <button
-      aria-label="nav-button"
-      className="nav-button centered"
-      type={type || "button"}
-      onClick={onClick}
-      data-tooltip={tooltipLabel}
-      ref={ref}
-    >
-      {icon}
-    </button>
+    <ToolTip label={tooltipLabel}>
+      <button
+        aria-label="nav-button"
+        className="nav-button centered"
+        type={type || "button"}
+        onClick={onClick}
+        data-tooltip={tooltipLabel}
+        ref={ref}
+      >
+        {icon}
+      </button>
+    </ToolTip>
   );
 };
 

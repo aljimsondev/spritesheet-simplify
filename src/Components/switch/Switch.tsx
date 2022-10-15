@@ -1,8 +1,7 @@
 import React from "react";
-import { NODE } from "../types";
 import { SwitchProps } from "./type";
 
-const Switch: NODE<SwitchProps> = ({ onSwitch, checked, name }) => {
+const Switch: React.FC<SwitchProps> = ({ onSwitch, checked, name }) => {
   const ref = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {

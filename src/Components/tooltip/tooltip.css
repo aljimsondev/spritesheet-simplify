@@ -1,41 +1,23 @@
-html {
-  font-family: "Lato";
-  margin: 20px auto;
-  line-height: 1.5;
-  max-width: 600px;
-  font-size: 1.25em;
+.tooltip {
+  @apply relative flex items-center justify-center;
 }
-
-span.tooltip {
-  padding: 0px 5px;
-  position: relative;
-  background: #ffbb99;
-  cursor: pointer;
-}
-
-.tooltip-info {
-  position: absolute;
-  top: -9999px;
-  left: -9999px;
-}
-
-span.tooltip::before {
+.tooltip::before {
   content: attr(data-tooltip);
-  position: absolute;
-  top: 1.5em;
-  font-size: 0.9em;
-  padding: 1px 5px;
-  display: none;
-  color: white;
-  background: rgba(0, 0, 0, 0.75);
-  border-radius: 4px;
-  transition: opacity 0.1s ease-out;
-  z-index: 99;
-  text-align: left;
+  @apply text-sm rounded-md duration-200 
+  origin-top scale-0 z-[99] px-2 py-1 
+  top-[3.5em] w-max absolute 
+  bg-white dark:bg-[#333]
+  text-gray-900 dark:text-gray-100;
 }
-
-span:hover::before {
-  display: inline-block;
+.tooltip::after {
+  content: "";
+  @apply duration-200 absolute
+  h-[10px] w-[20px] z-[99] 
+  top-[2em] scale-0 
+  border-[10px] border-transparent 
+  border-b-[white];
 }
-
-/* <p>The gray wolf, also known as the <span class="tooltip" data-tooltip="some more information"><span class="tooltip-info">some more information </span>timber wolf</span> or western wolf, is a canine native to the wilderness and remote areas of Eurasia and <span class="tooltip" data-tooltip="some more information"><span class="tooltip-info">some more information  </span>North America</span>. It is the largest extant member of its family, with males averaging 43–45 kg (95–99 lb), and females 36–38.5 kg (79–85 lb). Like the red wolf, it is distinguished from other <span class="tooltip" data-tooltip="some more information"><span class="tooltip-info">some more information</span>Canis species</span> by its larger size and less pointed features, particularly on the ears and muzzle.</p> */
+.tooltip:hover::before,
+.tooltip:hover::after {
+  @apply inline-block scale-100;
+}
