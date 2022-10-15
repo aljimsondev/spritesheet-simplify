@@ -95,51 +95,49 @@ const Sidebar: React.FC<SidebarProps> = ({ exportSpritesheet }) => {
       <Tabs defaultTabIndex={1}>
         <Tab tabLabel="Preview">
           <div className="preview-base" ref={previewBaseRef}>
+            <Accordion
+              activeIcon={<AiOutlinePlus size={20} />}
+              inactiveIcon={<AiOutlineMinus size={20} />}
+              hidden
+              open={backgroundProps.open}
+              toogle={handleClickBgPropsOpen}
+              title="PREVIEW BACKGROUND"
+            >
+              <div className="bg-color-picker-base">
+                <label
+                  htmlFor="bg-color-picker"
+                  className="bg-color-picker-wrapper"
+                >
+                  <input
+                    type="color"
+                    onChange={handleChangeBgPropsColor}
+                    name="color"
+                    id="bg-color-picker"
+                    ref={bgColorRef}
+                  />
+                  <p className="bg-text-color-label">{deferredColorValue}</p>
+                </label>
+                <button
+                  onClick={handleClickBgPropsDisplay}
+                  className="-icon-button"
+                >
+                  {backgroundProps.display ? (
+                    <AiOutlineEye size={20} />
+                  ) : (
+                    <AiOutlineEyeInvisible size={20} />
+                  )}
+                </button>
+              </div>
+            </Accordion>
             {buffers.length <= 0 && (
               <div className="centered mt-1 flex flex-col">
                 <img src={img} />
-                <h4>No Available Preview</h4>
+                <h4 className="text-lg text-blue-700">No Available Preview</h4>
                 <p>Add some sprites in the canvas</p>
               </div>
             )}
             {buffers.length > 0 && (
               <React.Fragment>
-                <Accordion
-                  activeIcon={<AiOutlinePlus size={20} />}
-                  inactiveIcon={<AiOutlineMinus size={20} />}
-                  hidden
-                  open={backgroundProps.open}
-                  toogle={handleClickBgPropsOpen}
-                  title="BACKGROUND"
-                >
-                  <div className="bg-color-picker-base">
-                    <label
-                      htmlFor="bg-color-picker"
-                      className="bg-color-picker-wrapper"
-                    >
-                      <input
-                        type="color"
-                        onChange={handleChangeBgPropsColor}
-                        name="color"
-                        id="bg-color-picker"
-                        ref={bgColorRef}
-                      />
-                      <p className="bg-text-color-label">
-                        {deferredColorValue}
-                      </p>
-                    </label>
-                    <button
-                      onClick={handleClickBgPropsDisplay}
-                      className="-icon-button"
-                    >
-                      {backgroundProps.display ? (
-                        <AiOutlineEye size={20} />
-                      ) : (
-                        <AiOutlineEyeInvisible size={20} />
-                      )}
-                    </button>
-                  </div>
-                </Accordion>
                 <div className="sidebar-anim-preview-base">
                   <p className="text-title px-5 py-3 ">ANIMATION PREVIEW</p>
                   <RenderList

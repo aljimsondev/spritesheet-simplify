@@ -1507,10 +1507,6 @@ video {
   left: 0px;
 }
 
-.z-\[98\] {
-  z-index: 98;
-}
-
 .z-\[19\] {
   z-index: 19;
 }
@@ -1685,6 +1681,11 @@ video {
   line-height: 1rem;
 }
 
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
 .font-semibold {
   font-weight: 600;
 }
@@ -1697,6 +1698,11 @@ video {
 .text-gray-700 {
   --tw-text-opacity: 1;
   color: rgb(55 65 81 / var(--tw-text-opacity));
+}
+
+.text-blue-700 {
+  --tw-text-opacity: 1;
+  color: rgb(29 78 216 / var(--tw-text-opacity));
 }
 
 .main-container {
