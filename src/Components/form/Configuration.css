@@ -24,5 +24,6 @@
 .btn-export {
   @apply w-full flex items-center justify-center 
   border-[1px] border-gray-800
-  p-2 rounded-[6px] text-sm;
+  p-2 rounded-[6px] text-sm duration-200
+  hover:bg-black hover:text-white;
 }

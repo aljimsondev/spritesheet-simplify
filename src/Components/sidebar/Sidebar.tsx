@@ -1,7 +1,6 @@
 import React from "react";
 import Tabs from "../Tabs";
 import { Tab } from "../Tabs/Tab";
-import PreviewCard from "../card/PreviewCard";
 import { Context } from "../../Store/store";
 import Renderer from "../../renderer";
 import Animate from "../../renderer/Animate";
@@ -16,8 +15,9 @@ import Configuration from "../form/Configuration";
 import Export from "../form/Export";
 import Accordion from "../accordion";
 import RenderList from "../list/RenderList";
+import { SidebarProps } from "../types";
 
-const Sidebar: React.FC<{}> = () => {
+const Sidebar: React.FC<SidebarProps> = ({ exportSpritesheet }) => {
   const { buffers, sidebarRef } = React.useContext(Context);
   const [sprites, setSprites] = React.useState<HTMLImageElement[]>([]);
   const [backgroundProps, setBackGroundProps] = React.useState({
@@ -29,12 +29,10 @@ const Sidebar: React.FC<{}> = () => {
   const bgColorRef = React.useRef<HTMLInputElement>(null);
   const previewBaseRef = React.useRef<HTMLDivElement>(null);
   const [isPending, startTransition] = React.useTransition();
-  const [cleared, setCanvasClearedStatus] = React.useState(false);
   const anim = new Animate();
   const renderer = new Renderer();
 
   const load = React.useCallback(async () => {
-    console.log(buffers);
     renderer.loadBuffers(buffers).then((d) => {
       renderer.createSpritesheets().then(async (spritesData) => {
         if (spritesData.length > 0) {
@@ -50,6 +48,10 @@ const Sidebar: React.FC<{}> = () => {
 
   React.useEffect(() => {
     load();
+    return () => {
+      //clean up
+      setSprites([]);
+    };
   }, [buffers]);
 
   const handlePlay = async (
@@ -89,7 +91,6 @@ const Sidebar: React.FC<{}> = () => {
   };
   //TODO FINALIZE EXPORT
   //TODO FINALIZE PREVIEW
-  //!create loading state in first load
 
   return (
     <div ref={sidebarRef} className="sidebar-base">
@@ -158,7 +159,7 @@ const Sidebar: React.FC<{}> = () => {
           <Configuration />
         </Tab>
         <Tab tabLabel="Export">
-          <Export />
+          <Export exportSpritesheet={exportSpritesheet} />
         </Tab>
       </Tabs>
     </div>

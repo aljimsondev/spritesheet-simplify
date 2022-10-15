@@ -50,3 +50,8 @@ export type BufferData = {
   data: string | ArrayBuffer | null;
   name: File["name"];
 };
+export type ExportSpritesheetType = (fileName: string) => Promise<void>;
+
+export type SidebarProps = {
+  exportSpritesheet: ExportSpritesheetType;
+};

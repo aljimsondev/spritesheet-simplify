@@ -14,8 +14,8 @@
   @apply duration-200 absolute
   h-[10px] w-[20px] z-[99] 
   top-[2em] scale-0 
-  border-[10px] border-transparent 
-  border-b-[white];
+  border-[10px] border-transparent delay-[50ms]
+  border-b-[white] origin-bottom;
 }
 .tooltip:hover::before,
 .tooltip:hover::after {

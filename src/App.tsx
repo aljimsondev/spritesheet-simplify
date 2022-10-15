@@ -93,10 +93,25 @@ function App() {
     fileInputRef.current?.click();
   };
   //download of spritesheet
-  const download = React.useCallback(async () => {
-    await renderer.download(properties.fileName).then((data) => {
-      if (!data) {
-        //dispatch notification
+  const download = React.useCallback(
+    async (fileName: string) => {
+      await renderer.download(fileName).then((data) => {
+        if (!data) {
+          //dispatch notification
+          return notificationDispatch({
+            type: "ADD_NOTIFICATION",
+            payload: {
+              dismissable: true,
+              onClose: () => {
+                notificationDispatch({ type: "RESET_NOTIFICATION" });
+              },
+              open: true,
+              text: "Opss, looks like you have not created any Spritesheet yet!",
+              type: "warning",
+            },
+          });
+        }
+        //success
         notificationDispatch({
           type: "ADD_NOTIFICATION",
           payload: {
@@ -105,13 +120,14 @@ function App() {
               notificationDispatch({ type: "RESET_NOTIFICATION" });
             },
             open: true,
-            text: "Opss, looks like you have not created any Spritesheet yet!",
-            type: "warning",
+            text: "Generating Spritesheet success!",
+            type: "success",
           },
         });
-      }
-    });
-  }, [buffers]);
+      });
+    },
+    [buffers]
+  );
 
   //runs in first render and reload
   React.useEffect(() => {
@@ -230,7 +246,7 @@ function App() {
           handleSelectImages={handleSelectImages}
           clearSelection={clearSelection}
           downloadButtonRef={downloadButtonRef}
-          download={download}
+          download={() => {}}
           handleOpenFileInput={handleOpenFileInput}
         />
         <div className="container-grow">
@@ -259,7 +275,7 @@ function App() {
             />
           </form>
           <FabComponent onClick={toogleState} />
-          <Sidebar />
+          <Sidebar exportSpritesheet={download} />
         </div>
 
         <Modal open={openModal}>

@@ -1,24 +1,66 @@
 import React from "react";
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
+import { Context } from "../../Store/store";
 import Accordion from "../accordion";
+import TextInput from "../input/TextInput";
 
-const Export: React.FC = () => {
-  const [openExporting, setOpenExporting] = React.useState(true);
+const Export: React.FC<{
+  exportSpritesheet: (fileName: string) => Promise<void>;
+}> = ({ exportSpritesheet }) => {
+  const [isPending, startTransition] = React.useTransition();
+  const { properties, onUpdateProperties } = React.useContext(Context);
+  const [exportingProps, setOpenExporting] = React.useState({
+    open: true,
+    fileName: "spritesheet.png",
+  });
 
   const handleToogleExporting = () => {
-    setOpenExporting((prevState) => !prevState);
+    setOpenExporting({ ...exportingProps, open: !exportingProps.open });
   };
+
+  const handleChangeState = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setOpenExporting({ ...exportingProps, [e.target.name]: e.target.value });
+    startTransition(() => {
+      onUpdateProperties([e.target.name] as any, e.target.value);
+    });
+  };
+
+  React.useEffect(() => {
+    setOpenExporting({ ...exportingProps, fileName: properties.fileName });
+    return () => {
+      //clean up
+    };
+  }, []);
+  async function _export() {
+    await exportSpritesheet(exportingProps.fileName);
+  }
+
   return (
     <Accordion
       activeIcon={<AiOutlinePlus size={20} />}
       inactiveIcon={<AiOutlineMinus size={20} />}
       hidden
-      open={openExporting}
-      title="BORDERLINE"
+      open={exportingProps.open}
+      title="EXPORT SPRITESHEET"
       toogle={handleToogleExporting}
     >
+      <div className="flex-1 flex flex-col mt-3">
+        <div className="flex-1 my-2">
+          <p className="text-xs font-semibold text-gray-700">
+            SPRITESHEET FILENAME
+          </p>
+        </div>
+        <TextInput
+          name="fileName"
+          placeholder="Filename"
+          value={exportingProps.fileName}
+          onChange={handleChangeState}
+        />
+      </div>
       <div className="flex-1 relative my-3">
-        <button className="btn-export">Export Spritesheet</button>
+        <button onClick={_export} className="btn-export">
+          Export Spritesheet
+        </button>
       </div>
     </Accordion>
   );
