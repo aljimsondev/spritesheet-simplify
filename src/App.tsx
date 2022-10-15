@@ -140,7 +140,9 @@ function App() {
     }
     //optional but i love to view this before rending :)
     const loadingTimer = setTimeout(() => {
-      setLoading(false);
+      if (!reloadApp) {
+        setLoading(false);
+      }
     }, Math.random() * 2000);
 
     return () => {
@@ -151,7 +153,7 @@ function App() {
   }, [reloadApp]);
 
   //load the renderer
-  const load = React.useCallback(async () => {
+  async function load() {
     window.addEventListener("keydown", (e) => {
       if (e.ctrlKey) {
         e.preventDefault();
@@ -180,7 +182,7 @@ function App() {
         await renderer.render(canvasWrapperRef.current);
       }
     });
-  }, [loading, buffers]);
+  }
 
   //renderer initialization
   React.useEffect(() => {
@@ -197,7 +199,6 @@ function App() {
   }, [
     buffers,
     loading,
-    reloadApp,
     deferredBorderColor,
     deferredBorderLine,
     deferredBorderWidth,
@@ -252,6 +253,7 @@ function App() {
   //TODO fix modal
   //?add dialog
   //?create getPosition handler for spritesheets
+
   return (
     <>
       <div className="main-container">

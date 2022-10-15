@@ -3,7 +3,7 @@
 }
 
 .switch-base.switch-active {
-  @apply delay-200 bg-switchActive;
+  @apply delay-200 bg-switchActive border-white;
 }
 .switch-base span {
   @apply duration-500 absolute h-switchThumb w-swithThumb bg-black rounded-full left-[-2px] translate-x-0;

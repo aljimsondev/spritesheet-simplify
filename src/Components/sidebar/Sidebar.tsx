@@ -26,8 +26,6 @@ const Sidebar: React.FC<SidebarProps> = ({ exportSpritesheet }) => {
     color: "#BFBFBF",
   });
   const deferredColorValue = React.useDeferredValue(backgroundProps.color);
-  const bgColorRef = React.useRef<HTMLInputElement>(null);
-  const previewBaseRef = React.useRef<HTMLDivElement>(null);
   const [isPending, startTransition] = React.useTransition();
   const anim = new Animate();
   const renderer = new Renderer();
@@ -76,11 +74,13 @@ const Sidebar: React.FC<SidebarProps> = ({ exportSpritesheet }) => {
     },
     [deferredColorValue]
   );
+
   const handleClickBgPropsOpen = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     setBackGroundProps({ ...backgroundProps, open: !backgroundProps.open });
   };
+
   const handleClickBgPropsDisplay = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -94,7 +94,7 @@ const Sidebar: React.FC<SidebarProps> = ({ exportSpritesheet }) => {
     <div ref={sidebarRef} className="sidebar-base">
       <Tabs defaultTabIndex={1}>
         <Tab tabLabel="Preview">
-          <div className="preview-base" ref={previewBaseRef}>
+          <div className="preview-base">
             <Accordion
               activeIcon={<AiOutlinePlus size={20} />}
               inactiveIcon={<AiOutlineMinus size={20} />}
@@ -113,7 +113,7 @@ const Sidebar: React.FC<SidebarProps> = ({ exportSpritesheet }) => {
                     onChange={handleChangeBgPropsColor}
                     name="color"
                     id="bg-color-picker"
-                    ref={bgColorRef}
+                    value={backgroundProps.color}
                   />
                   <p className="bg-text-color-label">{deferredColorValue}</p>
                 </label>
