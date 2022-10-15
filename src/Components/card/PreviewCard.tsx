@@ -2,7 +2,7 @@ import React from "react";
 import { FaDownload } from "react-icons/fa";
 import CreatePreviewThumbnail from "../../renderer/CreatePreviewThumbnail";
 import { AiOutlineEllipsis } from "react-icons/ai";
-import { IoPlayOutline, IoPauseOutline } from "react-icons/io5";
+import { IoPlayOutline } from "react-icons/io5";
 import InlineGroup from "../group/InlineGroup";
 import DropdownMenu from "../dropdown/DropdownMenu";
 import InputGroup from "../input/InputGroup";
@@ -38,6 +38,7 @@ const PreviewCard: React.FC<{
   const canvasWrapperRef = React.useRef<HTMLDivElement>(null);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
+  const previewCardRef = React.useRef<HTMLDivElement>(null);
   const deferredBgColor = React.useDeferredValue(backgroundColor);
   const [properties, setProperties] = React.useState<{
     name: string;
@@ -109,7 +110,7 @@ const PreviewCard: React.FC<{
 
   return (
     <>
-      <div className="preview-card ">
+      <div className="preview-card" ref={previewCardRef}>
         <React.Fragment>
           <div ref={canvasWrapperRef} className="preview-canvas-base">
             <div

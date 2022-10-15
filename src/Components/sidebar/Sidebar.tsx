@@ -15,6 +15,7 @@ import {
 import Configuration from "../form/Configuration";
 import Export from "../form/Export";
 import Accordion from "../accordion";
+import RenderList from "../list/RenderList";
 
 const Sidebar: React.FC<{}> = () => {
   const { buffers, sidebarRef } = React.useContext(Context);
@@ -28,24 +29,27 @@ const Sidebar: React.FC<{}> = () => {
   const bgColorRef = React.useRef<HTMLInputElement>(null);
   const previewBaseRef = React.useRef<HTMLDivElement>(null);
   const [isPending, startTransition] = React.useTransition();
+  const [cleared, setCanvasClearedStatus] = React.useState(false);
   const anim = new Animate();
+  const renderer = new Renderer();
+
+  const load = React.useCallback(async () => {
+    console.log(buffers);
+    renderer.loadBuffers(buffers).then((d) => {
+      renderer.createSpritesheets().then(async (spritesData) => {
+        if (spritesData.length > 0) {
+          await anim.loadSpritesheets(spritesData).then((isloaded) => {
+            if (isloaded) {
+              setSprites(spritesData); //set sprites after it was loaded in the animation engine
+            }
+          });
+        }
+      });
+    });
+  }, [buffers]);
 
   React.useEffect(() => {
-    (async () => {
-      //create spritesheets here
-      const renderer = new Renderer();
-      renderer.loadBuffers(buffers).then((d) => {
-        renderer.createSpritesheets().then(async (spritesData) => {
-          if (spritesData.length > 0) {
-            await anim.loadSpritesheets(spritesData).then((isloaded) => {
-              if (isloaded) {
-                setSprites(spritesData); //set sprites after it was loaded in the animation engine
-              }
-            });
-          }
-        });
-      });
-    })();
+    load();
   }, [buffers]);
 
   const handlePlay = async (
@@ -85,6 +89,7 @@ const Sidebar: React.FC<{}> = () => {
   };
   //TODO FINALIZE EXPORT
   //TODO FINALIZE PREVIEW
+  //!create loading state in first load
 
   return (
     <div ref={sidebarRef} className="sidebar-base">
@@ -138,17 +143,12 @@ const Sidebar: React.FC<{}> = () => {
                 </Accordion>
                 <div className="sidebar-anim-preview-base">
                   <p className="text-title px-5 py-3 ">ANIMATION PREVIEW</p>
-                  {sprites.map((spritesheet, index) => {
-                    return (
-                      <PreviewCard
-                        key={`${spritesheet.dataset.props! + index}`}
-                        backgroundColor={deferredColorValue}
-                        displayBackgroundColor={backgroundProps.display}
-                        buffer={spritesheet}
-                        handlePlayState={handlePlay}
-                      />
-                    );
-                  })}
+                  <RenderList
+                    sprites={sprites}
+                    backgroundColor={deferredColorValue}
+                    displayBackgroundColor={backgroundProps.display}
+                    handlePlay={handlePlay}
+                  />
                 </div>
               </React.Fragment>
             )}
@@ -165,4 +165,4 @@ const Sidebar: React.FC<{}> = () => {
   );
 };
 
-export default React.memo(Sidebar);
+export default Sidebar;
