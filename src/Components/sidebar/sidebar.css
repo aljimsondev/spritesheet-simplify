@@ -72,18 +72,6 @@
 .bg-color-picker-base {
   @apply flex items-center justify-between;
 }
-.bg-color-picker-wrapper {
-  @apply flex items-center justify-start 
-  py-[2px] px-1 
-  border-[1px] border-white
-  border-on-hover;
-}
-.bg-color-picker-input {
-  @apply w-7 h-7;
-}
-.bg-text-color-label {
-  @apply ml-5 text-sm text-gray-700;
-}
 .sidebar-anim-preview-base {
   @apply relative;
 }

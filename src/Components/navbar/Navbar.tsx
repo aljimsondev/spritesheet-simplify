@@ -11,6 +11,7 @@ import InlineGroup from "../group/InlineGroup";
 import Switch from "../switch/Switch";
 import NavbarControlGuideList from "../list/NavbarControlGuideList";
 import NavbarGuideButtonList from "../list/NavbarGuideButtonList";
+import AnimatedMenuIcon from "../button/AnimatedIcon";
 
 const Navbar: React.FC<NavbarProps> = ({
   clearSelection,
@@ -108,9 +109,7 @@ const Navbar: React.FC<NavbarProps> = ({
         </div>
         <div className="nav-button-base">
           <NavbarButton
-            icon={
-              openMenu ? <AiOutlineClose size={20} /> : <FaBars size={20} />
-            }
+            icon={<AnimatedMenuIcon active={!openMenu} />}
             onClick={toogleMenu}
           />
         </div>

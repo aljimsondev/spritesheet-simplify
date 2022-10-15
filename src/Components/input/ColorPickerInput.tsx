@@ -10,16 +10,16 @@ const ColorPickerInput: React.FC<{
 }> = ({ colorValue, onColorChange, inputProps }) => {
   const myRef = React.useRef<HTMLInputElement>(null);
   return (
-    <label htmlFor={myRef.current?.id} className="bg-color-picker-wrapper">
+    <label htmlFor={myRef.current?.id} className="-color-picker-wrapper">
       <input
         {...inputProps}
         type="color"
         onChange={onColorChange}
         ref={myRef}
         value={colorValue}
-        className="bg-color-picker-input"
+        className="-color-picker-input"
       />
-      <p className="bg-text-color-label">{colorValue}</p>
+      <p className="-picker-text-color-label">{colorValue}</p>
     </label>
   );
 };

@@ -1,0 +1,23 @@
+.-a-menu-icon-base {
+  @apply relative overflow-hidden;
+}
+.-a-menu-line {
+  @apply h-[2px] w-[25px]
+    my-[5px] duration-[0.3s] 
+    bg-white;
+}
+
+.-a-menu-line:nth-child(3) {
+  transition-delay: 100ms;
+}
+
+.--a-active-menu .-a-menu-line:not(:nth-child(1), :last-child) {
+  transform: translateX(-60px) translateY(-50px) rotate(90deg);
+  opacity: 0;
+}
+.--a-active-menu .-a-menu-line:nth-child(1) {
+  transform: rotate(40deg) translateY(6px) translateX(6px);
+}
+.--a-active-menu .-a-menu-line:last-child {
+  transform: rotate(-40deg) translateY(-10px) translateX(10px);
+}

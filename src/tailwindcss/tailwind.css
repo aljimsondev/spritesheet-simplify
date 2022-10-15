@@ -381,38 +381,6 @@
   justify-content: space-between;
 }
 
-.bg-color-picker-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  border-width: 1px;
-  --tw-border-opacity: 1;
-  border-color: rgb(255 255 255 / var(--tw-border-opacity));
-  padding-top: 2px;
-  padding-bottom: 2px;
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
-}
-
-.bg-color-picker-wrapper:hover {
-  border-width: 1px;
-  --tw-border-opacity: 1;
-  border-color: rgb(211 211 211 / var(--tw-border-opacity));
-}
-
-.bg-color-picker-input {
-  height: 1.75rem;
-  width: 1.75rem;
-}
-
-.bg-text-color-label {
-  margin-left: 1.25rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  --tw-text-opacity: 1;
-  color: rgb(55 65 81 / var(--tw-text-opacity));
-}
-
 .sidebar-anim-preview-base {
   position: relative;
 }
@@ -949,6 +917,70 @@
   100% {
     width: 100%;
   }
+}
+
+.-a-menu-icon-base {
+  position: relative;
+  overflow: hidden;
+}
+
+.-a-menu-line {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  height: 2px;
+  width: 25px;
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  transition-duration: 0.3s;
+}
+
+.-a-menu-line:nth-child(3) {
+  transition-delay: 100ms;
+}
+
+.--a-active-menu .-a-menu-line:not(:nth-child(1), :last-child) {
+  transform: translateX(-60px) translateY(-50px) rotate(90deg);
+  opacity: 0;
+}
+
+.--a-active-menu .-a-menu-line:nth-child(1) {
+  transform: rotate(40deg) translateY(6px) translateX(6px);
+}
+
+.--a-active-menu .-a-menu-line:last-child {
+  transform: rotate(-40deg) translateY(-10px) translateX(10px);
+}
+
+.-color-picker-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(255 255 255 / var(--tw-border-opacity));
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+.-color-picker-wrapper:hover {
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(211 211 211 / var(--tw-border-opacity));
+}
+
+.-color-picker-input {
+  height: 1.75rem;
+  width: 1.75rem;
+}
+
+.-picker-text-color-label {
+  margin-left: 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(55 65 81 / var(--tw-text-opacity));
 }
 
 /* ! tailwindcss v3.1.8 | MIT License | https://tailwindcss.com */

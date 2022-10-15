@@ -11,6 +11,8 @@
 @import url("../Components/input/TextInput.css");
 @import url("../Components/tooltip/tooltip.css");
 @import url("../Components/Loader/AnimatedLoader.css");
+@import url("../Components/button/AnimatedIcon.css");
+@import url("../Components/input/ColorPickerWrapper.css");
 
 @tailwind base;
 @tailwind components;

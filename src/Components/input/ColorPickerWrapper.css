@@ -1,0 +1,12 @@
+.-color-picker-wrapper {
+  @apply flex items-center justify-start 
+    py-[2px] px-1 
+    border-[1px] border-white
+    border-on-hover;
+}
+.-color-picker-input {
+  @apply w-7 h-7;
+}
+.-picker-text-color-label {
+  @apply ml-5 text-sm text-gray-700;
+}
