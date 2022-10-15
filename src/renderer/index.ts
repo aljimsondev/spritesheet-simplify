@@ -230,7 +230,7 @@ class Renderer {
     for (let col = 0; col < this.images.length; col++) {
       let imageHeight = this.images[col][0].height; //first index of the array
 
-      if (this.images.length > 0) {
+      if (this.images.length > 1) {
         //more than 1 column
         if (this.imageSpriteProps.imageHeight) {
           totalHeight += this.imageSpriteProps.imageHeight + padding; //custom height
@@ -315,7 +315,7 @@ class Renderer {
           colPadding = this.imageSpriteProps.padding;
         }
 
-        if (this.images.length > 0) {
+        if (this.images.length > 1) {
           //consist of more than 1 row, add padding  to give space of each column sprites
           if (this.imageSpriteProps.imageHeight) {
             currentPositionY += this.imageSpriteProps.imageHeight + colPadding;
