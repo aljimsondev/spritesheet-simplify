@@ -17,6 +17,7 @@ import { disableZoom } from "./EventHandler/DisableZoom";
 import Zoomify from "./Zoomify";
 import { useDeferredObject } from "./helpers/UseDeferredObject";
 import AnimatedLoader from "./Components/Loader/AnimatedLoader";
+import { CanvasZoomDrag } from "./EventHandler/CanvasZoomDrag";
 
 function App() {
   const {
@@ -50,33 +51,17 @@ function App() {
   const handleSelectImages = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files!;
 
-    const data = await LoadBase64Images(files); // now holds that images
-    setBuffers([...buffers, data]); //append new data in the buffers
-    saveToLocalStorage("blobs", [...buffers, data]); // save to local storage
+    const data = await LoadBase64Images(files);
+    setBuffers([...buffers, data]);
+    saveToLocalStorage("blobs", [...buffers, data]);
   };
 
-  //clear state
+  //clear buffers
   const clearSelection = React.useCallback(() => {
-    if (buffers.length > 0 && !loading) {
-      removeFromLocalStorage("blobs"); //remove buffers
-      setBuffers([]);
-      //dispatch notification
-      notificationDispatch({
-        type: "ADD_NOTIFICATION",
-        payload: {
-          dismissable: true,
-          onClose: () => {
-            notificationDispatch({ type: "RESET_NOTIFICATION" });
-          },
-          open: true,
-          text: "Canvas is cleared successfully!",
-          type: "success",
-        },
-      });
-      return;
-    }
-    //dispatch notification
-    notificationDispatch({
+    if (buffers.length <= 0) return;
+    removeFromLocalStorage("blobs"); //remove buffers
+    setBuffers([]);
+    return notificationDispatch({
       type: "ADD_NOTIFICATION",
       payload: {
         dismissable: true,
@@ -84,12 +69,11 @@ function App() {
           notificationDispatch({ type: "RESET_NOTIFICATION" });
         },
         open: true,
-        text: "Canvas is empty, please fill some sprites.",
-        type: "warning",
+        text: "Canvas is cleared successfully!",
+        type: "success",
       },
     });
   }, [buffers]);
-
   //handling file input programmatically
   const handleOpenFileInput = () => {
     fileInputRef.current?.click();
@@ -133,13 +117,14 @@ function App() {
 
   //runs in first render and reload
   React.useEffect(() => {
+    //enable zoom drag
+    CanvasZoomDrag(canvasWrapperRef.current!);
     //fetch blobs to localstorage
     const localBlobs = fetchToLocalStorage("blobs");
     if (localBlobs) {
       setBuffers(localBlobs);
     }
-    //optional but i love to view this before rending :)
-    const loadingTimer = setTimeout(() => {
+    const timer = setTimeout(() => {
       if (!reloadApp) {
         setLoading(false);
       }
@@ -148,12 +133,12 @@ function App() {
     return () => {
       setBuffers([]); //clean up
       setLoading(true);
-      clearTimeout(loadingTimer);
+      clearTimeout(timer);
     };
   }, [reloadApp]);
 
   //load the renderer
-  async function load() {
+  const load = React.useCallback(async () => {
     window.addEventListener("keydown", (e) => {
       if (e.ctrlKey) {
         e.preventDefault();
@@ -182,7 +167,7 @@ function App() {
         await renderer.render(canvasWrapperRef.current);
       }
     });
-  }
+  }, [buffers]);
 
   //renderer initialization
   React.useEffect(() => {
@@ -205,52 +190,9 @@ function App() {
     deferredCanvasBg,
     deferredPadding,
   ]);
-
-  /**
-   * HANDLES THE EVENTs
-   */
-  React.useEffect(() => {
-    const container = canvasWrapperRef.current!;
-    (() => {
-      if (container) {
-        const instance = Zoomify({
-          minScale: 0.1,
-          maxScale: 30,
-          element: container,
-          scaleSensitivity: 30,
-        });
-        container.addEventListener("wheel", (event) => {
-          if (event.ctrlKey) {
-            instance.zoom({
-              deltaScale: Math.sign(event.deltaY) > 0 ? -1 : 1,
-              x: event.pageX,
-              y: event.pageY,
-            });
-          }
-        });
-        container.addEventListener("dblclick", () => {
-          instance.panTo({
-            originX: 0,
-            originY: 0,
-            scale: 1,
-          });
-        });
-        container.addEventListener("mousemove", (event) => {
-          event.preventDefault();
-          if (!event.shiftKey) {
-            return;
-          }
-          instance.panBy({
-            originX: event.movementX,
-            originY: event.movementY,
-          });
-        });
-      }
-    })();
-  }, []);
-
   //TODO add dialog
   //TODO fix modal
+  //!FIX ME fix tooltip position
   //?add dialog
   //?create getPosition handler for spritesheets
 
