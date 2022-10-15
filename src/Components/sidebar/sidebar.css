@@ -78,7 +78,7 @@
   border-[1px] border-white
   border-on-hover;
 }
-#bg-color-picker {
+.bg-color-picker-input {
   @apply w-7 h-7;
 }
 .bg-text-color-label {

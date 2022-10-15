@@ -14,8 +14,9 @@ import {
 import Configuration from "../form/Configuration";
 import Export from "../form/Export";
 import Accordion from "../accordion";
-import RenderList from "../list/RenderList";
+import RenderList from "../list/PreviewRenderList";
 import { SidebarProps } from "../types";
+import ColorPickerInput from "../input/ColorPickerInput";
 
 const Sidebar: React.FC<SidebarProps> = ({ exportSpritesheet }) => {
   const { buffers, sidebarRef } = React.useContext(Context);
@@ -104,19 +105,14 @@ const Sidebar: React.FC<SidebarProps> = ({ exportSpritesheet }) => {
               title="PREVIEW BACKGROUND"
             >
               <div className="bg-color-picker-base">
-                <label
-                  htmlFor="bg-color-picker"
-                  className="bg-color-picker-wrapper"
-                >
-                  <input
-                    type="color"
-                    onChange={handleChangeBgPropsColor}
-                    name="color"
-                    id="bg-color-picker"
-                    value={backgroundProps.color}
-                  />
-                  <p className="bg-text-color-label">{deferredColorValue}</p>
-                </label>
+                <ColorPickerInput
+                  onColorChange={handleChangeBgPropsColor}
+                  colorValue={deferredColorValue}
+                  inputProps={{
+                    name: "color",
+                    id: "bg-color-picker",
+                  }}
+                />
                 <button
                   onClick={handleClickBgPropsDisplay}
                   className="-icon-button"

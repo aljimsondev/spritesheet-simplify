@@ -8,6 +8,7 @@ import {
 } from "react-icons/ai";
 import { Context } from "../../Store/store";
 import Accordion from "../accordion";
+import ColorPickerInput from "../input/ColorPickerInput";
 import InputGroup from "../input/InputGroup";
 import TextInput from "../input/TextInput";
 
@@ -135,16 +136,14 @@ const Configuration = () => {
           <div className="flex-1 my-2">
             <p className="text-xs font-semibold text-gray-700">BORDER COLOR</p>
           </div>
-          <label htmlFor="bg-color-picker" className="bg-color-picker-wrapper">
-            <input
-              type="color"
-              value={localState.borderColor}
-              onChange={handleChangeState}
-              name="borderColor"
-              id="bg-color-picker"
-            />
-            <p className="bg-text-color-label">{properties.borderColor}</p>
-          </label>
+          <ColorPickerInput
+            colorValue={localState.borderColor}
+            onColorChange={handleChangeState}
+            inputProps={{
+              name: "borderColor",
+              id: "border-color-picker",
+            }}
+          />
         </div>
       </Accordion>
       <Accordion
@@ -156,16 +155,14 @@ const Configuration = () => {
         toogle={handleClickBgPropsOpen}
       >
         <div className="bg-color-picker-base">
-          <label htmlFor="bg-color-picker" className="bg-color-picker-wrapper">
-            <input
-              type="color"
-              value={properties.canvasBackground}
-              onChange={handleChangeState}
-              name="canvasBackground"
-              id="bg-color-picker"
-            />
-            <p className="bg-text-color-label">{localState.canvasBackground}</p>
-          </label>
+          <ColorPickerInput
+            colorValue={localState.canvasBackground}
+            onColorChange={handleChangeState}
+            inputProps={{
+              name: "canvasBackground",
+              id: "canvas-bg-color-picker",
+            }}
+          />
           <button onClick={handleClickBgPropsDisplay} className="-icon-button">
             {backgroundProps.display ? (
               <AiOutlineEye size={20} />

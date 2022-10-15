@@ -400,7 +400,7 @@
   border-color: rgb(211 211 211 / var(--tw-border-opacity));
 }
 
-#bg-color-picker {
+.bg-color-picker-input {
   height: 1.75rem;
   width: 1.75rem;
 }

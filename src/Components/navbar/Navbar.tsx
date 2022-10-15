@@ -9,6 +9,8 @@ import Logo from "../logo/Logo";
 import { Context } from "../../Store/store";
 import InlineGroup from "../group/InlineGroup";
 import Switch from "../switch/Switch";
+import NavbarControlGuideList from "../list/NavbarControlGuideList";
+import NavbarGuideButtonList from "../list/NavbarGuideButtonList";
 
 const Navbar: React.FC<NavbarProps> = ({
   clearSelection,
@@ -19,17 +21,34 @@ const Navbar: React.FC<NavbarProps> = ({
   const [open, setOpen] = React.useState<boolean>(false);
   const { toogleMenu, openMenu, handleReload } = React.useContext(Context);
   const [dark, setDarkMode] = React.useState(false);
-  const navData = [
-    {
-      icon: <BiImageAdd size={30} />,
-      onClick: handleOpenFileInput,
-      tooltip: true,
-      tooltipLabel: "Add Sprites",
-    },
-  ];
+
+  const navbarData = {
+    buttonData: [
+      {
+        onClick: handleReload,
+        label: "Reload App",
+        shortcutKey: "Ctrl + R",
+      },
+      {
+        onClick: clearSelection,
+        label: "Clear Canvas",
+        shortcutKey: "Ctrl + X",
+      },
+    ],
+    appController: [
+      {
+        icon: <BiImageAdd size={30} />,
+        onClick: handleOpenFileInput,
+        tooltip: true,
+        tooltipLabel: "Add Sprites",
+      },
+    ],
+  };
+
   const toogleTheme = () => {
     setDarkMode((prevMode) => !prevMode);
   };
+
   //TODO refactor static element
   return (
     <div className="navbar">
@@ -55,74 +74,8 @@ const Navbar: React.FC<NavbarProps> = ({
               <>
                 <div className="nav-options-form-base">
                   <form className="nav-options-form">
-                    <InlineGroup className="items-center mt-2">
-                      <>
-                        <div className="flex-1">
-                          <button
-                            type="button"
-                            className="nav-options-btn"
-                            onClick={handleReload}
-                          >
-                            Reload App
-                          </button>
-                        </div>
-                        <p className="nav-options-btn-label">Ctrl + R</p>
-                      </>
-                    </InlineGroup>
-                    <InlineGroup className="items-center mt-2">
-                      <>
-                        <div className="flex-1">
-                          <button
-                            type="button"
-                            className="nav-options-btn"
-                            onClick={clearSelection}
-                          >
-                            Clear Canvas
-                          </button>
-                        </div>
-                        <p className="nav-options-btn-label">Ctrl + X</p>
-                      </>
-                    </InlineGroup>
-                    <InlineGroup className="items-center mt-2">
-                      <>
-                        <div className="flex-1">
-                          <p className="text-white text-sm">Zoom in</p>
-                        </div>
-                        <p className="nav-options-btn-label">
-                          Ctrl + MouseWheelUp
-                        </p>
-                      </>
-                    </InlineGroup>
-                    <InlineGroup className="items-center mt-2">
-                      <>
-                        <div className="flex-1">
-                          <p className="text-white text-sm">Zoom out</p>
-                        </div>
-                        <p className="nav-options-btn-label">
-                          Ctrl + MouseWheelDown
-                        </p>
-                      </>
-                    </InlineGroup>
-                    <InlineGroup className="items-center mt-2">
-                      <>
-                        <div className="flex-1">
-                          <p className="text-white text-sm">Drag Canvas</p>
-                        </div>
-                        <p className="nav-options-btn-label">
-                          Shift + Mousemove
-                        </p>
-                      </>
-                    </InlineGroup>
-                    <InlineGroup className="items-center mt-2">
-                      <>
-                        <div className="flex-1">
-                          <p className="text-white text-sm">
-                            Reset Canvas Scale
-                          </p>
-                        </div>
-                        <p className="nav-options-btn-label">Doubleclick</p>
-                      </>
-                    </InlineGroup>
+                    <NavbarGuideButtonList data={navbarData.buttonData} />
+                    <NavbarControlGuideList />
                     <InlineGroup className="items-center mt-5 border-t-[1px] border-white py-2">
                       <>
                         <div className="flex-1 flex items-center">
@@ -141,7 +94,7 @@ const Navbar: React.FC<NavbarProps> = ({
               </>
             </DropdownMenu>
           </div>
-          {navData.map((data, index) => {
+          {navbarData.appController.map((data, index) => {
             return (
               <NavbarButton
                 icon={data.icon}
