@@ -20,13 +20,12 @@ const NavbarButton: NODE<NavbarButtonProps> = ({
     };
   }, []);
   return (
-    <ToolTip label={tooltipLabel}>
+    <ToolTip label={tooltipLabel} enabled={tooltip}>
       <button
         aria-label="nav-button"
         className="nav-button centered"
         type={type || "button"}
         onClick={onClick}
-        data-tooltip={tooltipLabel}
         ref={ref}
       >
         {icon}

@@ -6,15 +6,16 @@ const ToolTip = React.forwardRef<
     children: JSX.Element[] | JSX.Element;
     label?: string;
     innerProps?: React.HTMLAttributes<HTMLDivElement>;
+    enabled?: boolean;
   }
->(({ children, label, innerProps }, ref) => {
+>(({ children, label = "", innerProps, enabled = false }, ref) => {
   return React.createElement(
     "div",
     {
       ...innerProps,
       ref: ref,
       "data-tooltip": label,
-      className: "tooltip",
+      className: enabled ? "tooltip" : "",
     },
     children
   );
