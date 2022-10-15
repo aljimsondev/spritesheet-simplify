@@ -183,7 +183,7 @@ const Configuration = () => {
         title="SPRITESHEET PADDING"
         toogle={handleOpenPaddingOption}
       >
-        <div className="flex-1">
+        <div className="flex-1 mt-2">
           <TextInput
             onChange={handleChangeState}
             name="padding"

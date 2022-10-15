@@ -19,17 +19,15 @@ import Accordion from "../accordion";
 const Sidebar: React.FC<{}> = () => {
   const { buffers, sidebarRef } = React.useContext(Context);
   const [sprites, setSprites] = React.useState<HTMLImageElement[]>([]);
-  const [backgroundProps, setBackGroundProps] = React.useState<{
-    open: boolean;
-    display: boolean;
-    color: string;
-  }>({
+  const [backgroundProps, setBackGroundProps] = React.useState({
     open: true,
     display: true,
     color: "#BFBFBF",
   });
   const deferredColorValue = React.useDeferredValue(backgroundProps.color);
   const bgColorRef = React.useRef<HTMLInputElement>(null);
+  const previewBaseRef = React.useRef<HTMLDivElement>(null);
+  const [isPending, startTransition] = React.useTransition();
   const anim = new Animate();
 
   React.useEffect(() => {
@@ -63,9 +61,11 @@ const Sidebar: React.FC<{}> = () => {
 
   const handleChangeBgPropsColor = React.useCallback(
     (e: any) => {
-      setBackGroundProps({
-        ...backgroundProps,
-        [e.target.name]: e.target.value,
+      startTransition(() => {
+        setBackGroundProps({
+          ...backgroundProps,
+          [e.target.name]: e.target.value,
+        });
       });
     },
     [deferredColorValue]
@@ -84,12 +84,13 @@ const Sidebar: React.FC<{}> = () => {
     });
   };
   //TODO FINALIZE EXPORT
+  //TODO FINALIZE PREVIEW
 
   return (
     <div ref={sidebarRef} className="sidebar-base">
       <Tabs defaultTabIndex={1}>
         <Tab tabLabel="Preview">
-          <div className="preview-base">
+          <div className="preview-base" ref={previewBaseRef}>
             {buffers.length <= 0 && (
               <div className="centered mt-1 flex flex-col">
                 <img src={img} />
@@ -120,7 +121,7 @@ const Sidebar: React.FC<{}> = () => {
                         ref={bgColorRef}
                       />
                       <p className="bg-text-color-label">
-                        {backgroundProps.color}
+                        {deferredColorValue}
                       </p>
                     </label>
                     <button
@@ -141,7 +142,7 @@ const Sidebar: React.FC<{}> = () => {
                     return (
                       <PreviewCard
                         key={`${spritesheet.dataset.props! + index}`}
-                        backgroundColor={backgroundProps.color}
+                        backgroundColor={deferredColorValue}
                         displayBackgroundColor={backgroundProps.display}
                         buffer={spritesheet}
                         handleDownload={() => {}}

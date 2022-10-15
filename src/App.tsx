@@ -37,9 +37,7 @@ function App() {
   const deferredPadding = useDeferredObject(properties, "padding");
   const deferredBorderWidth = useDeferredObject(properties, "borderWidth");
   const deferredBorderLine = useDeferredObject(properties, "borderLine");
-  const [reload, setReload] = React.useState(false);
   const renderer = new Renderer();
-
   disableZoom(document.getElementById("root")!);
 
   const toogleState = () => {
@@ -221,6 +219,9 @@ function App() {
       }
     })();
   }, []);
+
+  //TODO add dialog
+  //TODO add custom loader
 
   return (
     <>
