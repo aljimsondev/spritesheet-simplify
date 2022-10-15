@@ -40,7 +40,7 @@ const PreviewCard: React.FC<{
   const [openDropdown, setOpenDropdown] = React.useState(false);
   const [fps, setFps] = React.useState<number>(60);
   const playStateRef = React.useRef<HTMLButtonElement>(null);
-  const defaultScreen = { height: 120, width: 120 };
+  const defaultScreen = { height: 150, width: 120 };
   const canvasWrapperRef = React.useRef<HTMLDivElement>(null);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const dropdownRef = React.useRef<HTMLDivElement>(null);

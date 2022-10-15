@@ -101,7 +101,6 @@ class Animate {
   #end() {
     cancelAnimationFrame(this.#_RAF);
   }
-  createThumbnail(spritesheet: HTMLImageElement) {}
   start(time: number) {
     const deltaTime = time - this.#lastTime;
     this.#lastTime = time;
