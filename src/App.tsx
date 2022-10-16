@@ -157,6 +157,7 @@ function App() {
           setSpritesheets(s_sheets);
         });
         renderer.getYPositions();
+        renderer.donwloadDataJSON();
       }
     });
   };

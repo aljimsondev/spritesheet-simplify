@@ -2,7 +2,6 @@ import React from "react";
 import Tabs from "../Tabs";
 import { Tab } from "../Tabs/Tab";
 import { Context } from "../../Store/store";
-import Renderer from "../../renderer";
 import Animate from "../../renderer/Animate";
 import img from "../../assets/images-removebg-preview.png";
 import {
@@ -23,7 +22,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   spritesheets,
 }) => {
   const { buffers, sidebarRef } = React.useContext(Context);
-  const [sprites, setSprites] = React.useState<HTMLImageElement[]>([]);
   const [backgroundProps, setBackGroundProps] = React.useState({
     open: true,
     display: true,
@@ -32,14 +30,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   const deferredColorValue = React.useDeferredValue(backgroundProps.color);
   const [isPending, startTransition] = React.useTransition();
   const anim = new Animate();
-
-  React.useEffect(() => {
-    console.log(spritesheets);
-    return () => {
-      //clean up
-      setSprites([]);
-    };
-  }, [spritesheets]);
 
   const handlePlay = async (
     sprite: HTMLImageElement,

@@ -20,7 +20,7 @@ const InputGroup = React.forwardRef<
         {...inputProps}
         id={inputRef.current?.id}
         style={{ maxWidth: width }}
-        className="input-group-input"
+        className="input-group-input --o-n-input"
       />
     </label>
   );

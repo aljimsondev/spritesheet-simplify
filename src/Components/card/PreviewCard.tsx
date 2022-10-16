@@ -7,6 +7,7 @@ import InlineGroup from "../group/InlineGroup";
 import DropdownMenu from "../dropdown/DropdownMenu";
 import InputGroup from "../input/InputGroup";
 import { SpriteSheetDownload } from "../../helpers/SpriteSheetDownloader";
+import { Context } from "../../Store/store";
 
 //config must be global to allow configuration for the user whatever they desired
 const config = {
@@ -41,6 +42,7 @@ const PreviewCard = React.forwardRef<
     ref
   ) => {
     const [openDropdown, setOpenDropdown] = React.useState(false);
+    const { buffers, setBuffers } = React.useContext(Context);
     const [fps, setFps] = React.useState<number>(60);
     const playStateRef = React.useRef<HTMLButtonElement>(null);
     const defaultScreen = { height: 150, width: 120 };
@@ -49,7 +51,7 @@ const PreviewCard = React.forwardRef<
     const dropdownRef = React.useRef<HTMLDivElement>(null);
     const previewCardRef = React.useRef<HTMLDivElement>(null);
     const deferredBgColor = React.useDeferredValue(backgroundColor);
-    const [properties, setProperties] = React.useState<{
+    const [localProperties, setProperties] = React.useState<{
       name: string;
       height: number;
       width: number;
@@ -57,11 +59,11 @@ const PreviewCard = React.forwardRef<
       y: number;
     }>(defaultProperty);
 
-    const handlePlayingState = () => {
+    const handlePlayingState = React.useCallback(() => {
       if (buffer) {
         handlePlayState(buffer, canvasRef.current!, { fps: fps });
       }
-    };
+    }, [fps, buffer]);
 
     React.useEffect(() => {
       (() => {
@@ -73,7 +75,7 @@ const PreviewCard = React.forwardRef<
             width: number;
             posY: number;
           } = JSON.parse(buffer.dataset.props!);
-
+          console.log(props);
           CreatePreviewThumbnail(
             buffer,
             {
@@ -85,9 +87,9 @@ const PreviewCard = React.forwardRef<
             defaultScreen.width,
             defaultScreen.height
           );
-          console.log(props);
+
           setProperties({
-            ...properties,
+            ...localProperties,
             width: props.width,
             height: props.height,
             name: props.name,
@@ -102,26 +104,46 @@ const PreviewCard = React.forwardRef<
       };
     }, [backgroundColor, displayBackgroundColor]);
 
-    const handleChangeFPS = (e: React.ChangeEvent<HTMLInputElement>) => {
-      try {
-        const val = e.target.value as string;
-        setFps(parseFloat(val));
-      } catch (e) {
-        console.warn(e);
-      }
-    };
+    const handleChangeFPS = React.useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        try {
+          const val = e.target.value as string;
+          setFps(parseFloat(val));
+        } catch (e) {
+          console.warn(e);
+        }
+      },
+      [fps]
+    );
 
     //TODO add preview loading in each element
     //TODO edit configutaion and finalize functionality
     //TODO add preview properties update
-    const handleDownloadingSpriteSheet = () => {
+    //TODO add json download for spritesheets properties
+
+    const handleDownloadingSpriteSheet = React.useCallback(() => {
       if (buffer) {
         SpriteSheetDownload(buffer, {
-          fileName: properties.name,
+          fileName: localProperties.name,
           fileType: "png",
         });
       }
-    };
+    }, [localProperties.name]);
+
+    const handleSpritesheetWHProperties = React.useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        setProperties({ ...localProperties, [e.target.name]: e.target.value });
+      },
+      [buffer]
+    );
+
+    const onEnterKeyboardEvent = React.useCallback(
+      (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.code === "Enter") {
+        }
+      },
+      []
+    );
 
     return (
       <div className="preview-card" ref={previewCardRef}>
@@ -156,7 +178,7 @@ const PreviewCard = React.forwardRef<
             </div>
             <div className="max-w-[150px] text-ellipsis relative overflow-hidden">
               <p className="max-w-[100%] overflow-hidden text-ellipsis">
-                {properties.name}
+                {localProperties.name}
               </p>
             </div>
             <div className="preview-controller-label">
@@ -178,51 +200,52 @@ const PreviewCard = React.forwardRef<
               />
             </div>
             <InlineGroup className="mt-2">
-              <>
-                <div className="flex-1">
-                  <InputGroup
-                    label="H"
-                    inputProps={{
-                      width: 60,
-                      value: properties.height,
-                      onChange: (e) => {},
-                    }}
-                  />
-                </div>
-                <div className="flex-1">
-                  <InputGroup
-                    label="W"
-                    width={60}
-                    inputProps={{
-                      onChange: (e) => {},
-                      value: properties.width,
-                    }}
-                  />
-                </div>
-              </>
+              <div className="flex-1">
+                <InputGroup
+                  label="H"
+                  inputProps={{
+                    width: 60,
+                    value: localProperties.height,
+                    onKeyDownCapture: onEnterKeyboardEvent,
+                    name: "height",
+                    onChange: handleSpritesheetWHProperties,
+                    type: "number",
+                  }}
+                />
+              </div>
+              <div className="flex-1">
+                <InputGroup
+                  label="W"
+                  width={60}
+                  inputProps={{
+                    onChange: (e) => {},
+                    value: localProperties.width,
+                    name: "width",
+                    type: "number",
+                  }}
+                />
+              </div>
             </InlineGroup>
             <InlineGroup>
-              <>
-                <div className="flex-1">
-                  <InputGroup
-                    ref={ref}
-                    label="X"
-                    inputProps={{
-                      onChange: (e) => {},
-                      value: properties.x,
-                    }}
-                  />
-                </div>
-                <div className="flex-1">
-                  <InputGroup
-                    label="Y"
-                    inputProps={{
-                      onChange: (e) => {},
-                      value: properties.y,
-                    }}
-                  />
-                </div>
-              </>
+              <div className="flex-1">
+                <InputGroup
+                  ref={ref}
+                  label="X"
+                  inputProps={{
+                    onChange: (e) => {},
+                    value: localProperties.x,
+                  }}
+                />
+              </div>
+              <div className="flex-1">
+                <InputGroup
+                  label="Y"
+                  inputProps={{
+                    onChange: (e) => {},
+                    value: localProperties.y,
+                  }}
+                />
+              </div>
             </InlineGroup>
             <InlineGroup className="justify-between items-center mt-2">
               <>

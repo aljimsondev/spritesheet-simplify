@@ -1,12 +1,12 @@
-import {
-  fetchToLocalStorage,
-  saveToLocalStorage,
-} from "../helpers/LocalStorageHelper";
 import { BufferData } from "../Components/types";
+
+/**
+ * HOW TO MAKE IMAGES RESIZEABLE
+ * solution 1: add reference to that row and  use it when updating rows later
+ */
 
 interface Renderer {
   canvas: HTMLCanvasElement;
-  context: CanvasRenderingContext2D;
   imageSpriteProps: {
     padding: number;
     imageWidth: number;
@@ -17,28 +17,20 @@ interface Renderer {
     x?: number;
     y?: number;
   };
-  buffers: BufferData[][];
-  images: HTMLImageElement[][];
-  imagesArray: HTMLImageElement[];
-  focus: boolean;
-  _RAF: any;
-  buffer: BufferData[];
-  maxPadding: number;
-  defaultBorderWidth: number;
-  defaultBorderColor: string;
-  posYArray: number[];
 }
 
 class Renderer {
+  #images: HTMLImageElement[][] = []; //for 2d spritesheet array
+  #imagesArray: HTMLImageElement[] = []; //for single row images for animation spritesheet
+  #maxPadding: number = 100;
+  #defaultBorderColor: string = "#000000";
+  #defaultBorderWidth: number = 1;
+  #posYArray: number[] = [];
+  #buffer: BufferData[] = [];
+  #buffers: BufferData[][] = [];
+  #context: CanvasRenderingContext2D | null = null;
   constructor() {
-    this.images = []; //for 2d spritesheet array
-    this.imagesArray = []; //for single row images for animation spritesheet
     this.#init();
-    this._RAF = null;
-    this.maxPadding = 100;
-    this.defaultBorderColor = "#000000";
-    this.defaultBorderWidth = 1;
-    this.posYArray = [];
   }
 
   setImageSpriteProps(args: {
@@ -56,7 +48,7 @@ class Renderer {
   #init() {
     this.canvas = document.createElement("canvas");
     this.canvas.id = "renderer-canvas";
-    this.context = this.canvas.getContext("2d")!;
+    this.#context = this.canvas.getContext("2d")!;
   }
   /**
    * Load the base64 data and convert it to HTML images
@@ -69,14 +61,14 @@ class Renderer {
     return new Promise<boolean>((resolve, reject) => {
       try {
         let counter = 0;
-        this.buffers = buffers;
+        this.#buffers = buffers;
         for (let row = 0; row < buffers.length; row++) {
-          this.images[row] = [];
+          this.#images[row] = [];
           for (let col = 0; col < buffers[row].length; col++) {
             const image = new Image();
             image.src = buffers[row][col].data as string;
             image.alt = buffers[row][col].name;
-            this.images[row][col] = image; //assigning image to indexes
+            this.#images[row][col] = image; //assigning image to indexes
           }
           counter++;
         }
@@ -94,18 +86,18 @@ class Renderer {
    * @param buffer
    * @returns
    */
-  async loadBuffer(buffer: BufferData[]) {
+  async #loadBuffer(buffer: BufferData[]) {
     if (buffer.length <= 0) return;
 
     return new Promise<boolean>((resolve, reject) => {
       try {
         let counter = 0;
-        this.buffer = buffer;
+        this.#buffer = buffer;
         for (let row = 0; row < buffer.length; row++) {
           const image = new Image();
           image.src = buffer[row].data as string;
           image.alt = buffer[row].name;
-          this.imagesArray[row] = image; //assigning image to indexes
+          this.#imagesArray[row] = image; //assigning image to indexes
           counter++;
         }
         if (counter >= buffer.length) {
@@ -122,7 +114,7 @@ class Renderer {
    * @param imagesArray
    * @param posY
    */
-  async loadRowData(
+  async #loadRowData(
     imagesArray: HTMLImageElement[],
     context: CanvasRenderingContext2D,
     posY: number,
@@ -154,8 +146,8 @@ class Renderer {
         options?.imageHeight || image.height
       );
       if (options?.borderLine) {
-        context.lineWidth = options?.borderWidth || this.defaultBorderWidth;
-        context.strokeStyle = options?.borderColor || this.defaultBorderColor;
+        context.lineWidth = options?.borderWidth || this.#defaultBorderWidth;
+        context.strokeStyle = options?.borderColor || this.#defaultBorderColor;
         context.strokeRect(
           i * startingPositionX,
           posY,
@@ -174,9 +166,9 @@ class Renderer {
     const ctx = canvas.getContext("2d")!;
     const image = new Image();
     if (sprites.length > 0) {
-      canvas.width = this.getTotalWidth(sprites);
+      canvas.width = this.#getTotalWidth(sprites);
       canvas.height = sprites[0].height;
-      this.loadRowData(sprites, ctx, 0);
+      this.#loadRowData(sprites, ctx, 0);
       image.src = canvas.toDataURL();
       image.alt = sprites[0].alt;
       image.dataset.props = JSON.stringify({
@@ -189,21 +181,31 @@ class Renderer {
     return image;
   }
   async createSpritesheets(): Promise<HTMLImageElement[]> {
-    return this.images.map((row, y) => {
-      return this.#createAnimationSpriteSheet(row, this.posYArray[y]);
+    return this.#images.map((row, y) => {
+      return this.#createAnimationSpriteSheet(row, this.#posYArray[y]);
     });
   }
+  donwloadDataJSON() {
+    // for (let i = 0; i < this.images.length; i++) {
+    //   const firstImage = this.images[i][0];
+    //   this.obj.prototype.[Symbol.[this.images[i][0].alt]] = {
+    //     height: this.images[i][0].height,
+    //     width: this.images[i][0].width,
+    //     y: this.posYArray[i],
+    //   };
+    // }
+    // console.log(this.obj);
+  }
 
-  updateRowDataProperties(row: number, props?: {}) {}
   getYPositions() {
-    return this.posYArray;
+    return this.#posYArray;
   }
 
   /**
    * Get the total occopied width of the images in the canvas
    * @returns Total Width
    */
-  getTotalWidth(
+  #getTotalWidth(
     imagesArray: HTMLImageElement[],
     options?: {
       customWidth?: number;
@@ -233,23 +235,23 @@ class Renderer {
     if (
       isNaN(this.imageSpriteProps.padding) ||
       typeof this.imageSpriteProps.padding !== "number" ||
-      this.imageSpriteProps.padding > this.maxPadding
+      this.imageSpriteProps.padding > this.#maxPadding
     ) {
       padding = 0;
     } else {
       padding = this.imageSpriteProps.padding;
     }
 
-    for (let col = 0; col < this.images.length; col++) {
-      let imageHeight = this.images[col][0].height; //first index of the array
+    for (let col = 0; col < this.#images.length; col++) {
+      let imageHeight = this.#images[col][0].height; //first index of the array
 
-      if (this.images.length > 1) {
+      if (this.#images.length > 1) {
         //more than 1 column
         if (this.imageSpriteProps.imageHeight) {
           totalHeight += this.imageSpriteProps.imageHeight + padding; //custom height
         }
         totalHeight += imageHeight + padding; //original image height
-      } else if (this.images.length === 1) {
+      } else if (this.#images.length === 1) {
         //only 1 column means no padding applied
         if (this.imageSpriteProps.imageHeight) {
           totalHeight += this.imageSpriteProps.imageHeight; //custom height
@@ -265,9 +267,9 @@ class Renderer {
    */
   getCanvasWidth() {
     let highestWidth = 0;
-    if (this.images.length <= 0) return 0;
-    for (let i = 0; i < this.images.length; i++) {
-      let width = this.getTotalWidth(this.images[i], {
+    if (this.#images.length <= 0) return 0;
+    for (let i = 0; i < this.#images.length; i++) {
+      let width = this.#getTotalWidth(this.#images[i], {
         customWidth: this.imageSpriteProps.imageWidth,
       });
       if (width > highestWidth) {
@@ -285,7 +287,7 @@ class Renderer {
   async download(fileName: string) {
     return new Promise<boolean>((resolve, reject) => {
       try {
-        if (this.images.length > 0) {
+        if (this.#images.length > 0) {
           const blob = this.canvas.toDataURL("image/png");
           const a = document.createElement("a");
           a.download = `${fileName || "spritesheet"}.png`;
@@ -303,16 +305,16 @@ class Renderer {
   /**
    * Draw the images in the canvas
    */
-  async drawCanvas() {
-    if (this.images.length > 0) {
+  async #drawCanvas() {
+    if (this.#images.length > 0) {
       this.canvas.width = this.getCanvasWidth();
       this.canvas.height = this.getCanvasHeight();
       let colPadding = 0;
       let currentPositionY = 0;
 
-      for (let row = 0; row < this.images.length; row++) {
-        this.posYArray[row] = currentPositionY;
-        this.loadRowData(this.images[row], this.context, currentPositionY, {
+      for (let row = 0; row < this.#images.length; row++) {
+        this.#posYArray[row] = currentPositionY;
+        this.#loadRowData(this.#images[row], this.#context!, currentPositionY, {
           imageWidth: this.imageSpriteProps.imageWidth,
           imageHeight: this.imageSpriteProps.imageHeight,
           borderLine: this.imageSpriteProps.borderLine,
@@ -322,31 +324,31 @@ class Renderer {
         if (
           isNaN(this.imageSpriteProps.padding) ||
           typeof this.imageSpriteProps.padding !== "number" ||
-          this.imageSpriteProps.padding > this.maxPadding
+          this.imageSpriteProps.padding > this.#maxPadding
         ) {
           colPadding = 0;
         } else {
           colPadding = this.imageSpriteProps.padding;
         }
 
-        if (this.images.length > 1) {
+        if (this.#images.length > 1) {
           //consist of more than 1 row, add padding  to give space of each column sprites
           if (this.imageSpriteProps.imageHeight) {
             currentPositionY += this.imageSpriteProps.imageHeight + colPadding;
           } else {
-            currentPositionY += this.images[row][0].height + colPadding;
+            currentPositionY += this.#images[row][0].height + colPadding;
           }
-        } else if (this.images.length === 1) {
+        } else if (this.#images.length === 1) {
           //only 1 row
           if (this.imageSpriteProps.imageHeight) {
             currentPositionY += this.imageSpriteProps.imageHeight;
           } else {
-            currentPositionY += this.images[row][0].height;
+            currentPositionY += this.#images[row][0].height;
           }
         }
       }
     } else {
-      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.#context?.clearRect(0, 0, this.canvas.width, this.canvas.height);
       this.canvas.width = 0;
       this.canvas.height = 0;
     }
@@ -360,7 +362,7 @@ class Renderer {
   async render(parentEl: HTMLElement) {
     return new Promise<boolean>((resolve, reject) => {
       try {
-        this.drawCanvas();
+        this.#drawCanvas();
         if (parentEl.childElementCount > 0) {
           for (let key in Object.keys(parentEl.childNodes)) {
             //remove all children there is

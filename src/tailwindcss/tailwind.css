@@ -564,6 +564,19 @@
   outline-offset: 2px;
 }
 
+.--o-n-input::-webkit-outer-spin-button,
+.--o-n-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  -moz-appearance: textfield;
+}
+
+/* Firefox */
+
+.--o-n-input[type="number"] {
+  -moz-appearance: textfield;
+}
+
 .configuration-base {
   display: flex;
   flex-direction: column;
@@ -1519,10 +1532,6 @@ video {
   .container {
     max-width: 1440px;
   }
-}
-
-.static {
-  position: static;
 }
 
 .absolute {

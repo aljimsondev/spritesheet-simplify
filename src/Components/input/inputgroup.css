@@ -5,3 +5,15 @@
 .input-group-input {
   @apply border-none pl-1 outline-none ml-2;
 }
+
+.--o-n-input::-webkit-outer-spin-button,
+.--o-n-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  -moz-appearance: textfield;
+}
+
+/* Firefox */
+.--o-n-input[type="number"] {
+  -moz-appearance: textfield;
+}
