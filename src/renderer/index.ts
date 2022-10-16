@@ -14,6 +14,8 @@ interface Renderer {
     borderLine: boolean;
     borderWidth: number;
     borderColor: string;
+    x?: number;
+    y?: number;
   };
   buffers: BufferData[][];
   images: HTMLImageElement[][];
@@ -24,6 +26,7 @@ interface Renderer {
   maxPadding: number;
   defaultBorderWidth: number;
   defaultBorderColor: string;
+  posYArray: number[];
 }
 
 class Renderer {
@@ -35,6 +38,7 @@ class Renderer {
     this.maxPadding = 100;
     this.defaultBorderColor = "#000000";
     this.defaultBorderWidth = 1;
+    this.posYArray = [];
   }
 
   setImageSpriteProps(args: {
@@ -44,6 +48,8 @@ class Renderer {
     borderLine: boolean;
     borderWidth: number;
     borderColor: string;
+    x?: number;
+    y?: number;
   }) {
     this.imageSpriteProps = args;
   }
@@ -160,30 +166,37 @@ class Renderer {
     }
   }
 
-  createAnimationSpriteSheet(sprites: HTMLImageElement[]): HTMLImageElement {
+  #createAnimationSpriteSheet(
+    sprites: HTMLImageElement[],
+    posY: number
+  ): HTMLImageElement {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d")!;
     const image = new Image();
-
     if (sprites.length > 0) {
       canvas.width = this.getTotalWidth(sprites);
       canvas.height = sprites[0].height;
       this.loadRowData(sprites, ctx, 0);
-
       image.src = canvas.toDataURL();
       image.alt = sprites[0].alt;
       image.dataset.props = JSON.stringify({
         height: sprites[0].height,
         width: sprites[0].width,
         name: sprites[0].alt,
+        posY: posY,
       });
     }
     return image;
   }
   async createSpritesheets(): Promise<HTMLImageElement[]> {
-    return this.images.map((row) => {
-      return this.createAnimationSpriteSheet(row);
+    return this.images.map((row, y) => {
+      return this.#createAnimationSpriteSheet(row, this.posYArray[y]);
     });
+  }
+
+  updateRowDataProperties(row: number, props?: {}) {}
+  getYPositions() {
+    return this.posYArray;
   }
 
   /**
@@ -298,6 +311,7 @@ class Renderer {
       let currentPositionY = 0;
 
       for (let row = 0; row < this.images.length; row++) {
+        this.posYArray[row] = currentPositionY;
         this.loadRowData(this.images[row], this.context, currentPositionY, {
           imageWidth: this.imageSpriteProps.imageWidth,
           imageHeight: this.imageSpriteProps.imageHeight,
@@ -337,6 +351,7 @@ class Renderer {
       this.canvas.height = 0;
     }
   }
+
   /**
    * Render the canvas the in the parent element in the DOM
    * @param parentEl - Parent Element

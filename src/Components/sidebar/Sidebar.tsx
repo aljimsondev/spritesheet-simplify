@@ -18,7 +18,10 @@ import RenderList from "../list/PreviewRenderList";
 import { SidebarProps } from "../types";
 import ColorPickerInput from "../input/ColorPickerInput";
 
-const Sidebar: React.FC<SidebarProps> = ({ exportSpritesheet }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  exportSpritesheet,
+  spritesheets,
+}) => {
   const { buffers, sidebarRef } = React.useContext(Context);
   const [sprites, setSprites] = React.useState<HTMLImageElement[]>([]);
   const [backgroundProps, setBackGroundProps] = React.useState({
@@ -29,29 +32,14 @@ const Sidebar: React.FC<SidebarProps> = ({ exportSpritesheet }) => {
   const deferredColorValue = React.useDeferredValue(backgroundProps.color);
   const [isPending, startTransition] = React.useTransition();
   const anim = new Animate();
-  const renderer = new Renderer();
-
-  const load = React.useCallback(async () => {
-    renderer.loadBuffers(buffers).then((d) => {
-      renderer.createSpritesheets().then(async (spritesData) => {
-        if (spritesData.length > 0) {
-          await anim.loadSpritesheets(spritesData).then((isloaded) => {
-            if (isloaded) {
-              setSprites(spritesData); //set sprites after it was loaded in the animation engine
-            }
-          });
-        }
-      });
-    });
-  }, [buffers]);
 
   React.useEffect(() => {
-    load();
+    console.log(spritesheets);
     return () => {
       //clean up
       setSprites([]);
     };
-  }, [buffers]);
+  }, [spritesheets]);
 
   const handlePlay = async (
     sprite: HTMLImageElement,
@@ -137,7 +125,7 @@ const Sidebar: React.FC<SidebarProps> = ({ exportSpritesheet }) => {
                 <div className="sidebar-anim-preview-base">
                   <p className="text-title px-5 py-3 ">ANIMATION PREVIEW</p>
                   <RenderList
-                    sprites={sprites}
+                    sprites={spritesheets}
                     backgroundColor={deferredColorValue}
                     displayBackgroundColor={backgroundProps.display}
                     handlePlay={handlePlay}

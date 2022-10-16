@@ -21,95 +21,109 @@ const defaultProperty = {
   name: "",
 };
 
-const PreviewCard: React.FC<{
-  buffer: HTMLImageElement | undefined;
-  backgroundColor: string;
-  displayBackgroundColor: boolean;
-  handlePlayState: (
-    sprite: HTMLImageElement,
-    ref: HTMLCanvasElement,
-    options?: { fps: number }
-  ) => void;
-}> = ({ buffer, handlePlayState, backgroundColor, displayBackgroundColor }) => {
-  const [openDropdown, setOpenDropdown] = React.useState(false);
-  const [fps, setFps] = React.useState<number>(60);
-  const playStateRef = React.useRef<HTMLButtonElement>(null);
-  const defaultScreen = { height: 150, width: 120 };
-  const canvasWrapperRef = React.useRef<HTMLDivElement>(null);
-  const canvasRef = React.useRef<HTMLCanvasElement>(null);
-  const dropdownRef = React.useRef<HTMLDivElement>(null);
-  const previewCardRef = React.useRef<HTMLDivElement>(null);
-  const deferredBgColor = React.useDeferredValue(backgroundColor);
-  const [properties, setProperties] = React.useState<{
-    name: string;
-    height: number;
-    width: number;
-    x: number;
-    y: number;
-  }>(defaultProperty);
+//TODO refactor code
 
-  const handlePlayingState = () => {
-    if (buffer) {
-      handlePlayState(buffer, canvasRef.current!, { fps: fps });
-    }
-  };
+const PreviewCard = React.forwardRef<
+  HTMLInputElement,
+  {
+    buffer: HTMLImageElement | undefined;
+    backgroundColor: string;
+    displayBackgroundColor: boolean;
+    handlePlayState: (
+      sprite: HTMLImageElement,
+      ref: HTMLCanvasElement,
+      options?: { fps: number }
+    ) => void;
+  }
+>(
+  (
+    { buffer, handlePlayState, backgroundColor, displayBackgroundColor },
+    ref
+  ) => {
+    const [openDropdown, setOpenDropdown] = React.useState(false);
+    const [fps, setFps] = React.useState<number>(60);
+    const playStateRef = React.useRef<HTMLButtonElement>(null);
+    const defaultScreen = { height: 150, width: 120 };
+    const canvasWrapperRef = React.useRef<HTMLDivElement>(null);
+    const canvasRef = React.useRef<HTMLCanvasElement>(null);
+    const dropdownRef = React.useRef<HTMLDivElement>(null);
+    const previewCardRef = React.useRef<HTMLDivElement>(null);
+    const deferredBgColor = React.useDeferredValue(backgroundColor);
+    const [properties, setProperties] = React.useState<{
+      name: string;
+      height: number;
+      width: number;
+      x: number;
+      y: number;
+    }>(defaultProperty);
 
-  React.useEffect(() => {
-    (() => {
-      const ctx = canvasRef.current?.getContext("2d")!;
+    const handlePlayingState = () => {
       if (buffer) {
-        const props: { name: string; height: number; width: number } =
-          JSON.parse(buffer.dataset.props!);
+        handlePlayState(buffer, canvasRef.current!, { fps: fps });
+      }
+    };
 
-        CreatePreviewThumbnail(
-          buffer,
-          {
-            height: props.height,
+    React.useEffect(() => {
+      (() => {
+        const ctx = canvasRef.current?.getContext("2d")!;
+        if (buffer) {
+          const props: {
+            name: string;
+            height: number;
+            width: number;
+            posY: number;
+          } = JSON.parse(buffer.dataset.props!);
+
+          CreatePreviewThumbnail(
+            buffer,
+            {
+              height: props.height,
+              width: props.width,
+              name: props.name,
+            },
+            ctx,
+            defaultScreen.width,
+            defaultScreen.height
+          );
+          console.log(props);
+          setProperties({
+            ...properties,
             width: props.width,
+            height: props.height,
             name: props.name,
-          },
-          ctx,
-          defaultScreen.width,
-          defaultScreen.height
-        );
-        setProperties({
-          ...properties,
-          width: props.width,
-          height: props.height,
-          name: props.name,
+            y: props.posY,
+          });
+        }
+      })();
+
+      return () => {
+        //clean up
+        setProperties(defaultProperty);
+      };
+    }, [backgroundColor, displayBackgroundColor]);
+
+    const handleChangeFPS = (e: React.ChangeEvent<HTMLInputElement>) => {
+      try {
+        const val = e.target.value as string;
+        setFps(parseFloat(val));
+      } catch (e) {
+        console.warn(e);
+      }
+    };
+
+    //TODO add preview loading in each element
+    //TODO edit configutaion and finalize functionality
+    //TODO add preview properties update
+    const handleDownloadingSpriteSheet = () => {
+      if (buffer) {
+        SpriteSheetDownload(buffer, {
+          fileName: properties.name,
+          fileType: "png",
         });
       }
-    })();
-
-    return () => {
-      //clean up
-      setProperties(defaultProperty);
     };
-  }, [backgroundColor, displayBackgroundColor]);
 
-  const handleChangeFPS = (e: React.ChangeEvent<HTMLInputElement>) => {
-    try {
-      const val = e.target.value as string;
-      setFps(parseFloat(val));
-    } catch (e) {
-      console.warn(e);
-    }
-  };
-
-  //TODO add preview loading in each element
-  //TODO edit configutaion and finalize functionality
-  //TODO add preview properties update
-  const handleDownloadingSpriteSheet = () => {
-    if (buffer) {
-      SpriteSheetDownload(buffer, {
-        fileName: properties.name,
-        fileType: "png",
-      });
-    }
-  };
-
-  return (
-    <>
+    return (
       <div className="preview-card" ref={previewCardRef}>
         <React.Fragment>
           <div ref={canvasWrapperRef} className="preview-canvas-base">
@@ -191,6 +205,7 @@ const PreviewCard: React.FC<{
               <>
                 <div className="flex-1">
                   <InputGroup
+                    ref={ref}
                     label="X"
                     inputProps={{
                       onChange: (e) => {},
@@ -233,8 +248,8 @@ const PreviewCard: React.FC<{
           </div>
         </React.Fragment>
       </div>
-    </>
-  );
-};
+    );
+  }
+);
 
-export default React.memo(PreviewCard);
+export default PreviewCard;

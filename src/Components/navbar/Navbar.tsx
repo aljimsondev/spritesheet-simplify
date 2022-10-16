@@ -18,7 +18,8 @@ const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const dropdownRef = React.useRef(null);
   const [open, setOpen] = React.useState<boolean>(false);
-  const { toogleMenu, openMenu, handleReload } = React.useContext(Context);
+  const { toogleMenu, openMenu, handleReload, buffers } =
+    React.useContext(Context);
   const [dark, setDarkMode] = React.useState(false);
 
   const navbarData = {
@@ -47,6 +48,33 @@ const Navbar: React.FC<NavbarProps> = ({
   const toogleTheme = () => {
     setDarkMode((prevMode) => !prevMode);
   };
+
+  React.useEffect(() => {
+    let pressed = false;
+    (() => {
+      window.addEventListener("keydown", (e) => {
+        if (e.ctrlKey) {
+          e.preventDefault();
+          switch (e.code) {
+            case "KeyR":
+              //reload app
+              handleReload();
+              return;
+            case "KeyX":
+              if (pressed) return;
+              clearSelection(); //clear canvas
+              pressed = true;
+              return;
+            default:
+              return;
+          }
+        }
+      });
+      window.addEventListener("keyup", (e) => {
+        pressed = false;
+      });
+    })();
+  }, [buffers]);
 
   return (
     <div className="navbar">

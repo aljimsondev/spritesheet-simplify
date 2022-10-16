@@ -27,7 +27,6 @@ function App() {
     reloadApp,
     buffers,
     setBuffers,
-    handleReload,
   } = React.useContext(Context);
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -40,6 +39,9 @@ function App() {
   const deferredBorderWidth = useDeferredObject(properties, "borderWidth");
   const deferredBorderLine = useDeferredObject(properties, "borderLine");
   const [loading, setLoading] = React.useState(true);
+  const [spritesheets, setSpritesheets] = React.useState<HTMLImageElement[]>(
+    []
+  );
   const renderer = new Renderer();
   disableZoom(document.getElementById("root")!);
 
@@ -138,22 +140,7 @@ function App() {
   }, [reloadApp]);
 
   //load the renderer
-  const load = React.useCallback(async () => {
-    window.addEventListener("keydown", (e) => {
-      if (e.ctrlKey) {
-        e.preventDefault();
-        switch (e.code) {
-          case "KeyR":
-            //reload app
-            handleReload();
-            return;
-          case "KeyX":
-            return clearSelection(); //clear canvas
-          default:
-            return;
-        }
-      }
-    });
+  const load = async () => {
     renderer.setImageSpriteProps({
       borderLine: deferredBorderLine as boolean,
       imageHeight: properties.height,
@@ -165,18 +152,18 @@ function App() {
     await renderer.loadBuffers(buffers).then(async (data) => {
       if (canvasWrapperRef.current && !loading) {
         await renderer.render(canvasWrapperRef.current);
+        await renderer.createSpritesheets().then((s_sheets) => {
+          //create sprites to pass in preview later
+          setSpritesheets(s_sheets);
+        });
+        renderer.getYPositions();
       }
     });
-  }, [buffers]);
+  };
 
   //renderer initialization
   React.useEffect(() => {
-    try {
-      load();
-    } catch (e) {
-      console.warn(e);
-    }
-
+    load();
     return () => {
       //clean up function
       document.getElementById("renderer-canvas")?.remove();
@@ -203,7 +190,6 @@ function App() {
           handleSelectImages={handleSelectImages}
           clearSelection={clearSelection}
           downloadButtonRef={downloadButtonRef}
-          download={() => {}}
           handleOpenFileInput={handleOpenFileInput}
         />
         <div className="container-grow">
@@ -233,7 +219,7 @@ function App() {
             />
           </form>
           <FabComponent onClick={toogleState} />
-          <Sidebar exportSpritesheet={download} />
+          <Sidebar exportSpritesheet={download} spritesheets={spritesheets} />
         </div>
 
         <Modal open={openModal}>

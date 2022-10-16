@@ -4,7 +4,6 @@ export type NavbarProps = {
   handleSelectImages: (e: React.ChangeEvent<HTMLInputElement>) => void;
   clearSelection: () => void;
   downloadButtonRef: React.RefObject<HTMLAnchorElement>;
-  download: () => void;
   handleOpenFileInput: () => void;
 };
 
@@ -54,4 +53,5 @@ export type ExportSpritesheetType = (fileName: string) => Promise<void>;
 
 export type SidebarProps = {
   exportSpritesheet: ExportSpritesheetType;
+  spritesheets: HTMLImageElement[];
 };

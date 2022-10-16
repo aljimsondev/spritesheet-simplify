@@ -92,6 +92,12 @@ const Configuration = () => {
     });
   };
 
+  const handleKeydownOnInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.code === "Enter") {
+      console.log("handle update here");
+    }
+  };
+
   return (
     <>
       <Accordion
@@ -182,6 +188,7 @@ const Configuration = () => {
       >
         <div className="flex-1 mt-2">
           <TextInput
+            onKeyDownCapture={handleKeydownOnInput}
             onChange={handleChangeState}
             name="padding"
             type="number"
