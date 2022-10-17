@@ -7,6 +7,9 @@ module.exports = {
     backgroundColor: ({ theme }) => ({
       ...theme("colors"),
       base: "#dbdbdb",
+      baseDark: "#333",
+      card: "#fefefe",
+      cardDark: "#0a0a0a",
       navbarBase: "#2c2c2c",
       navbarBaseHover: "#1e1e1e",
       primaryBlue: "#2b1cd9",

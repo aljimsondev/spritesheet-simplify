@@ -1,6 +1,6 @@
 .text-input-base {
-  @apply flex-1 relative;
+  @apply flex-1 relative bg-transparent;
 }
 .text-input-m {
-  @apply w-full px-2 py-1 outline-none border-[1px] border-[lightgray] rounded-sm;
+  @apply w-full px-2 py-1 outline-none border-[1px] border-[lightgray] rounded-sm bg-transparent;
 }

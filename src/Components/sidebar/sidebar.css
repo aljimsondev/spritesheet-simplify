@@ -4,7 +4,7 @@
   flex flex-col 
   sticky top-0 
   duration-300 
-  border-l-[1px] border-l-[lightgray];
+  border-l-[1px] border-l-[lightgray] dark:border-l-gray-900 bg-card dark:bg-cardDark;
   animation: display 1s ease !important;
 }
 .sidebar {
@@ -26,18 +26,18 @@
 .sidebar-heading {
   @apply flex items-center
   h-[7vh] 
-  border-b-[1px] border-b-[lightgray];
+  border-b-[1px] border-b-[lightgray] dark:border-b-gray-800;
 }
 
 .sidebar-heading button {
   @apply flex flex-1 items-center justify-center text-gray-400 text-sm;
 }
 .sidebar-btn-active {
-  @apply bg-white text-black !important;
+  @apply text-black dark:text-white !important;
 }
 
 .sidebar-content {
-  @apply bg-white flex-1 overflow-hidden overflow-y-auto;
+  @apply flex-1 overflow-hidden overflow-y-auto;
 }
 .sidebar-content::-webkit-scrollbar-track {
   @apply rounded-lg bg-[#f5f5f5];

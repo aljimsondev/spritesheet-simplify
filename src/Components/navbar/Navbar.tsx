@@ -21,6 +21,7 @@ const Navbar: React.FC<NavbarProps> = ({
   const { toogleMenu, openMenu, handleReload, buffers } =
     React.useContext(Context);
   const [dark, setDarkMode] = React.useState(false);
+  const root = window.document.documentElement;
 
   const navbarData = {
     buttonData: [
@@ -48,6 +49,20 @@ const Navbar: React.FC<NavbarProps> = ({
   const toogleTheme = () => {
     setDarkMode((prevMode) => !prevMode);
   };
+
+  React.useEffect(() => {
+    if (dark) {
+      if (root?.classList.contains("light")) {
+        root.classList.remove("light");
+      }
+      root.classList.add("dark");
+    } else {
+      if (root?.classList.contains("dark")) {
+        root.classList.remove("dark");
+      }
+      root.classList.add("light");
+    }
+  }, [dark]);
 
   React.useEffect(() => {
     let pressed = false;

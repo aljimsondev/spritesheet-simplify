@@ -23,7 +23,7 @@
 }
 
 .container-grow {
-  @apply grow max-w-[100vw] max-h-[100vh] relative  overflow-hidden flex flex-row;
+  @apply grow max-w-[100vw] max-h-[100vh] relative  overflow-hidden flex flex-row bg-base dark:bg-baseDark;
 }
 
 .canvas-wrapper {
@@ -32,7 +32,6 @@
   min-h-[93vh] 
   flex-grow 
   max-h-[93vh] 
-  bg-base 
   max-w-[100vw] block;
 }
 #canvas-root {

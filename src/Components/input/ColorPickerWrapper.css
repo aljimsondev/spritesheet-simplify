@@ -1,7 +1,7 @@
 .-color-picker-wrapper {
   @apply flex items-center justify-start 
     py-[2px] px-1 
-    border-[1px] border-white
+    border-[1px] border-transparent
     border-on-hover;
 }
 .-color-picker-input {
