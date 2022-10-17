@@ -1,7 +1,13 @@
 import React from "react";
 import { SwitchProps } from "./type";
 
-const Switch: React.FC<SwitchProps> = ({ onSwitch, checked, name }) => {
+const Switch: React.FC<SwitchProps> = ({
+  onSwitch,
+  checked,
+  name,
+  inActiveIcon,
+  activeIcon,
+}) => {
   const ref = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -14,7 +20,7 @@ const Switch: React.FC<SwitchProps> = ({ onSwitch, checked, name }) => {
 
   return (
     <div className="switch-base" ref={ref}>
-      <span />
+      <span>{checked ? activeIcon : inActiveIcon}</span>
       <div className="switch">
         <input
           onChange={onSwitch}

@@ -75,7 +75,7 @@ const PreviewCard = React.forwardRef<
             width: number;
             posY: number;
           } = JSON.parse(buffer.dataset.props!);
-          console.log(props);
+
           CreatePreviewThumbnail(
             buffer,
             {
@@ -177,7 +177,7 @@ const PreviewCard = React.forwardRef<
               </div>
             </div>
             <div className="max-w-[150px] text-ellipsis relative overflow-hidden">
-              <p className="max-w-[100%] overflow-hidden text-ellipsis">
+              <p className="max-w-[100%] overflow-hidden text-ellipsis text-gray-800 dark:text-gray-300">
                 {localProperties.name}
               </p>
             </div>

@@ -3,7 +3,7 @@ import Tabs from "../Tabs";
 import { Tab } from "../Tabs/Tab";
 import { Context } from "../../Store/store";
 import Animate from "../../renderer/Animate";
-import img from "../../assets/images-removebg-preview.png";
+
 import {
   AiOutlineMinus,
   AiOutlinePlus,
@@ -16,6 +16,7 @@ import Accordion from "../accordion";
 import RenderList from "../list/PreviewRenderList";
 import { SidebarProps } from "../types";
 import ColorPickerInput from "../input/ColorPickerInput";
+import NoPreviewCard from "../card/NoPreviewCard";
 
 const Sidebar: React.FC<SidebarProps> = ({
   exportSpritesheet,
@@ -103,13 +104,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </button>
               </div>
             </Accordion>
-            {buffers.length <= 0 && (
-              <div className="centered mt-1 flex flex-col">
-                <img src={img} />
-                <h4 className="text-lg text-blue-700">No Available Preview</h4>
-                <p>Add some sprites in the canvas</p>
-              </div>
-            )}
+            {buffers.length <= 0 && <NoPreviewCard />}
             {buffers.length > 0 && (
               <React.Fragment>
                 <div className="sidebar-anim-preview-base">

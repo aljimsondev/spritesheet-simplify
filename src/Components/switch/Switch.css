@@ -6,13 +6,13 @@
   @apply delay-200 bg-switchActive border-white;
 }
 .switch-base span {
-  @apply duration-500 absolute h-switchThumb w-swithThumb bg-black rounded-full left-[-2px] translate-x-0;
+  @apply duration-500 absolute h-switchThumb w-swithThumb bg-black rounded-full left-[-2px] translate-x-0 flex items-center justify-center text-white dark:text-black;
 }
 
 .switch-active span {
   @apply bg-orange-500;
   /* translate-x-[w-switchBase - w-swithThumb]; */
-  transform: translateX(calc(60px - 30px + 1px));
+  transform: translateX(calc(50px - 30px + 1px));
 }
 
 .switch {

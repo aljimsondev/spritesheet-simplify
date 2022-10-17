@@ -54,7 +54,7 @@ module.exports = {
       min: "min-content",
       max: "max-content",
       fit: "fit-content",
-      switchBase: "28px",
+      switchBase: "20px",
       switchThumb: "30px",
     }),
     width: ({ theme }) => ({
@@ -91,7 +91,7 @@ module.exports = {
       min: "min-content",
       max: "max-content",
       fit: "fit-content",
-      switchBase: "60px",
+      switchBase: "50px",
       swithThumb: "30px",
     }),
     fontFamily: {

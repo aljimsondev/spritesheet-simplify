@@ -123,7 +123,9 @@ const Configuration = () => {
             checked={properties.borderLine}
             onChange={(e) => onUpdateProperties("borderLine", e.target.checked)}
           />
-          <label className="text-sm">Show borderline</label>
+          <label className="text-sm text-gray-800 dark:text-gray-300">
+            Show borderline
+          </label>
         </div>
         <div className="flex-1 flex flex-col mt-3">
           <div className="flex-1 my-2">

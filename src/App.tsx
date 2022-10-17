@@ -57,29 +57,6 @@ function App() {
     setBuffers([...buffers, data]);
     saveToLocalStorage("blobs", [...buffers, data]);
   };
-
-  //clear buffers
-  const clearSelection = React.useCallback(() => {
-    if (buffers.length <= 0) return;
-    removeFromLocalStorage("blobs"); //remove buffers
-    setBuffers([]);
-    return notificationDispatch({
-      type: "ADD_NOTIFICATION",
-      payload: {
-        dismissable: true,
-        onClose: () => {
-          notificationDispatch({ type: "RESET_NOTIFICATION" });
-        },
-        open: true,
-        text: "Canvas is cleared successfully!",
-        type: "success",
-      },
-    });
-  }, [buffers]);
-  //handling file input programmatically
-  const handleOpenFileInput = () => {
-    fileInputRef.current?.click();
-  };
   //download of spritesheet
   const download = React.useCallback(
     async (fileName: string) => {
@@ -114,8 +91,37 @@ function App() {
         });
       });
     },
-    [buffers]
+    [
+      buffers,
+      loading,
+      deferredBorderColor,
+      deferredBorderLine,
+      deferredBorderWidth,
+      deferredPadding,
+    ]
   );
+  //clear buffers
+  const clearSelection = React.useCallback(() => {
+    if (buffers.length <= 0) return;
+    removeFromLocalStorage("blobs"); //remove buffers
+    setBuffers([]);
+    return notificationDispatch({
+      type: "ADD_NOTIFICATION",
+      payload: {
+        dismissable: true,
+        onClose: () => {
+          notificationDispatch({ type: "RESET_NOTIFICATION" });
+        },
+        open: true,
+        text: "Canvas is cleared successfully!",
+        type: "success",
+      },
+    });
+  }, [buffers]);
+  //handling file input programmatically
+  const handleOpenFileInput = () => {
+    fileInputRef.current?.click();
+  };
 
   //runs in first render and reload
   React.useEffect(() => {

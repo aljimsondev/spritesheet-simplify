@@ -3,4 +3,6 @@ export type SwitchProps = {
   name?: string;
   id?: string;
   checked: React.InputHTMLAttributes<HTMLInputElement>["checked"];
+  inActiveIcon: JSX.Element;
+  activeIcon: JSX.Element;
 };

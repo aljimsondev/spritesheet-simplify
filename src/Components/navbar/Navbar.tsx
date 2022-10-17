@@ -1,7 +1,7 @@
 import React from "react";
 import { NavbarProps } from "../types";
 import { AiFillCaretDown } from "react-icons/ai";
-import { BiImageAdd } from "react-icons/bi";
+import { BiImageAdd, BiSun, BiMoon } from "react-icons/bi";
 import NavbarButton from "../button/NavbarButton";
 import DropdownMenu from "../dropdown/DropdownMenu";
 import Logo from "../logo/Logo";
@@ -125,6 +125,8 @@ const Navbar: React.FC<NavbarProps> = ({
                             onSwitch={toogleTheme}
                             id="theme"
                             checked={dark}
+                            activeIcon={<BiMoon />}
+                            inActiveIcon={<BiSun />}
                           />
                         </div>
                         <p className="nav-options-btn-label">Toogle Theme</p>
