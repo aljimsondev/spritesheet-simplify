@@ -1,4 +1,3 @@
-import "./fabComponent.css";
 import { AiOutlineQuestion } from "react-icons/ai";
 import { NODE } from "../types";
 import { FabProps } from "./types";

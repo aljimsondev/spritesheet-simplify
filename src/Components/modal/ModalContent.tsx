@@ -1,5 +1,4 @@
 import React from "react";
-import "./Modal.css";
 import { NODE } from "../types";
 import { LinkData, ModalFooterButtonProps } from "./types";
 import imgMultiSprites from "../../assets/multiple_sprites1.jpg";
@@ -145,7 +144,7 @@ const ModalContent: NODE<{ toogleState: () => void }> = ({ toogleState }) => {
     <>
       <div className="modal-header">
         <button
-          className="close-button error -sm abs right centered m-0-1 "
+          className="close-button rounded-full absolute right-0 flex items-center justify-center m-4"
           onClick={toogleState}
         >
           <AiOutlineClose />
@@ -158,25 +157,32 @@ const ModalContent: NODE<{ toogleState: () => void }> = ({ toogleState }) => {
               <img className="logo" src={logoImg} alt="logo" />
             </div>
             <div>
-              <h1>Spritesheet Simplify</h1>
-              <p>by aljimsondev</p>
+              <h1 className="text-3xl text-gray-800 dark:text-gray-300">
+                Spritesheet Simplify
+              </h1>
+              <p className="text-gray-800 dark:text-gray-300">by aljimsondev</p>
             </div>
           </div>
           {sectionsData.map((data, index) => {
             return (
               <section className="mt-5" key={index + data.title}>
-                <h2>{data.title}</h2>
+                <h2 className="text-gray-800 dark:text-gray-300 text-2xl font-semibold">
+                  {data.title}
+                </h2>
                 {data.paragraph.map((p) => {
                   return (
-                    <p className="mt-2" key={p}>
+                    <p
+                      className="text-gray-800 dark:text-gray-300 text-lg my-2"
+                      key={p}
+                    >
                       {p}
                     </p>
                   );
                 })}
                 {data.adOns?.paragraph.map((p, index) => {
                   return (
-                    <div className="note inline-start mt-1" key={index + p}>
-                      <p>{p}</p>
+                    <div className="note-base" key={index + p}>
+                      <p className="note-text">{p}</p>
                     </div>
                   );
                 })}

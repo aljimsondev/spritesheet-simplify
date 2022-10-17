@@ -1,32 +1,14 @@
 .fab-custom-wrapper {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  margin: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  @apply absolute
+  bottom-0 left-0 m-4 flex flex-col items-end z-[999];
 }
 .fab-custom {
-  border: none;
-  outline: none;
-  background: rgba(0, 0, 0, 0.8);
-  height: 2rem;
-  width: 2rem;
-  border-radius: 50%;
   transition: 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
+  @apply border-none outline-none h-8 w-8 rounded-full flex items-center justify-center text-white bg-black;
 }
 .fab-custom:hover {
-  background: rgba(0, 0, 0, 0.9);
-  transform: scale(1.2);
-  color: var(--PRIMARY);
+  @apply scale-125;
 }
 .open {
-  display: block;
-  visibility: visible;
-  opacity: 1;
+  @apply block visible opacity-100;
 }
