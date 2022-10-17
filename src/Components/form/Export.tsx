@@ -46,9 +46,7 @@ const Export: React.FC<{
     >
       <div className="flex-1 flex flex-col mt-3">
         <div className="flex-1 my-2">
-          <p className="text-xs font-semibold text-gray-700">
-            SPRITESHEET FILENAME
-          </p>
+          <p className="text-title">SPRITESHEET FILENAME</p>
         </div>
         <TextInput
           name="fileName"

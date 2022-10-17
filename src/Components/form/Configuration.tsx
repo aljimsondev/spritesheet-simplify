@@ -127,7 +127,7 @@ const Configuration = () => {
         </div>
         <div className="flex-1 flex flex-col mt-3">
           <div className="flex-1 my-2">
-            <p className="text-xs font-semibold text-gray-700">BORDER WIDTH</p>
+            <p className="text-title">BORDER WIDTH</p>
           </div>
           <TextInput
             type="number"

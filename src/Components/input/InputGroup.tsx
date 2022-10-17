@@ -14,7 +14,7 @@ const InputGroup = React.forwardRef<
   const inputRef = React.useRef<HTMLInputElement>(null);
   return (
     <label htmlFor={inputRef.current?.id} className="input-group-base">
-      <p>{label}</p>
+      <p className="input-group-label">{label}</p>
       <input
         ref={ref}
         {...inputProps}

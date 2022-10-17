@@ -2,10 +2,10 @@
   @apply flex flex-col py-3 px-5;
 }
 .outline-v {
-  @apply border-y-[1px] border-y-[lightgray];
+  @apply border-y-[1px] border-y-[lightgray] dark:border-y-[#333];
 }
 .outline-b {
-  @apply border-b-[1px] border-b-[lightgray];
+  @apply border-b-[1px] border-b-[lightgray] dark:border-b-[#333];
 }
 .note-base {
   @apply flex bg-primaryBlue p-2 items-start justify-center my-2;

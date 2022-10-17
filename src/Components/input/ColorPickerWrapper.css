@@ -1,12 +1,28 @@
+input[type="color"] {
+  -webkit-appearance: none;
+  border: none;
+}
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+}
+input[type="color"]::-moz-color-swatch {
+  border: none;
+}
 .-color-picker-wrapper {
   @apply flex items-center justify-start 
     py-[2px] px-1 
     border-[1px] border-transparent
     border-on-hover;
 }
+.-color-picker-input-base {
+  @apply flex items-center justify-center border-[1px] border-gray-700 dark:border-gray-600;
+}
 .-color-picker-input {
-  @apply w-7 h-7;
+  @apply w-6 h-6 !important;
 }
 .-picker-text-color-label {
-  @apply ml-5 text-sm text-gray-700;
+  @apply ml-5 text-sm text-gray-700 dark:text-gray-400;
 }

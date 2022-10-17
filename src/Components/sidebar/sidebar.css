@@ -61,10 +61,10 @@
   @apply relative flex-1 flex items-center justify-between;
 }
 .text-title {
-  @apply font-semibold text-xs text-gray-700;
+  @apply font-semibold text-xs text-gray-700 dark:text-gray-400;
 }
 .-icon-button {
-  @apply h-7 w-7 flex items-center justify-center duration-200 rounded-sm border-on-hover;
+  @apply h-7 w-7 flex items-center justify-center duration-200 rounded-sm border-on-hover text-gray-800 dark:text-gray-300;
 }
 .sidebase-bg-summary {
   @apply list-none;

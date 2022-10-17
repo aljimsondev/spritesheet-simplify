@@ -3,7 +3,7 @@
 }
 .preview-card {
   @apply overflow-hidden flex 
-  min-h-[150px] relative select-none mt-2 border-b-[1px] border-b-[lightgray];
+  min-h-[150px] relative select-none mt-2 border-b-[1px] border-b-[lightgray] dark:border-b-[#333];
 }
 .preview-loading-base {
   @apply flex-1 
@@ -26,19 +26,7 @@
 .inline-group {
   @apply w-full flex flex-row items-start;
 }
-#fpsRef {
-  padding: 2px 5px;
-  outline: none;
-  border: 1px solid lightgray;
-  width: 80px;
-}
-.fps-input-base {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex: 1;
-  padding: 0 10px;
-}
+
 .dropdown-c-content-base {
   @apply relative 
   bg-primaryBlue

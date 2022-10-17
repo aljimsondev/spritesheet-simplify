@@ -1,9 +1,12 @@
 .input-group-base {
   @apply flex flex-grow px-1
-  border-[1px] border-transparent rounded-sm w-[100%] relative border-on-hover;
+  border-[1px] border-transparent rounded-sm w-[100%] relative border-on-hover items-center;
+}
+.input-group-label {
+  @apply text-gray-800 dark:text-gray-500 font-semibold text-sm;
 }
 .input-group-input {
-  @apply border-none pl-1 outline-none ml-2 bg-transparent text-gray-800 dark:text-gray-200;
+  @apply border-none pl-1 outline-none ml-2 bg-transparent text-gray-800 dark:text-gray-500;
 }
 
 .--o-n-input::-webkit-outer-spin-button,

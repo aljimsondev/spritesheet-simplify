@@ -1,6 +1,14 @@
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  -moz-appearance: textfield;
+}
+
 .text-input-base {
   @apply flex-1 relative bg-transparent;
 }
 .text-input-m {
-  @apply w-full px-2 py-1 outline-none border-[1px] border-[lightgray] rounded-sm bg-transparent;
+  @apply w-full px-2 py-1 outline-none border-[1px] rounded-sm bg-transparent
+  border-[lightgray] dark:border-[#333] text-gray-800 dark:text-gray-300;
 }

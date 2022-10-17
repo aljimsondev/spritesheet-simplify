@@ -1,5 +1,5 @@
 .navbar {
-  @apply h-[7vh] w-[100%] flex items-center sticky top-0 z-50 bg-navbarBase;
+  @apply h-[7vh] w-[100%] flex items-center sticky top-0 z-50 bg-navbarBase dark:bg-black;
 }
 .nav-title {
   margin-left: 3rem;
