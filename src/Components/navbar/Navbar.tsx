@@ -125,8 +125,8 @@ const Navbar: React.FC<NavbarProps> = ({
                             onSwitch={toogleTheme}
                             id="theme"
                             checked={dark}
-                            activeIcon={<BiMoon />}
-                            inActiveIcon={<BiSun />}
+                            inActiveIcon={<BiMoon />}
+                            activeIcon={<BiSun />}
                           />
                         </div>
                         <p className="nav-options-btn-label">Toogle Theme</p>

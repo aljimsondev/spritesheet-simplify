@@ -2,17 +2,29 @@
   @apply rounded-[10px] p-4 absolute
   bottom-0 left-0 m-4 z-[999] 
   max-w-[300px] xs:max-w-[400px]
-  bg-white;
+  bg-white dark:bg-[#111];
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 }
 .notification {
-  @apply flex relative flex-row items-start;
+  @apply flex relative flex-row items-center;
+}
+.notification-text {
+  @apply text-gray-800 dark:text-gray-300;
 }
 .notification-icon {
   @apply flex items-center justify-center
   h-[2rem] w-[2rem] min-w-[2rem] min-h-[2rem]
   mr-[0.5rem] rounded-full overflow-hidden;
 }
+.notification-dismiss {
+  @apply centered rounded-full rotate-[45deg] ml-2 
+  bg-[#00000033] 
+  hover:bg-[#00000055]
+  p-1 
+  text-gray-900 dark:text-gray-400
+  text-lg;
+}
+
 .notification p {
   @apply min-w-[8rem];
 }

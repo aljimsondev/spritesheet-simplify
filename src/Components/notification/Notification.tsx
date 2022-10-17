@@ -61,10 +61,10 @@ const Notification: NODE<NotificationProps> = (props) => {
                   {Icon}
                 </span>
               )}
-              <p>{props.text}</p>
+              <p className="notification-text">{props.text}</p>
               {props.dismissable && (
                 <button
-                  className="close-button centered rounded-full rotate-[45deg]"
+                  className="notification-dismiss"
                   onClick={props.onClose}
                 >
                   <AiOutlinePlus />

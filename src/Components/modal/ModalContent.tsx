@@ -58,7 +58,7 @@ const sectionsData = [
     ],
   },
   {
-    title: "Creating spritesheet in row",
+    title: "Creating spritesheet in Column",
     paragraph: [
       `Select all your sprites behaviour in multiple selection and add it
       in the canvas.`,
@@ -71,7 +71,7 @@ const sectionsData = [
     },
   },
   {
-    title: "Creating spritesheet in column",
+    title: "Creating spritesheet in Row",
     paragraph: [
       ` Instead of selecting multiple sprites, you can select sprites
       individually and place it in the canvas to display it in column.`,
@@ -83,24 +83,18 @@ const sectionsData = [
     },
   },
   {
-    title: "Custom spritesheet image properties",
+    title: "Track Properties",
     paragraph: [
-      ` You can also customize the Image properties(width, height and
-        padding) of your spritesheet.`,
+      ` Instead of selecting multiple sprites, you can select sprites
+      individually and place it in the canvas to display it in column.`,
     ],
     adOns: {
-      paragraph: [
-        `Note:I recommend not to use custom sprite size when you
-      have many type of behaviour in your sprites, especially when it
-      has different sizes. Spritesheet Simplify does not
-      support custom size in selected rows and columns. Custom size
-      will be applied to all sprites in the canvas.`,
-      ],
+      paragraph: [``],
     },
     image: {
       className: "mt-2 mx-600",
-      src: customSizeSprites,
-      alt: "custom_sprites",
+      src: imgSingleSprite,
+      alt: "col_sprites",
     },
   },
 ];
@@ -177,13 +171,6 @@ const ModalContent: NODE<{ toogleState: () => void }> = ({ toogleState }) => {
                     >
                       {p}
                     </p>
-                  );
-                })}
-                {data.adOns?.paragraph.map((p, index) => {
-                  return (
-                    <div className="note-base" key={index + p}>
-                      <p className="note-text">{p}</p>
-                    </div>
                   );
                 })}
                 {data.image && (

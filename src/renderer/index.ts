@@ -186,6 +186,8 @@ class Renderer {
     });
   }
   donwloadDataJSON() {
+    // ['a', 'b', 'c'].reduce((a, v) => ({ ...a, [v]: v}), {})
+    // { a: "a", b: "b", c: "c" }
     // for (let i = 0; i < this.images.length; i++) {
     //   const firstImage = this.images[i][0];
     //   this.obj.prototype.[Symbol.[this.images[i][0].alt]] = {
