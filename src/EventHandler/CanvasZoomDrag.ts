@@ -1,8 +1,8 @@
 import Zoomify from "../Zoomify";
 
-export function CanvasZoomDrag<T = HTMLDivElement>(targetEl: T) {
-  const container = targetEl as HTMLDivElement;
-  if (targetEl as HTMLDivElement) {
+export function CanvasZoomDrag(targetEl: HTMLDivElement) {
+  const container = targetEl;
+  if (container) {
     const instance = Zoomify({
       minScale: 0.1,
       maxScale: 30,
