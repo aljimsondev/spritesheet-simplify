@@ -1,8 +1,12 @@
 .navbar {
-  @apply h-[7vh] w-[100%] flex items-center sticky top-0 z-50 bg-navbarBase dark:bg-black;
+  @apply h-[7vh] w-[100%]
+  px-0
+  flex items-center 
+  sticky top-0 z-50 
+  bg-navbarBase dark:bg-black;
 }
 .nav-title {
-  margin-left: 3rem;
+  @apply ml-0 xs:ml-[1rem];
 }
 .span {
   @apply flex items-center justify-center mr-[10px];
@@ -36,7 +40,9 @@
   transform: rotate(45deg);
 }
 .nav-options-form-base {
-  @apply min-w-[300px] p-2 relative;
+  @apply min-w-[100vw]
+  xs:min-w-[300px] 
+  p-2 relative;
 }
 .nav-options-form {
   @apply flex flex-col py-3 px-3;

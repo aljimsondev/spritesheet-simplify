@@ -19,7 +19,7 @@
   @apply w-[100%] h-[100%] overflow-hidden flex items-center;
 }
 .switch-input {
-  @apply m-0 p-[10px] w-[100%] h-[100%] cursor-pointer opacity-0;
+  @apply m-0 p-[10px] w-[100%] h-[100%] opacity-0;
 }
 .switch-label {
   @apply ml-4 text-base;

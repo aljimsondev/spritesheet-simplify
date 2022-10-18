@@ -178,6 +178,7 @@ function App() {
         await renderer.createSpritesheets().then((s_sheets) => {
           //create sprites to pass in preview later
           setLocalState({ ...localState, spritesheets: s_sheets });
+          renderer.donwloadDataJSON();
         });
       }
     });

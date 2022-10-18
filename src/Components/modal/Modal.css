@@ -55,8 +55,10 @@
   @apply bg-[#555] dark:bg-[#bbb] rounded-lg;
 }
 .container {
-  @apply w-[100%] md:w-[80%]
-  p-8;
+  @apply w-[100%] md:w-[70%]
+  max-w-[100%] md:max-w-[70%]
+  min-w-[100%] md:min-w-[70%]
+ p-8 !important;
 }
 .container section {
   @apply border-t-[1px] border-t-[#c4c4c4] dark:border-t-[#696969] py-4;
@@ -106,5 +108,8 @@
   @apply flex items-center justify-center p-[5px] ml-[10px];
 }
 .modal-inline {
-  @apply flex items-center;
+  @apply flex 
+  xs:flex-row flex-col 
+  items-center
+  text-center xs:text-start;
 }

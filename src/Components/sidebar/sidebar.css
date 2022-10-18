@@ -1,5 +1,6 @@
 .sidebar-base {
-  @apply min-w-[350px] 
+  @apply min-w-[100vw] 
+  sm:min-w-[350px] 
   w-[20vw] h-[93vh] 
   flex flex-col 
   sticky top-0 

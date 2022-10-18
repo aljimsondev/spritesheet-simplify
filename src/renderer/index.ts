@@ -29,6 +29,20 @@ class Renderer {
   #buffer: BufferData[] = [];
   #buffers: BufferData[][] = [];
   #context: CanvasRenderingContext2D | null = null;
+  #JSONData: {
+    frames: any;
+    properties?: {
+      height: number;
+      width: number;
+      version: number;
+    };
+  } = { frames: {} };
+  #spritesheetsRowData: {
+    posY: number;
+    height: number;
+    width: number;
+    name: string;
+  }[] = [];
   constructor() {
     this.#init();
   }
@@ -111,8 +125,6 @@ class Renderer {
   }
   /**
    * Loads the images row and render it in the canvas
-   * @param imagesArray
-   * @param posY
    */
   async #loadRowData(
     imagesArray: HTMLImageElement[],
@@ -126,9 +138,10 @@ class Renderer {
       borderColor?: string;
     }
   ) {
-    let startingPositionX = 0; //entry point of rendering
+    let startingPositionX = 0; //entry point of rendering horizontally
     for (let i = 0; i < imagesArray.length; i++) {
       const image = imagesArray[i];
+
       if (options?.imageWidth) {
         startingPositionX = options.imageWidth;
       } else {
@@ -186,7 +199,7 @@ class Renderer {
     });
   }
   donwloadDataJSON() {
-    // ['a', 'b', 'c'].reduce((a, v) => ({ ...a, [v]: v}), {})
+    ["a", "b", "c"].reduce((a, v) => ({ ...a, [v]: v }), {});
     // { a: "a", b: "b", c: "c" }
     // for (let i = 0; i < this.images.length; i++) {
     //   const firstImage = this.images[i][0];
@@ -197,6 +210,21 @@ class Renderer {
     //   };
     // }
     // console.log(this.obj);
+    console.log(this.#spritesheetsRowData);
+    let prevName = "";
+    let name = "";
+    const result = this.#spritesheetsRowData.reduce((obj, cur, i) => {
+      name = cur.name.split(".png")[0];
+      if (name === prevName) {
+        name = `${name}(${i + 1})`;
+      }
+      prevName = name;
+      return {
+        ...obj,
+        [name]: { height: cur.height, width: cur.width, posY: cur.posY },
+      };
+    }, {});
+    console.log(result);
   }
 
   getYPositions() {
@@ -316,6 +344,14 @@ class Renderer {
 
       for (let row = 0; row < this.#images.length; row++) {
         this.#posYArray[row] = currentPositionY;
+        //add row image data to array to be exported as JSON
+        this.#spritesheetsRowData[row] = {
+          height: this.#images[row][0].height,
+          width: this.#images[row][0].width,
+          name: this.#images[row][0].alt,
+          posY: currentPositionY,
+        };
+
         this.#loadRowData(this.#images[row], this.#context!, currentPositionY, {
           imageWidth: this.imageSpriteProps.imageWidth,
           imageHeight: this.imageSpriteProps.imageHeight,
@@ -323,6 +359,7 @@ class Renderer {
           borderWidth: this.imageSpriteProps.borderWidth,
           borderColor: this.imageSpriteProps.borderColor,
         });
+
         if (
           isNaN(this.imageSpriteProps.padding) ||
           typeof this.imageSpriteProps.padding !== "number" ||

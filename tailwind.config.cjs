@@ -25,6 +25,10 @@ module.exports = {
       switchBorderColor: "#505050",
     }),
     screens: {
+      xs5: "200px",
+      xs4: "300px",
+      xs3: "400px",
+      xs2: "500px",
       xs: "768px",
       sm: "976px",
       md: "1025px",

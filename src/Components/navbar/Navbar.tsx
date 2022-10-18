@@ -94,11 +94,11 @@ const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <div className="navbar">
-      <div className="nav-title">
+      <div className="nav-title hidden xs2:flex">
         <Logo />
       </div>
-      <div className="nav-flex-grow">
-        <div className="flex h-[7vh] items-center justify-end relative ml-3">
+      <div className="nav-flex-grow px-0">
+        <div className="flex h-[7vh] items-center justify-end relative ml-0 xs:ml-3">
           <div ref={dropdownRef}>
             <DropdownMenu
               buttonClass="m-1 h-[6vh] text-white"
