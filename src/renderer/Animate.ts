@@ -10,6 +10,9 @@ interface Animate {
 }
 
 //TODO there must be only 1 request animation
+//! TO BOOST APP PERFORMANCE RENDERED IMAGES SHOULD BE OPTIMIZED
+//? implementation:
+//? saved the images original properties in the array, upon downloading the spritesheet restore orginal properties of the images to preserve quality
 //each component must have a preview
 //fps should be dynamic
 
@@ -21,8 +24,8 @@ class Animate {
   #interval = 1000;
   #timer = 0;
   #_RAF = 0;
-  #buttonRef: HTMLElement | null = null;
   #playing: boolean = false;
+  #renderFrameX_ref: HTMLInputElement | undefined = undefined;
   #spritesheetProps = {
     height: 0,
     width: 0,
@@ -126,6 +129,10 @@ class Animate {
     }
     this.#clear(); //clear canvas
     this.#drawImageSprites(); //draw sprites
+    this.drawUI();
+  }
+  setFrameXTargetRef(targetEl: HTMLInputElement) {
+    this.#renderFrameX_ref = targetEl;
   }
   #reset() {
     this.#playing = false;
@@ -152,7 +159,10 @@ class Animate {
     });
   }
   drawUI() {
-    if (this.#buttonRef) {
+    if (this.#renderFrameX_ref) {
+      this.#renderFrameX_ref.value = `${
+        this.#frameX * this.#spritesheetProps.width
+      }`;
     }
   }
   setState() {

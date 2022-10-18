@@ -8,6 +8,7 @@ import DropdownMenu from "../dropdown/DropdownMenu";
 import InputGroup from "../input/InputGroup";
 import { SpriteSheetDownload } from "../../helpers/SpriteSheetDownloader";
 import { Context } from "../../Store/store";
+import Animate from "../../renderer/Animate";
 
 //config must be global to allow configuration for the user whatever they desired
 const config = {
@@ -33,7 +34,7 @@ const PreviewCard = React.forwardRef<
     handlePlayState: (
       sprite: HTMLImageElement,
       ref: HTMLCanvasElement,
-      options?: { fps: number }
+      options?: { fps: number; frameXRenderRef: HTMLInputElement }
     ) => void;
   }
 >(
@@ -42,15 +43,17 @@ const PreviewCard = React.forwardRef<
     ref
   ) => {
     const [openDropdown, setOpenDropdown] = React.useState(false);
-    const { buffers, setBuffers } = React.useContext(Context);
     const [fps, setFps] = React.useState<number>(60);
     const playStateRef = React.useRef<HTMLButtonElement>(null);
+    const frameXRenderRef = React.useRef<HTMLInputElement>(null);
     const defaultScreen = { height: 150, width: 120 };
     const canvasWrapperRef = React.useRef<HTMLDivElement>(null);
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
     const dropdownRef = React.useRef<HTMLDivElement>(null);
     const previewCardRef = React.useRef<HTMLDivElement>(null);
     const deferredBgColor = React.useDeferredValue(backgroundColor);
+    const anim = new Animate();
+
     const [localProperties, setProperties] = React.useState<{
       name: string;
       height: number;
@@ -59,9 +62,22 @@ const PreviewCard = React.forwardRef<
       y: number;
     }>(defaultProperty);
 
+    // const handlePlayingState = React.useCallback(() => {
+    //   if (buffer) {
+    //     handlePlayState(buffer, canvasRef.current!, {
+    //       fps: fps,
+    //       frameXRenderRef: frameXRenderRef.current!,
+    //     });
+    //   }
+    // }, [fps, buffer]);
+
     const handlePlayingState = React.useCallback(() => {
       if (buffer) {
-        handlePlayState(buffer, canvasRef.current!, { fps: fps });
+        anim.init(canvasRef.current!);
+        anim.setFrameXTargetRef(frameXRenderRef.current!);
+        anim.play(buffer, {
+          fps: fps,
+        });
       }
     }, [fps, buffer]);
 
@@ -229,7 +245,7 @@ const PreviewCard = React.forwardRef<
             <InlineGroup>
               <div className="flex-1">
                 <InputGroup
-                  ref={ref}
+                  ref={frameXRenderRef}
                   label="X"
                   inputProps={{
                     onChange: (e) => {},

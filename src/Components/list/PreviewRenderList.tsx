@@ -8,6 +8,7 @@ const RenderList: React.FC<{
     ref: HTMLCanvasElement,
     options?: {
       fps: number;
+      frameXRenderRef: HTMLInputElement;
     }
   ) => void;
   backgroundColor: string;

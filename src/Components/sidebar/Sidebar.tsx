@@ -35,8 +35,13 @@ const Sidebar: React.FC<SidebarProps> = ({
   const handlePlay = async (
     sprite: HTMLImageElement,
     ref: HTMLCanvasElement,
-    options?: { fps: number }
+    options?: { fps: number; frameXTargetRef?: HTMLInputElement }
   ) => {
+    if (options?.frameXTargetRef) {
+      //set the targetted element to render the frameX
+      console.log(options.frameXTargetRef);
+      anim.setFrameXTargetRef(options.frameXTargetRef);
+    }
     anim.init(ref); //set reference to the target canvas
     anim.play(sprite, {
       fps: options?.fps,

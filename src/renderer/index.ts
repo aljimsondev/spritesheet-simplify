@@ -21,12 +21,10 @@ interface Renderer {
 
 class Renderer {
   #images: HTMLImageElement[][] = []; //for 2d spritesheet array
-  #imagesArray: HTMLImageElement[] = []; //for single row images for animation spritesheet
   #maxPadding: number = 100;
   #defaultBorderColor: string = "#000000";
   #defaultBorderWidth: number = 1;
   #posYArray: number[] = [];
-  #buffer: BufferData[] = [];
   #buffers: BufferData[][] = [];
   #context: CanvasRenderingContext2D | null = null;
   #JSONData: {
@@ -100,29 +98,6 @@ class Renderer {
    * @param buffer
    * @returns
    */
-  async #loadBuffer(buffer: BufferData[]) {
-    if (buffer.length <= 0) return;
-
-    return new Promise<boolean>((resolve, reject) => {
-      try {
-        let counter = 0;
-        this.#buffer = buffer;
-        for (let row = 0; row < buffer.length; row++) {
-          const image = new Image();
-          image.src = buffer[row].data as string;
-          image.alt = buffer[row].name;
-          this.#imagesArray[row] = image; //assigning image to indexes
-          counter++;
-        }
-        if (counter >= buffer.length) {
-          resolve(true);
-        }
-        resolve(false);
-      } catch (e) {
-        reject(e);
-      }
-    });
-  }
   /**
    * Loads the images row and render it in the canvas
    */
@@ -210,7 +185,6 @@ class Renderer {
     //   };
     // }
     // console.log(this.obj);
-    console.log(this.#spritesheetsRowData);
     let prevName = "";
     let name = "";
     const result = this.#spritesheetsRowData.reduce((obj, cur, i) => {
@@ -224,7 +198,7 @@ class Renderer {
         [name]: { height: cur.height, width: cur.width, posY: cur.posY },
       };
     }, {});
-    console.log(result);
+    // console.log(result);
   }
 
   getYPositions() {
@@ -395,6 +369,7 @@ class Renderer {
 
   /**
    * Render the canvas the in the parent element in the DOM
+   * `NOTE:Parent Element should be empty`
    * @param parentEl - Parent Element
    * @returns
    */
