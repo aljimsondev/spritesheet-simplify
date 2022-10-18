@@ -17,10 +17,13 @@ const Navbar: React.FC<NavbarProps> = ({
   handleOpenFileInput,
 }) => {
   const dropdownRef = React.useRef(null);
-  const [open, setOpen] = React.useState<boolean>(false);
   const { toogleMenu, openMenu, handleReload, buffers } =
     React.useContext(Context);
-  const [dark, setDarkMode] = React.useState(false);
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [localState, setLocalState] = React.useState({
+    dark: false,
+  });
+
   const root = window.document.documentElement;
 
   const navbarData = {
@@ -46,12 +49,12 @@ const Navbar: React.FC<NavbarProps> = ({
     ],
   };
 
-  const toogleTheme = () => {
-    setDarkMode((prevMode) => !prevMode);
-  };
+  const toogleTheme = React.useCallback(() => {
+    setLocalState({ ...localState, dark: !localState.dark });
+  }, [localState.dark]);
 
   React.useEffect(() => {
-    if (dark) {
+    if (localState.dark) {
       if (root?.classList.contains("light")) {
         root.classList.remove("light");
       }
@@ -62,33 +65,31 @@ const Navbar: React.FC<NavbarProps> = ({
       }
       root.classList.add("light");
     }
-  }, [dark]);
+  }, [localState.dark]);
 
   React.useEffect(() => {
     let pressed = false;
-    (() => {
-      window.addEventListener("keydown", (e) => {
-        if (e.ctrlKey) {
-          e.preventDefault();
-          switch (e.code) {
-            case "KeyR":
-              //reload app
-              handleReload();
-              return;
-            case "KeyX":
-              if (pressed) return;
-              clearSelection(); //clear canvas
-              pressed = true;
-              return;
-            default:
-              return;
-          }
+    window.addEventListener("keydown", (e) => {
+      if (e.ctrlKey) {
+        e.preventDefault();
+        switch (e.code) {
+          case "KeyR":
+            //reload app
+            handleReload();
+            return;
+          case "KeyX":
+            if (pressed) return;
+            clearSelection(); //clear canvas
+            pressed = true;
+            return;
+          default:
+            return;
         }
-      });
-      window.addEventListener("keyup", (e) => {
-        pressed = false;
-      });
-    })();
+      }
+    });
+    window.addEventListener("keyup", (e) => {
+      pressed = false;
+    });
   }, [buffers]);
 
   return (
@@ -112,29 +113,27 @@ const Navbar: React.FC<NavbarProps> = ({
                 </div>
               }
             >
-              <>
-                <div className="nav-options-form-base">
-                  <form className="nav-options-form">
-                    <NavbarGuideButtonList data={navbarData.buttonData} />
-                    <NavbarControlGuideList />
-                    <InlineGroup className="items-center mt-5 border-t-[1px] border-white py-2">
-                      <>
-                        <div className="flex-1 flex items-center">
-                          <Switch
-                            name="theme"
-                            onSwitch={toogleTheme}
-                            id="theme"
-                            checked={dark}
-                            inActiveIcon={<BiMoon />}
-                            activeIcon={<BiSun />}
-                          />
-                        </div>
-                        <p className="nav-options-btn-label">Toogle Theme</p>
-                      </>
-                    </InlineGroup>
-                  </form>
-                </div>
-              </>
+              <div className="nav-options-form-base">
+                <form className="nav-options-form">
+                  <NavbarGuideButtonList data={navbarData.buttonData} />
+                  <NavbarControlGuideList />
+                  <InlineGroup className="items-center mt-5 border-t-[1px] border-white py-2">
+                    <>
+                      <div className="flex-1 flex items-center">
+                        <Switch
+                          name="theme"
+                          onSwitch={toogleTheme}
+                          id="theme"
+                          checked={localState.dark}
+                          inActiveIcon={<BiMoon />}
+                          activeIcon={<BiSun />}
+                        />
+                      </div>
+                      <p className="nav-options-btn-label">Toogle Theme</p>
+                    </>
+                  </InlineGroup>
+                </form>
+              </div>
             </DropdownMenu>
           </div>
           {navbarData.appController.map((data, index) => {
@@ -160,4 +159,4 @@ const Navbar: React.FC<NavbarProps> = ({
   );
 };
 
-export default Navbar;
+export default React.memo(Navbar);

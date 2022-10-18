@@ -30,4 +30,4 @@ const RenderList: React.FC<{
   );
 };
 
-export default RenderList;
+export default React.memo(RenderList);

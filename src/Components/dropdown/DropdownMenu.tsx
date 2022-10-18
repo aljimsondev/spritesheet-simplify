@@ -21,9 +21,10 @@ const DropdownMenu: React.FC<DropDownProps> = ({
     };
   }, []);
 
-  const toggle = () => {
+  const toggle = React.useCallback(() => {
     toggleState((prevState) => !prevState);
-  };
+  }, []);
+
   return (
     <div ref={dropdownRef} className="nav-menu-base">
       <button className={buttonClass} onClick={toggle}>
@@ -42,7 +43,7 @@ const DropdownMenu: React.FC<DropDownProps> = ({
             : `nav-menu`
         }
       >
-        <div className="nav-menu-content">{children}</div>
+        <div className="nav-menu-content">{open && children}</div>
       </div>
     </div>
   );

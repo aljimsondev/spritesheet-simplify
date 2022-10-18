@@ -19,6 +19,7 @@ const NavbarButton: NODE<NavbarButtonProps> = ({
       //clean up
     };
   }, []);
+
   return (
     <ToolTip label={tooltipLabel} enabled={tooltip}>
       <button

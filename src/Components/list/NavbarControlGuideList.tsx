@@ -1,3 +1,4 @@
+import React from "react";
 import InlineGroup from "../group/InlineGroup";
 
 function NavbarControlGuideList() {
@@ -26,4 +27,4 @@ function NavbarControlGuideList() {
   );
 }
 
-export default NavbarControlGuideList;
+export default React.memo(NavbarControlGuideList);

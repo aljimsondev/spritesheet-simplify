@@ -14,10 +14,14 @@ import {
 import LoadBase64Images from "./helpers/LoadBase64Files";
 import Renderer from "./renderer";
 import { disableZoom } from "./EventHandler/DisableZoom";
-import Zoomify from "./Zoomify";
 import { useDeferredObject } from "./helpers/UseDeferredObject";
 import AnimatedLoader from "./Components/Loader/AnimatedLoader";
 import { CanvasZoomDrag } from "./EventHandler/CanvasZoomDrag";
+
+type LocalStates = {
+  loading: boolean;
+  spritesheets: HTMLImageElement[];
+};
 
 function App() {
   const {
@@ -29,25 +33,27 @@ function App() {
     setBuffers,
   } = React.useContext(Context);
 
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
-  const downloadButtonRef = React.useRef<HTMLAnchorElement>(null);
-  const canvasWrapperRef = React.useRef<HTMLDivElement>(null);
-  const [openModal, setModalState] = React.useState<boolean>(false);
+  const refs = {
+    fileInput: React.useRef<HTMLInputElement>(null),
+    downloadButton: React.useRef<HTMLAnchorElement>(null),
+    canvasWrapper: React.useRef<HTMLDivElement>(null),
+  };
+
+  const [localState, setLocalState] = React.useState<LocalStates>({
+    loading: true,
+    spritesheets: [],
+  });
   const deferredCanvasBg = useDeferredObject(properties, "canvasBackground");
   const deferredBorderColor = useDeferredObject(properties, "borderColor");
   const deferredPadding = useDeferredObject(properties, "padding");
   const deferredBorderWidth = useDeferredObject(properties, "borderWidth");
   const deferredBorderLine = useDeferredObject(properties, "borderLine");
-  const [loading, setLoading] = React.useState(true);
-  const [spritesheets, setSpritesheets] = React.useState<HTMLImageElement[]>(
-    []
-  );
+  const [openModal, setOpenModal] = React.useState(false);
   const renderer = new Renderer();
-  disableZoom(document.getElementById("root")!);
 
-  const toogleState = () => {
-    setModalState((prevState) => !prevState);
-  };
+  const updateModalState = React.useCallback(() => {
+    setOpenModal((prevState) => !prevState);
+  }, [openModal]);
 
   //handle image selection
   const handleSelectImages = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,6 +63,21 @@ function App() {
     setBuffers([...buffers, data]);
     saveToLocalStorage("blobs", [...buffers, data]);
   };
+  //for the properties
+  const spritesProperties = React.useMemo(() => {
+    return {
+      deferredBorderColor,
+      deferredBorderLine,
+      deferredBorderWidth,
+      deferredPadding,
+    };
+  }, [
+    deferredBorderColor,
+    deferredBorderLine,
+    deferredBorderWidth,
+    deferredPadding,
+  ]);
+
   //download of spritesheet
   const download = React.useCallback(
     async (fileName: string) => {
@@ -91,14 +112,7 @@ function App() {
         });
       });
     },
-    [
-      buffers,
-      loading,
-      deferredBorderColor,
-      deferredBorderLine,
-      deferredBorderWidth,
-      deferredPadding,
-    ]
+    [buffers, localState.loading, spritesProperties]
   );
   //clear buffers
   const clearSelection = React.useCallback(() => {
@@ -120,13 +134,16 @@ function App() {
   }, [buffers]);
   //handling file input programmatically
   const handleOpenFileInput = () => {
-    fileInputRef.current?.click();
+    refs.fileInput.current?.click();
   };
 
   //runs in first render and reload
   React.useEffect(() => {
+    //disable zoom in root element
+    disableZoom(document.getElementById("root")!);
+    //set draggable element
     //enable zoom drag
-    CanvasZoomDrag(canvasWrapperRef.current!);
+    CanvasZoomDrag(refs.canvasWrapper.current!);
     //fetch blobs to localstorage
     const localBlobs = fetchToLocalStorage("blobs");
     if (localBlobs) {
@@ -134,13 +151,13 @@ function App() {
     }
     const timer = setTimeout(() => {
       if (!reloadApp) {
-        setLoading(false);
+        setLocalState({ ...localState, loading: false });
       }
     }, Math.random() * 2000);
 
     return () => {
       setBuffers([]); //clean up
-      setLoading(true);
+      setLocalState({ ...localState, loading: true });
       clearTimeout(timer);
     };
   }, [reloadApp]);
@@ -156,14 +173,12 @@ function App() {
       borderColor: deferredBorderColor as string,
     });
     await renderer.loadBuffers(buffers).then(async (data) => {
-      if (canvasWrapperRef.current && !loading) {
-        await renderer.render(canvasWrapperRef.current);
+      if (refs.canvasWrapper.current && !localState.loading && data) {
+        await renderer.render(refs.canvasWrapper.current);
         await renderer.createSpritesheets().then((s_sheets) => {
           //create sprites to pass in preview later
-          setSpritesheets(s_sheets);
+          setLocalState({ ...localState, spritesheets: s_sheets });
         });
-        renderer.getYPositions();
-        renderer.donwloadDataJSON();
       }
     });
   };
@@ -176,13 +191,10 @@ function App() {
       document.getElementById("renderer-canvas")?.remove();
     };
   }, [
-    buffers,
-    loading,
-    deferredBorderColor,
-    deferredBorderLine,
-    deferredBorderWidth,
-    deferredCanvasBg,
-    deferredPadding,
+    buffers, //whenever new buffer added
+    localState.loading, //whenever is reload activated
+    spritesProperties, //whenever sprites props
+    deferredCanvasBg, //whenever canvas bg changes
   ]);
   //TODO add dialog
   //TODO fix modal
@@ -196,14 +208,14 @@ function App() {
         <Navbar
           handleSelectImages={handleSelectImages}
           clearSelection={clearSelection}
-          downloadButtonRef={downloadButtonRef}
+          downloadButtonRef={refs.downloadButton}
           handleOpenFileInput={handleOpenFileInput}
         />
         <div className="container-grow">
-          {loading && <AnimatedLoader />}
+          {localState.loading && <AnimatedLoader />}
           <div className="canvas-wrapper">
             <div
-              ref={canvasWrapperRef}
+              ref={refs.canvasWrapper}
               id="canvas-root"
               style={{
                 background: properties.displayCanvasBackground
@@ -222,15 +234,18 @@ function App() {
                 ((event.target as HTMLInputElement).value = "")
               }
               multiple
-              ref={fileInputRef}
+              ref={refs.fileInput}
             />
           </form>
-          <FabComponent onClick={toogleState} />
-          <Sidebar exportSpritesheet={download} spritesheets={spritesheets} />
+          <FabComponent onClick={updateModalState} />
+          <Sidebar
+            exportSpritesheet={download}
+            spritesheets={localState.spritesheets}
+          />
         </div>
 
         <Modal open={openModal}>
-          <ModalContent toogleState={toogleState} />
+          <ModalContent toogleState={updateModalState} />
         </Modal>
         <Notification
           type={notification.type}

@@ -33,4 +33,4 @@ const NavbarGuideButtonList: React.FC<{
   );
 };
 
-export default NavbarGuideButtonList;
+export default React.memo(NavbarGuideButtonList);

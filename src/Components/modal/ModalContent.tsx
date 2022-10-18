@@ -83,13 +83,12 @@ const sectionsData = [
     },
   },
   {
-    title: "Track Properties",
+    title: "Sprite Properties",
     paragraph: [
-      ` Instead of selecting multiple sprites, you can select sprites
-      individually and place it in the canvas to display it in column.`,
+      `Sprites properties can be found in the preview section. H stands for the height, W is for the width, X position is for the sprite frame position horizontally and Y for the sprite position vertically.`,
     ],
     adOns: {
-      paragraph: [``],
+      paragraph: [`Note: Custom width and height is not supported yet.`],
     },
     image: {
       className: "mt-2 mx-600",

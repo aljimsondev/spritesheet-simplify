@@ -1,3 +1,4 @@
+import React from "react";
 import { AiOutlineQuestion } from "react-icons/ai";
 import { NODE } from "../types";
 import { FabProps } from "./types";
@@ -12,4 +13,4 @@ const FabComponent: NODE<FabProps> = ({ onClick }) => {
   );
 };
 
-export default FabComponent;
+export default React.memo(FabComponent);
