@@ -62,15 +62,6 @@ const PreviewCard = React.forwardRef<
       y: number;
     }>(defaultProperty);
 
-    // const handlePlayingState = React.useCallback(() => {
-    //   if (buffer) {
-    //     handlePlayState(buffer, canvasRef.current!, {
-    //       fps: fps,
-    //       frameXRenderRef: frameXRenderRef.current!,
-    //     });
-    //   }
-    // }, [fps, buffer]);
-
     const handlePlayingState = React.useCallback(() => {
       if (buffer) {
         anim.init(canvasRef.current!);
@@ -220,7 +211,6 @@ const PreviewCard = React.forwardRef<
                 <InputGroup
                   label="H"
                   inputProps={{
-                    width: 60,
                     value: localProperties.height,
                     onKeyDownCapture: onEnterKeyboardEvent,
                     name: "height",
@@ -232,7 +222,6 @@ const PreviewCard = React.forwardRef<
               <div className="flex-1">
                 <InputGroup
                   label="W"
-                  width={60}
                   inputProps={{
                     onChange: (e) => {},
                     value: localProperties.width,

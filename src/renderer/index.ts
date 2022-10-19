@@ -19,6 +19,8 @@ interface Renderer {
   };
 }
 
+import Minify from "./MinifyImages";
+
 class Renderer {
   #images: HTMLImageElement[][] = []; //for 2d spritesheet array
   #maxPadding: number = 100;
@@ -41,6 +43,7 @@ class Renderer {
     width: number;
     name: string;
   }[] = [];
+  #minify = new Minify(300, 300);
   constructor() {
     this.#init();
   }
@@ -225,7 +228,6 @@ class Renderer {
       }, 0);
       return totalWidthCombine;
     }
-
     return 0;
   }
 
@@ -325,7 +327,7 @@ class Renderer {
           name: this.#images[row][0].alt,
           posY: currentPositionY,
         };
-
+        this.#minify.minify(this.#images[row]);
         this.#loadRowData(this.#images[row], this.#context!, currentPositionY, {
           imageWidth: this.imageSpriteProps.imageWidth,
           imageHeight: this.imageSpriteProps.imageHeight,
