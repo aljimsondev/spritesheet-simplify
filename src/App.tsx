@@ -172,6 +172,7 @@ function App() {
       borderWidth: deferredBorderWidth as number,
       borderColor: deferredBorderColor as string,
     });
+
     await renderer.loadBuffers(buffers).then(async (data) => {
       if (refs.canvasWrapper.current && !localState.loading && data) {
         await renderer.render(refs.canvasWrapper.current);
@@ -184,9 +185,21 @@ function App() {
     });
   };
 
+  //update canvas row handler
+  const updateSpritesheetColumnHandler = React.useCallback(
+    async (arrayIndex: number, width: number, height: number) => {
+      //TODO update here
+      await renderer.updateColumnData(arrayIndex, 150, 150).then((success) => {
+        //reload app
+      });
+    },
+    [buffers]
+  );
+
   //renderer initialization
   React.useEffect(() => {
     load();
+    updateSpritesheetColumnHandler(0, 120, 120);
     return () => {
       //clean up function
       document.getElementById("renderer-canvas")?.remove();
@@ -201,7 +214,6 @@ function App() {
   //TODO fix modal
   //!FIX ME fix tooltip position
   //?add dialog
-  //?create getPosition handler for spritesheets
 
   return (
     <>

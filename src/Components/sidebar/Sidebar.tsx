@@ -30,23 +30,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   });
   const deferredColorValue = React.useDeferredValue(backgroundProps.color);
   const [isPending, startTransition] = React.useTransition();
-  const anim = new Animate();
-
-  const handlePlay = async (
-    sprite: HTMLImageElement,
-    ref: HTMLCanvasElement,
-    options?: { fps: number; frameXTargetRef?: HTMLInputElement }
-  ) => {
-    if (options?.frameXTargetRef) {
-      //set the targetted element to render the frameX
-      console.log(options.frameXTargetRef);
-      anim.setFrameXTargetRef(options.frameXTargetRef);
-    }
-    anim.init(ref); //set reference to the target canvas
-    anim.play(sprite, {
-      fps: options?.fps,
-    });
-  };
 
   const handleChangeBgPropsColor = React.useCallback(
     (e: any) => {
@@ -121,7 +104,6 @@ const Sidebar: React.FC<SidebarProps> = ({
                     sprites={spritesheets}
                     backgroundColor={deferredColorValue}
                     displayBackgroundColor={backgroundProps.display}
-                    handlePlay={handlePlay}
                   />
                 </div>
               </React.Fragment>

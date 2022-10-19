@@ -18,7 +18,6 @@ class Minify {
   minify(images: HTMLImageElement[]) {
     if (images.length > 0) {
       const { height, width } = this.getNewImageProperties(images[0]);
-      console.log(height + " and " + width);
     }
   }
   getNewImageProperties(image: HTMLImageElement) {

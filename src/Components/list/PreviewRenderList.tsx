@@ -3,17 +3,9 @@ import PreviewCard from "../card/PreviewCard";
 
 const RenderList: React.FC<{
   sprites: HTMLImageElement[];
-  handlePlay: (
-    sprite: HTMLImageElement,
-    ref: HTMLCanvasElement,
-    options?: {
-      fps: number;
-      frameXRenderRef: HTMLInputElement;
-    }
-  ) => void;
   backgroundColor: string;
   displayBackgroundColor: boolean;
-}> = ({ sprites, handlePlay, backgroundColor, displayBackgroundColor }) => {
+}> = ({ sprites, backgroundColor, displayBackgroundColor }) => {
   return (
     <React.Fragment>
       {sprites.map((spritesheet, index) => {
@@ -23,7 +15,6 @@ const RenderList: React.FC<{
             backgroundColor={backgroundColor}
             displayBackgroundColor={displayBackgroundColor}
             buffer={spritesheet}
-            handlePlayState={handlePlay}
           />
         );
       })}

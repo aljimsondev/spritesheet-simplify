@@ -104,24 +104,23 @@ class Renderer {
   /**
    * Loads the images row and render it in the canvas
    */
-  async #loadRowData(
+  async #loadColumnData(
     imagesArray: HTMLImageElement[],
     context: CanvasRenderingContext2D,
     posY: number,
     options?: {
-      imageWidth?: number;
-      imageHeight?: number;
       borderLine?: boolean;
       borderWidth?: number;
       borderColor?: string;
+      customWidth?: number;
+      customHeight?: number;
     }
   ) {
     let startingPositionX = 0; //entry point of rendering horizontally
     for (let i = 0; i < imagesArray.length; i++) {
       const image = imagesArray[i];
-
-      if (options?.imageWidth) {
-        startingPositionX = options.imageWidth;
+      if (options?.customWidth) {
+        startingPositionX = options.customWidth;
       } else {
         startingPositionX = image.width;
       }
@@ -133,8 +132,8 @@ class Renderer {
         image.height, //image sprite height
         i * startingPositionX, //position x
         posY, // position y
-        options?.imageWidth || image.width,
-        options?.imageHeight || image.height
+        options?.customWidth || image.width,
+        options?.customHeight || image.height
       );
       if (options?.borderLine) {
         context.lineWidth = options?.borderWidth || this.#defaultBorderWidth;
@@ -142,24 +141,30 @@ class Renderer {
         context.strokeRect(
           i * startingPositionX,
           posY,
-          options?.imageWidth || image.width,
-          options?.imageHeight || image.height
+          image.width,
+          image.height
         );
       }
     }
   }
 
-  #createAnimationSpriteSheet(
-    sprites: HTMLImageElement[],
-    posY: number
-  ): HTMLImageElement {
+  /**
+   * Create a spritesheet from columns from the given input
+   */
+  #createAnimationSpriteSheet(props: {
+    sprites: HTMLImageElement[];
+    posY: number;
+    arrayIndex: number;
+  }): HTMLImageElement {
+    const { sprites, posY, arrayIndex } = props;
+
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d")!;
     const image = new Image();
     if (sprites.length > 0) {
       canvas.width = this.#getTotalWidth(sprites);
       canvas.height = sprites[0].height;
-      this.#loadRowData(sprites, ctx, 0);
+      this.#loadColumnData(sprites, ctx, 0);
       image.src = canvas.toDataURL();
       image.alt = sprites[0].alt;
       image.dataset.props = JSON.stringify({
@@ -167,27 +172,21 @@ class Renderer {
         width: sprites[0].width,
         name: sprites[0].alt,
         posY: posY,
+        arrayIndex: arrayIndex,
       });
     }
     return image;
   }
   async createSpritesheets(): Promise<HTMLImageElement[]> {
     return this.#images.map((row, y) => {
-      return this.#createAnimationSpriteSheet(row, this.#posYArray[y]);
+      return this.#createAnimationSpriteSheet({
+        sprites: row,
+        posY: this.#posYArray[y],
+        arrayIndex: y,
+      });
     });
   }
   donwloadDataJSON() {
-    ["a", "b", "c"].reduce((a, v) => ({ ...a, [v]: v }), {});
-    // { a: "a", b: "b", c: "c" }
-    // for (let i = 0; i < this.images.length; i++) {
-    //   const firstImage = this.images[i][0];
-    //   this.obj.prototype.[Symbol.[this.images[i][0].alt]] = {
-    //     height: this.images[i][0].height,
-    //     width: this.images[i][0].width,
-    //     y: this.posYArray[i],
-    //   };
-    // }
-    // console.log(this.obj);
     let prevName = "";
     let name = "";
     const result = this.#spritesheetsRowData.reduce((obj, cur, i) => {
@@ -201,9 +200,62 @@ class Renderer {
         [name]: { height: cur.height, width: cur.width, posY: cur.posY },
       };
     }, {});
-    // console.log(result);
   }
-
+  /**
+   *
+   * @param index - index of the array which changes will be applied to
+   */
+  async updateColumnData(index: number, height: number, width: number) {
+    //update buffers instead of images and return value should be a base64 data
+    return new Promise((resolve, reject) => {
+      try {
+        const col = this.#images[index];
+        if (col && col.length > 0) {
+          const newColumn = col.map((img) => {
+            return this.#clone({ image: img, width: width, height: height });
+          });
+          this.#images[index] = newColumn;
+          resolve(true);
+        }
+        resolve(false);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+  /**
+   * Clone images with new given properties
+   * @param props
+   * @returns clone image
+   */
+  #clone(props: {
+    height: number;
+    width: number;
+    image: HTMLImageElement;
+    options?: {};
+  }) {
+    const { image, width, height } = props;
+    const canvas = document.createElement("canvas")!;
+    const ctx = canvas.getContext("2d")!;
+    canvas.width = width;
+    canvas.height = height; //renders all
+    ctx.drawImage(
+      image, //image
+      0, //image source x
+      0, //image source y
+      image.width, //image sprite width
+      image.height, //image sprite height
+      0, //position x
+      0, // position y
+      width,
+      height
+    );
+    const buffer = canvas.toDataURL();
+    const newImage = new Image();
+    newImage.alt = image.alt;
+    newImage.src = buffer;
+    return newImage;
+  }
   getYPositions() {
     return this.#posYArray;
   }
@@ -328,13 +380,16 @@ class Renderer {
           posY: currentPositionY,
         };
         this.#minify.minify(this.#images[row]);
-        this.#loadRowData(this.#images[row], this.#context!, currentPositionY, {
-          imageWidth: this.imageSpriteProps.imageWidth,
-          imageHeight: this.imageSpriteProps.imageHeight,
-          borderLine: this.imageSpriteProps.borderLine,
-          borderWidth: this.imageSpriteProps.borderWidth,
-          borderColor: this.imageSpriteProps.borderColor,
-        });
+        this.#loadColumnData(
+          this.#images[row],
+          this.#context!,
+          currentPositionY,
+          {
+            borderLine: this.imageSpriteProps.borderLine,
+            borderWidth: this.imageSpriteProps.borderWidth,
+            borderColor: this.imageSpriteProps.borderColor,
+          }
+        );
 
         if (
           isNaN(this.imageSpriteProps.padding) ||
