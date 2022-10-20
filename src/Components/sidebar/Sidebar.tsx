@@ -70,9 +70,6 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
   }, [spritesheets]);
 
-  //! FIX ME
-  //? create edit functionality
-
   return (
     <div ref={sidebarRef} className="sidebar-base">
       <Tabs defaultTabIndex={1}>

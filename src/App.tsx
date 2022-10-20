@@ -58,13 +58,15 @@ function App() {
   }, [openModal]);
 
   //handle image selection
-  const handleSelectImages = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files!;
-
-    const data = await LoadBase64Images(files);
-    setBuffers([...buffers, data]);
-    saveToLocalStorage("blobs", [...buffers, data]);
-  };
+  const handleSelectImages = React.useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = e.target.files!;
+      const data = await LoadBase64Images(files);
+      setBuffers([...buffers, data]);
+      saveToLocalStorage("blobs", [...buffers, data]);
+    },
+    []
+  );
   //for the properties
   const spritesProperties = React.useMemo(() => {
     return {
@@ -120,7 +122,11 @@ function App() {
         });
       });
     },
-    [buffers, localState.loading, spritesProperties]
+    [
+      buffers,
+      // localState.loading,
+      // spritesProperties
+    ]
   );
   //clear buffers
   const clearSelection = React.useCallback(() => {
@@ -144,9 +150,9 @@ function App() {
     });
   }, [buffers]);
   //handling file input programmatically
-  const handleOpenFileInput = () => {
+  const handleOpenFileInput = React.useCallback(() => {
     refs.fileInput.current?.click();
-  };
+  }, []);
 
   //runs in first render and reload
   React.useEffect(() => {
