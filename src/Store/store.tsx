@@ -1,6 +1,6 @@
 import React from "react";
 import { NotificationProps } from "../Components/notification/type";
-import { BufferData, Child } from "../Components/types";
+import { BufferData, Child } from "../types/types";
 import { NotificationReducer } from "./reducers/NotificationReducers";
 import { NotificationReducerType } from "./reducers/types";
 import { AppProperties, ContextType, StoreProps } from "./types";
@@ -15,6 +15,7 @@ export const defaultStatus = {
   borderColor: "#000000",
   canvasBackground: "#F3F3F3",
   displayCanvasBackground: true,
+  updated: false,
 };
 
 export const defaultNotification: NotificationProps = {

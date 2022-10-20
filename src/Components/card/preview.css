@@ -32,3 +32,9 @@
   bg-primaryBlue
   w-[250px] p-2;
 }
+.cancel-btn {
+  @apply bg-white px-2 py-1 text-xs rounded-sm;
+}
+.outline-btn {
+  @apply px-2 py-1 text-xs text-white font-semibold border-[1px] border-white;
+}

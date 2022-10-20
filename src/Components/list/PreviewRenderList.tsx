@@ -1,11 +1,13 @@
 import React from "react";
 import PreviewCard from "../card/PreviewCard";
+import { RenderListProps } from "./types";
 
-const RenderList: React.FC<{
-  sprites: HTMLImageElement[];
-  backgroundColor: string;
-  displayBackgroundColor: boolean;
-}> = ({ sprites, backgroundColor, displayBackgroundColor }) => {
+const RenderList: React.FC<RenderListProps> = ({
+  sprites,
+  backgroundColor,
+  displayBackgroundColor,
+  updateSpritesheetColumn,
+}) => {
   return (
     <React.Fragment>
       {sprites.map((spritesheet, index) => {
@@ -15,6 +17,7 @@ const RenderList: React.FC<{
             backgroundColor={backgroundColor}
             displayBackgroundColor={displayBackgroundColor}
             buffer={spritesheet}
+            updateSpritesheetColumn={updateSpritesheetColumn}
           />
         );
       })}

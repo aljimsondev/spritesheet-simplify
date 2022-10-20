@@ -1,4 +1,4 @@
-import { ClickAwayEventListener } from "../types";
+import { ClickAwayEventListener } from "../../types/types";
 interface ClickAwayListener {
   cb: () => void;
   ref: React.RefObject<any>;

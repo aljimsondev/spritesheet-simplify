@@ -1,5 +1,5 @@
 import React from "react";
-import { NODE } from "../types";
+import { NODE } from "../../types/types";
 import { LinkData, ModalFooterButtonProps } from "./types";
 import imgMultiSprites from "../../assets/multiple_sprites1.jpg";
 import imgSingleSprite from "../../assets/single_sprite1.jpg";

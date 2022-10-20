@@ -17,11 +17,7 @@ import { disableZoom } from "./EventHandler/DisableZoom";
 import { useDeferredObject } from "./helpers/UseDeferredObject";
 import AnimatedLoader from "./Components/Loader/AnimatedLoader";
 import { CanvasZoomDrag } from "./EventHandler/CanvasZoomDrag";
-
-type LocalStates = {
-  loading: boolean;
-  spritesheets: HTMLImageElement[];
-};
+import { LocalStates, UpdateSpritesheetColumn } from "./types/main";
 
 function App() {
   const {
@@ -31,6 +27,7 @@ function App() {
     reloadApp,
     buffers,
     setBuffers,
+    onUpdateProperties,
   } = React.useContext(Context);
 
   const refs = {
@@ -42,12 +39,17 @@ function App() {
   const [localState, setLocalState] = React.useState<LocalStates>({
     loading: true,
     spritesheets: [],
+    update: false,
   });
+  const [loading, setLoading] = React.useState(true);
   const deferredCanvasBg = useDeferredObject(properties, "canvasBackground");
   const deferredBorderColor = useDeferredObject(properties, "borderColor");
   const deferredPadding = useDeferredObject(properties, "padding");
   const deferredBorderWidth = useDeferredObject(properties, "borderWidth");
   const deferredBorderLine = useDeferredObject(properties, "borderLine");
+  const deferredHeight = useDeferredObject(properties, "height");
+  const deferredWidth = useDeferredObject(properties, "width");
+  const deferredUpdateStatus = useDeferredObject(properties, "updated");
   const [openModal, setOpenModal] = React.useState(false);
   const renderer = new Renderer();
 
@@ -70,12 +72,18 @@ function App() {
       deferredBorderLine,
       deferredBorderWidth,
       deferredPadding,
+      deferredHeight,
+      deferredWidth,
+      deferredUpdateStatus,
     };
   }, [
     deferredBorderColor,
     deferredBorderLine,
     deferredBorderWidth,
     deferredPadding,
+    deferredHeight,
+    deferredWidth,
+    deferredUpdateStatus,
   ]);
 
   //download of spritesheet
@@ -119,6 +127,9 @@ function App() {
     if (buffers.length <= 0) return;
     removeFromLocalStorage("blobs"); //remove buffers
     setBuffers([]);
+    setLocalState({ ...localState, spritesheets: [] });
+    renderer.clear();
+
     return notificationDispatch({
       type: "ADD_NOTIFICATION",
       payload: {
@@ -146,18 +157,20 @@ function App() {
     CanvasZoomDrag(refs.canvasWrapper.current!);
     //fetch blobs to localstorage
     const localBlobs = fetchToLocalStorage("blobs");
-    if (localBlobs) {
-      setBuffers(localBlobs);
-    }
+    (async () => {
+      if (localBlobs) {
+        setBuffers(localBlobs);
+      }
+    })();
     const timer = setTimeout(() => {
       if (!reloadApp) {
-        setLocalState({ ...localState, loading: false });
+        setLoading(false);
       }
     }, Math.random() * 2000);
 
     return () => {
       setBuffers([]); //clean up
-      setLocalState({ ...localState, loading: true });
+      setLoading(true);
       clearTimeout(timer);
     };
   }, [reloadApp]);
@@ -166,54 +179,49 @@ function App() {
   const load = async () => {
     renderer.setImageSpriteProps({
       borderLine: deferredBorderLine as boolean,
-      imageHeight: properties.height,
-      imageWidth: properties.width,
       padding: deferredPadding as number,
       borderWidth: deferredBorderWidth as number,
       borderColor: deferredBorderColor as string,
     });
-
     await renderer.loadBuffers(buffers).then(async (data) => {
-      if (refs.canvasWrapper.current && !localState.loading && data) {
+      if (refs.canvasWrapper.current && !loading && data) {
         await renderer.render(refs.canvasWrapper.current);
         await renderer.createSpritesheets().then((s_sheets) => {
           //create sprites to pass in preview later
           setLocalState({ ...localState, spritesheets: s_sheets });
-          renderer.donwloadDataJSON();
         });
       }
     });
   };
 
   //update canvas row handler
-  const updateSpritesheetColumnHandler = React.useCallback(
-    async (arrayIndex: number, width: number, height: number) => {
-      //TODO update here
-      await renderer.updateColumnData(arrayIndex, 150, 150).then((success) => {
-        //reload app
-      });
-    },
-    [buffers]
-  );
+  const updateSpritesheetColumnHandler: UpdateSpritesheetColumn =
+    React.useCallback(
+      (arrayIndex: number, width: number, height: number) => {
+        const newBuffers = renderer.updateColumnData(arrayIndex, width, height);
+        if (newBuffers && newBuffers.length > 0) {
+          setBuffers(newBuffers);
+          saveToLocalStorage("blobs", newBuffers);
+        }
+      },
+      [buffers]
+    );
 
   //renderer initialization
   React.useEffect(() => {
     load();
-    updateSpritesheetColumnHandler(0, 120, 120);
     return () => {
       //clean up function
-      document.getElementById("renderer-canvas")?.remove();
+      document.getElementById("renderer-canvas")?.remove(); //remove the canvas on rerender
     };
   }, [
     buffers, //whenever new buffer added
-    localState.loading, //whenever is reload activated
+    loading, //whenever is reload activated
     spritesProperties, //whenever sprites props
     deferredCanvasBg, //whenever canvas bg changes
+    localState.update,
   ]);
   //TODO add dialog
-  //TODO fix modal
-  //!FIX ME fix tooltip position
-  //?add dialog
 
   return (
     <>
@@ -225,7 +233,7 @@ function App() {
           handleOpenFileInput={handleOpenFileInput}
         />
         <div className="container-grow">
-          {localState.loading && <AnimatedLoader />}
+          {loading && <AnimatedLoader />}
           <div className="canvas-wrapper">
             <div
               ref={refs.canvasWrapper}
@@ -254,6 +262,7 @@ function App() {
           <Sidebar
             exportSpritesheet={download}
             spritesheets={localState.spritesheets}
+            updateSpritesheetColumn={updateSpritesheetColumnHandler}
           />
         </div>
 

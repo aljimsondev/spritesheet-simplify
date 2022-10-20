@@ -1,6 +1,6 @@
 import React from "react";
 import { AiOutlineQuestion } from "react-icons/ai";
-import { NODE } from "../types";
+import { NODE } from "../../types/types";
 import { FabProps } from "./types";
 
 const FabComponent: NODE<FabProps> = ({ onClick }) => {

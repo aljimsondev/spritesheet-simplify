@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { Portal } from "../Portal";
-import { NODE } from "../types";
+import { NODE } from "../../types/types";
 import {
   AiOutlineExclamation,
   AiOutlineQuestion,

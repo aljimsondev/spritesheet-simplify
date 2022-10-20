@@ -4,7 +4,7 @@
  * @returns a Promise containing of base64 image data and old properties
  */
 
-import { BufferData } from "../Components/types";
+import { BufferData } from "../types/types";
 
 export const ConvertToBase64 = async (file: File) => {
   const reader = new FileReader();

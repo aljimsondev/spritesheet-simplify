@@ -1,5 +1,5 @@
 import React from "react";
-import { DropDownProps, NODE } from "../types";
+import { DropDownProps, NODE } from "../../types/types";
 import ClickAwayListener from "../listener/ClickAwayEventListener";
 
 const DropdownMenu: React.FC<DropDownProps> = ({

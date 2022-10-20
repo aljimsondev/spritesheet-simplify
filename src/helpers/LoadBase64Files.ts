@@ -1,4 +1,4 @@
-import { BufferData } from "../Components/types";
+import { BufferData } from "../types/types";
 import { ConvertToBase64 } from "./ToBase64";
 
 /**

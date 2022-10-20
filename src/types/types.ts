@@ -1,4 +1,5 @@
 import React from "react";
+import { UpdateSpritesheetColumn } from "./main";
 export type NODE<T> = (props: T) => JSX.Element;
 export type NavbarProps = {
   handleSelectImages: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -54,4 +55,5 @@ export type ExportSpritesheetType = (fileName: string) => Promise<void>;
 export type SidebarProps = {
   exportSpritesheet: ExportSpritesheetType;
   spritesheets: HTMLImageElement[];
+  updateSpritesheetColumn: UpdateSpritesheetColumn;
 };

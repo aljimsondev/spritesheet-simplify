@@ -1,6 +1,6 @@
 import React from "react";
 import ToolTip from "../tooltip";
-import { NavbarButtonProps, NODE } from "../types";
+import { NavbarButtonProps, NODE } from "../../types/types";
 
 const NavbarButton: NODE<NavbarButtonProps> = ({
   icon,

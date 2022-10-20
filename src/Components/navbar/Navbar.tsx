@@ -1,5 +1,5 @@
 import React from "react";
-import { NavbarProps } from "../types";
+import { NavbarProps } from "../../types/types";
 import { AiFillCaretDown } from "react-icons/ai";
 import { BiImageAdd, BiSun, BiMoon } from "react-icons/bi";
 import NavbarButton from "../button/NavbarButton";

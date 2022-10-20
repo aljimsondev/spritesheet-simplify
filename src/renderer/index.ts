@@ -1,16 +1,11 @@
-import { BufferData } from "../Components/types";
-
-/**
- * HOW TO MAKE IMAGES RESIZEABLE
- * solution 1: add reference to that row and  use it when updating rows later
- */
+import { BufferData } from "../types/types";
 
 interface Renderer {
   canvas: HTMLCanvasElement;
   imageSpriteProps: {
     padding: number;
-    imageWidth: number;
-    imageHeight: number;
+    // imageWidth: number;
+    // imageHeight: number;
     borderLine: boolean;
     borderWidth: number;
     borderColor: string;
@@ -19,8 +14,6 @@ interface Renderer {
   };
 }
 
-import Minify from "./MinifyImages";
-
 class Renderer {
   #images: HTMLImageElement[][] = []; //for 2d spritesheet array
   #maxPadding: number = 100;
@@ -28,6 +21,7 @@ class Renderer {
   #defaultBorderWidth: number = 1;
   #posYArray: number[] = [];
   #buffers: BufferData[][] = [];
+  #imageCache = new Map<string, HTMLImageElement[]>();
   #context: CanvasRenderingContext2D | null = null;
   #JSONData: {
     frames: any;
@@ -43,15 +37,14 @@ class Renderer {
     width: number;
     name: string;
   }[] = [];
-  #minify = new Minify(300, 300);
   constructor() {
     this.#init();
   }
 
   setImageSpriteProps(args: {
     padding: number;
-    imageWidth: number;
-    imageHeight: number;
+    // imageWidth: number;
+    // imageHeight: number;
     borderLine: boolean;
     borderWidth: number;
     borderColor: string;
@@ -72,7 +65,6 @@ class Renderer {
    */
   async loadBuffers(buffers: BufferData[][]) {
     if (buffers.length <= 0) return;
-
     return new Promise<boolean>((resolve, reject) => {
       try {
         let counter = 0;
@@ -205,35 +197,42 @@ class Renderer {
    *
    * @param index - index of the array which changes will be applied to
    */
-  async updateColumnData(index: number, height: number, width: number) {
+  updateColumnData(index: number, width: number, height: number) {
     //update buffers instead of images and return value should be a base64 data
-    return new Promise((resolve, reject) => {
-      try {
-        const col = this.#images[index];
-        if (col && col.length > 0) {
+    try {
+      const col = this.#images[index];
+      if (col && col.length > 0) {
+        const cacheValue = this.#imageCache.get(col[0].alt);
+        if (cacheValue) {
+          //images in the cache
+          const newColumn = cacheValue.map((img) => {
+            return this.#clone({ image: img, width: width, height: height });
+          });
+          this.#buffers[index] = newColumn;
+          return this.#buffers;
+        } else {
           const newColumn = col.map((img) => {
             return this.#clone({ image: img, width: width, height: height });
           });
-          this.#images[index] = newColumn;
-          resolve(true);
+          this.#buffers[index] = newColumn;
+          return this.#buffers;
         }
-        resolve(false);
-      } catch (e) {
-        reject(e);
       }
-    });
+    } catch (e: any) {
+      throw new Error(e.message);
+    }
   }
   /**
    * Clone images with new given properties
    * @param props
-   * @returns clone image
+   * @returns clone image buffer
    */
   #clone(props: {
     height: number;
     width: number;
     image: HTMLImageElement;
     options?: {};
-  }) {
+  }): BufferData {
     const { image, width, height } = props;
     const canvas = document.createElement("canvas")!;
     const ctx = canvas.getContext("2d")!;
@@ -250,11 +249,7 @@ class Renderer {
       width,
       height
     );
-    const buffer = canvas.toDataURL();
-    const newImage = new Image();
-    newImage.alt = image.alt;
-    newImage.src = buffer;
-    return newImage;
+    return { data: canvas.toDataURL(), name: image.alt };
   }
   getYPositions() {
     return this.#posYArray;
@@ -304,17 +299,9 @@ class Renderer {
       let imageHeight = this.#images[col][0].height; //first index of the array
 
       if (this.#images.length > 1) {
-        //more than 1 column
-        if (this.imageSpriteProps.imageHeight) {
-          totalHeight += this.imageSpriteProps.imageHeight + padding; //custom height
-        }
-        totalHeight += imageHeight + padding; //original image height
+        totalHeight += imageHeight + padding;
       } else if (this.#images.length === 1) {
-        //only 1 column means no padding applied
-        if (this.imageSpriteProps.imageHeight) {
-          totalHeight += this.imageSpriteProps.imageHeight; //custom height
-        }
-        totalHeight += imageHeight; //original image height
+        totalHeight += imageHeight;
       }
     }
     return totalHeight;
@@ -327,15 +314,27 @@ class Renderer {
     let highestWidth = 0;
     if (this.#images.length <= 0) return 0;
     for (let i = 0; i < this.#images.length; i++) {
-      let width = this.#getTotalWidth(this.#images[i], {
-        customWidth: this.imageSpriteProps.imageWidth,
-      });
+      let width = this.#getTotalWidth(this.#images[i]);
       if (width > highestWidth) {
         highestWidth = width;
       }
     }
 
     return highestWidth;
+  }
+  #clearCache() {
+    this.#imageCache.clear();
+  }
+  #clearBuffer() {
+    this.#buffers.length = 0;
+  }
+  #clearImages() {
+    this.#images.length = 0;
+  }
+  clear() {
+    this.#clearCache();
+    this.#clearBuffer();
+    this.#clearImages();
   }
   /**
    * Download the spritesheet
@@ -379,7 +378,7 @@ class Renderer {
           name: this.#images[row][0].alt,
           posY: currentPositionY,
         };
-        this.#minify.minify(this.#images[row]);
+        this.#imageCache.set(this.#images[row][0].alt, this.#images[row]);
         this.#loadColumnData(
           this.#images[row],
           this.#context!,
@@ -402,19 +401,9 @@ class Renderer {
         }
 
         if (this.#images.length > 1) {
-          //consist of more than 1 row, add padding  to give space of each column sprites
-          if (this.imageSpriteProps.imageHeight) {
-            currentPositionY += this.imageSpriteProps.imageHeight + colPadding;
-          } else {
-            currentPositionY += this.#images[row][0].height + colPadding;
-          }
+          currentPositionY += this.#images[row][0].height + colPadding;
         } else if (this.#images.length === 1) {
-          //only 1 row
-          if (this.imageSpriteProps.imageHeight) {
-            currentPositionY += this.imageSpriteProps.imageHeight;
-          } else {
-            currentPositionY += this.#images[row][0].height;
-          }
+          currentPositionY += this.#images[row][0].height;
         }
       }
     } else {

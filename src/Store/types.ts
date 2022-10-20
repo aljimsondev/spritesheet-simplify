@@ -1,5 +1,5 @@
 import { NotificationProps } from "../Components/notification/type";
-import { BufferData } from "../Components/types";
+import { BufferData } from "../types/types";
 import {
   ComponentReducerActionType,
   NotificationReducerActions,
@@ -19,6 +19,7 @@ export type AppProperties = {
   borderColor: string;
   canvasBackground: string;
   displayCanvasBackground: boolean;
+  updated: boolean;
 };
 
 export type ContextType = {

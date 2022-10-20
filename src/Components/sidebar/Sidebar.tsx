@@ -2,8 +2,6 @@ import React from "react";
 import Tabs from "../Tabs";
 import { Tab } from "../Tabs/Tab";
 import { Context } from "../../Store/store";
-import Animate from "../../renderer/Animate";
-
 import {
   AiOutlineMinus,
   AiOutlinePlus,
@@ -14,13 +12,15 @@ import Configuration from "../form/Configuration";
 import Export from "../form/Export";
 import Accordion from "../accordion";
 import RenderList from "../list/PreviewRenderList";
-import { SidebarProps } from "../types";
+import { SidebarProps } from "../../types/types";
 import ColorPickerInput from "../input/ColorPickerInput";
 import NoPreviewCard from "../card/NoPreviewCard";
+import { scrollToBottom } from "../../helpers/ScrollToBottom";
 
 const Sidebar: React.FC<SidebarProps> = ({
   exportSpritesheet,
   spritesheets,
+  updateSpritesheetColumn,
 }) => {
   const { buffers, sidebarRef } = React.useContext(Context);
   const [backgroundProps, setBackGroundProps] = React.useState({
@@ -30,7 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   });
   const deferredColorValue = React.useDeferredValue(backgroundProps.color);
   const [isPending, startTransition] = React.useTransition();
-
+  const previewBaseRef = React.useRef<HTMLDivElement>(null);
   const handleChangeBgPropsColor = React.useCallback(
     (e: any) => {
       startTransition(() => {
@@ -58,6 +58,18 @@ const Sidebar: React.FC<SidebarProps> = ({
     });
   };
 
+  React.useEffect(() => {
+    if (previewBaseRef.current) {
+      console.log(previewBaseRef.current.scrollHeight);
+      previewBaseRef.current.scrollTop = previewBaseRef.current.scrollHeight;
+      previewBaseRef.current.scrollTo({
+        top: -previewBaseRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+      scrollToBottom(previewBaseRef.current!);
+    }
+  }, [spritesheets]);
+
   //! FIX ME
   //? create edit functionality
 
@@ -65,7 +77,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     <div ref={sidebarRef} className="sidebar-base">
       <Tabs defaultTabIndex={1}>
         <Tab tabLabel="Preview">
-          <div className="preview-base">
+          <div className="preview-base" ref={previewBaseRef}>
             <Accordion
               activeIcon={<AiOutlinePlus size={20} />}
               inactiveIcon={<AiOutlineMinus size={20} />}
@@ -104,6 +116,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     sprites={spritesheets}
                     backgroundColor={deferredColorValue}
                     displayBackgroundColor={backgroundProps.display}
+                    updateSpritesheetColumn={updateSpritesheetColumn}
                   />
                 </div>
               </React.Fragment>

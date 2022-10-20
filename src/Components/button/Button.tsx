@@ -1,5 +1,5 @@
 import React from "react";
-import { NODE } from "../types";
+import { NODE } from "../../types/types";
 import { ButtonType } from "./types";
 
 const Button: NODE<ButtonType> = ({ children, className, type, onClick }) => {

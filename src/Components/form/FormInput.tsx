@@ -1,6 +1,6 @@
 import React from "react";
 import ClickAwayListener from "../listener/ClickAwayEventListener";
-import { FormInputProps, NODE } from "../types";
+import { FormInputProps, NODE } from "../../types/types";
 
 const FormInput: NODE<FormInputProps> = ({
   label,
