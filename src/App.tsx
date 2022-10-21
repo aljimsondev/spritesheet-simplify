@@ -153,7 +153,6 @@ function App() {
   const handleOpenFileInput = React.useCallback(() => {
     refs.fileInput.current?.click();
   }, []);
-  console.log(buffers);
   //runs in first render and reload
   React.useEffect(() => {
     //disable zoom in root element
@@ -228,6 +227,7 @@ function App() {
     localState.update,
   ]);
   //TODO add dialog
+  //TODO optimize performance
 
   return (
     <>
