@@ -60,7 +60,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   React.useEffect(() => {
     if (previewBaseRef.current) {
-      console.log(previewBaseRef.current.scrollHeight);
       previewBaseRef.current.scrollTop = previewBaseRef.current.scrollHeight;
       previewBaseRef.current.scrollTo({
         top: -previewBaseRef.current.scrollHeight,
