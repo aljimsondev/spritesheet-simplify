@@ -6,9 +6,13 @@ const Tabs: React.FC<{ children: any; defaultTabIndex?: number }> = ({
 }) => {
   const [activeTab, setActiveTab] = React.useState(0);
   const childCount = React.Children.count(children);
-  const handleChangeActiveTab = (tabIndex: number) => {
-    setActiveTab(tabIndex);
-  };
+
+  const handleChangeActiveTab = React.useCallback(
+    (tabIndex: number) => {
+      setActiveTab(tabIndex);
+    },
+    [activeTab]
+  );
 
   React.useEffect(() => {
     //set active tab
@@ -22,9 +26,7 @@ const Tabs: React.FC<{ children: any; defaultTabIndex?: number }> = ({
   const renderTab = React.useCallback(() => {
     if (childCount === 1) {
       return React.cloneElement(React.Children.only(children), {
-        onClick: () => {
-          handleChangeActiveTab(0);
-        },
+        onClick: React.useCallback(() => handleChangeActiveTab(0), []),
         ariaSelected: activeTab,
         tabIndex: 0,
         isActive: 1,
@@ -33,9 +35,7 @@ const Tabs: React.FC<{ children: any; defaultTabIndex?: number }> = ({
 
     return React.Children.map(children, (child, index) => {
       return React.cloneElement(child, {
-        onClick: () => {
-          handleChangeActiveTab(index);
-        },
+        onClick: React.useCallback(() => handleChangeActiveTab(index), []),
         ariaSelected: activeTab,
         tabIndex: index,
         isActive: index === activeTab,

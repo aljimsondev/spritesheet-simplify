@@ -64,12 +64,13 @@ const Store: Child<StoreProps> = ({ children }) => {
     }
   }, [sidebarRef.current]);
 
-  const handleReload = () => {
+  const handleReload = React.useCallback(() => {
     setReloadApp(true);
     setTimeout(() => {
       setReloadApp(false);
     }, 3000);
-  };
+  }, [reloadApp]);
+
   const onChangeBorderline = () => {
     setProperties({ ...properties, borderLine: !properties.borderLine });
   };

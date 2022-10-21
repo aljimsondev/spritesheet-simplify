@@ -3,7 +3,7 @@ import { NODE } from "../../types/types";
 import { LinkData, ModalFooterButtonProps } from "./types";
 import imgMultiSprites from "../../assets/multiple_sprites1.jpg";
 import imgSingleSprite from "../../assets/single_sprite1.jpg";
-import customSizeSprites from "../../assets/custom_size_sprites.png";
+import customSizeSprites from "../../assets/custom_size.jpg";
 import logoImg from "../../assets/logo.png";
 import Logo from "../logo/Logo";
 import {
@@ -92,7 +92,7 @@ const sectionsData = [
     },
     image: {
       className: "mt-2 mx-600",
-      src: imgSingleSprite,
+      src: customSizeSprites,
       alt: "col_sprites",
     },
   },

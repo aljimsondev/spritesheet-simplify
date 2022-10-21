@@ -18,6 +18,8 @@ import { useDeferredObject } from "./helpers/UseDeferredObject";
 import AnimatedLoader from "./Components/Loader/AnimatedLoader";
 import { CanvasZoomDrag } from "./EventHandler/CanvasZoomDrag";
 import { LocalStates, UpdateSpritesheetColumn } from "./types/main";
+import Logo from "./Components/logo/Logo";
+import NavbarMain from "./Components/navbar";
 
 function App() {
   const {
@@ -228,14 +230,13 @@ function App() {
   ]);
   //TODO add dialog
   //TODO optimize performance
-
+  //tODO add export in json
   return (
     <>
       <div className="main-container">
-        <Navbar
+        <NavbarMain
           handleSelectImages={handleSelectImages}
           clearSelection={clearSelection}
-          downloadButtonRef={refs.downloadButton}
           handleOpenFileInput={handleOpenFileInput}
         />
         <div className="container-grow">

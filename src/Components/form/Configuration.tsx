@@ -17,7 +17,6 @@ const Configuration = () => {
   const [paddingOpen, setPaddingOpen] = React.useState(true);
   const { properties, onUpdateProperties } = React.useContext(Context);
   const [isPending, startTranstition] = React.useTransition();
-
   const [localState, setLocalState] = React.useState({
     borderColor: "#f3f3f3",
     canvasBackground: "#000000",
@@ -39,25 +38,53 @@ const Configuration = () => {
     setBackGroundProps({ ...backgroundProps, open: !backgroundProps.open });
   };
 
-  const handleClickBgPropsDisplay = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    setBackGroundProps({
-      ...backgroundProps,
-      display: !backgroundProps.display,
-    });
-    startTranstition(() => {
-      onUpdateProperties("displayCanvasBackground", !backgroundProps.display);
-    });
-  };
+  const memoizedLocalState = React.useMemo(() => {
+    return localState;
+  }, [localState]);
 
-  const handleToogleBorderOpt = () => {
+  const memoizedColorPickerInputProps = React.useMemo(() => {
+    return {
+      borderColor: {
+        name: "borderColor",
+        id: "border-color-picker",
+      },
+      canvasBackground: {
+        name: "canvasBackground",
+        id: "canvas-bg-color-picker",
+      },
+    };
+  }, []);
+  const memoizedIcons = React.useMemo(() => {
+    return {
+      activeIcon: <AiOutlinePlus size={20} />,
+      inActiveIcon: <AiOutlineMinus size={20} />,
+      question: <AiOutlineQuestion />,
+      eyeShow: <AiOutlineEye size={20} />,
+      eyeHidden: <AiOutlineEyeInvisible size={20} />,
+    };
+  }, []);
+
+  const handleClickBgPropsDisplay = React.useCallback(
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      setBackGroundProps({
+        ...backgroundProps,
+        display: !backgroundProps.display,
+      });
+      startTranstition(() => {
+        onUpdateProperties("displayCanvasBackground", !backgroundProps.display);
+      });
+    },
+    [backgroundProps.display]
+  );
+
+  const handleToogleBorderOpt = React.useCallback(() => {
     setBorderOpt((prevState) => !prevState);
-  };
+  }, [openBorderOpt]);
 
-  const handleOpenPaddingOption = () => {
+  const handleOpenPaddingOption = React.useCallback(() => {
     setPaddingOpen((prevState) => !prevState);
-  };
+  }, [paddingOpen]);
+
   const updateProperties = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val: any = parseFloat(e.target.value);
 
@@ -85,33 +112,34 @@ const Configuration = () => {
     })();
   }, []);
 
-  const handleChangeState = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalState({ ...localState, [e.target.name]: e.target.value });
-    startTranstition(() => {
-      updateProperties(e);
-    });
-  };
-
-  const handleKeydownOnInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.code === "Enter") {
-      console.log("handle update here");
-    }
-  };
+  const handleChangeState = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setLocalState({ ...localState, [e.target.name]: e.target.value });
+      startTranstition(() => {
+        updateProperties(e);
+      });
+    },
+    [
+      localState.borderColor,
+      localState.borderLine,
+      localState.canvasBackground,
+      localState.padding,
+      localState.borderWidth,
+    ]
+  );
 
   return (
     <>
       <Accordion
-        activeIcon={<AiOutlinePlus size={20} />}
-        inactiveIcon={<AiOutlineMinus size={20} />}
+        activeIcon={memoizedIcons.activeIcon}
+        inactiveIcon={memoizedIcons.inActiveIcon}
         hidden
         open={openBorderOpt}
         title="BORDERLINE"
         toogle={handleToogleBorderOpt}
       >
         <figure className="note-base">
-          <span className="note-icon">
-            <AiOutlineQuestion />
-          </span>
+          <span className="note-icon">{memoizedIcons.question}</span>
           <p className="note-text">
             Note: Turn this off when exporting the spritesheets.
           </p>
@@ -135,7 +163,7 @@ const Configuration = () => {
             type="number"
             name="borderWidth"
             placeholder="Border Width"
-            value={localState.borderWidth}
+            value={memoizedLocalState.borderWidth}
             onChange={handleChangeState}
             min={1}
           />
@@ -145,18 +173,15 @@ const Configuration = () => {
             <p className="text-title">BORDER COLOR</p>
           </div>
           <ColorPickerInput
-            colorValue={localState.borderColor}
+            colorValue={memoizedLocalState.borderColor}
             onColorChange={handleChangeState}
-            inputProps={{
-              name: "borderColor",
-              id: "border-color-picker",
-            }}
+            inputProps={memoizedColorPickerInputProps.borderColor}
           />
         </div>
       </Accordion>
       <Accordion
-        activeIcon={<AiOutlinePlus size={20} />}
-        inactiveIcon={<AiOutlineMinus size={20} />}
+        activeIcon={memoizedIcons.activeIcon}
+        inactiveIcon={memoizedIcons.inActiveIcon}
         hidden
         open={backgroundProps.open}
         title="BACKGROUND"
@@ -164,25 +189,20 @@ const Configuration = () => {
       >
         <div className="bg-color-picker-base">
           <ColorPickerInput
-            colorValue={localState.canvasBackground}
+            colorValue={memoizedLocalState.canvasBackground}
             onColorChange={handleChangeState}
-            inputProps={{
-              name: "canvasBackground",
-              id: "canvas-bg-color-picker",
-            }}
+            inputProps={memoizedColorPickerInputProps.canvasBackground}
           />
           <button onClick={handleClickBgPropsDisplay} className="-icon-button">
-            {backgroundProps.display ? (
-              <AiOutlineEye size={20} />
-            ) : (
-              <AiOutlineEyeInvisible size={20} />
-            )}
+            {backgroundProps.display
+              ? memoizedIcons.eyeShow
+              : memoizedIcons.eyeHidden}
           </button>
         </div>
       </Accordion>
       <Accordion
-        activeIcon={<AiOutlinePlus size={20} />}
-        inactiveIcon={<AiOutlineMinus size={20} />}
+        activeIcon={memoizedIcons.activeIcon}
+        inactiveIcon={memoizedIcons.inActiveIcon}
         hidden
         open={paddingOpen}
         title="SPRITESHEET PADDING"
@@ -190,18 +210,15 @@ const Configuration = () => {
       >
         <div className="flex-1 mt-2">
           <TextInput
-            onKeyDownCapture={handleKeydownOnInput}
             onChange={handleChangeState}
             name="padding"
             type="number"
-            value={localState.padding}
+            value={memoizedLocalState.padding}
             min={0}
           />
         </div>
         <figure className="note-base my-3">
-          <span className="note-icon">
-            <AiOutlineQuestion />
-          </span>
+          <span className="note-icon">{memoizedIcons.question}</span>
           <p className="note-text">
             Note: Padding will be applied when there is more than 1 column.
           </p>

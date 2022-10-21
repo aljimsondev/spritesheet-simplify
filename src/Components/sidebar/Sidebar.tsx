@@ -69,6 +69,13 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
   }, [spritesheets]);
 
+  const memoizedColorPickerInputProps = React.useMemo(() => {
+    return {
+      name: "color",
+      id: "bg-color-picker",
+    };
+  }, []);
+
   return (
     <div ref={sidebarRef} className="sidebar-base">
       <Tabs defaultTabIndex={1}>
@@ -86,10 +93,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <ColorPickerInput
                   onColorChange={handleChangeBgPropsColor}
                   colorValue={deferredColorValue}
-                  inputProps={{
-                    name: "color",
-                    id: "bg-color-picker",
-                  }}
+                  inputProps={memoizedColorPickerInputProps}
                 />
                 <button
                   onClick={handleClickBgPropsDisplay}

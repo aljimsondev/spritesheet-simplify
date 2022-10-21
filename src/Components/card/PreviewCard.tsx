@@ -126,7 +126,7 @@ const PreviewCard = React.forwardRef<HTMLInputElement, PreviewCardProps>(
     const handleDownloadingSpriteSheet = React.useCallback(() => {
       if (buffer) {
         SpriteSheetDownload(buffer, {
-          fileName: localProperties.name,
+          fileName: localProperties.name.split(".")[0],
           fileType: "png",
         });
       }

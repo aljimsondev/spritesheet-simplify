@@ -4,7 +4,6 @@ export type NODE<T> = (props: T) => JSX.Element;
 export type NavbarProps = {
   handleSelectImages: (e: React.ChangeEvent<HTMLInputElement>) => void;
   clearSelection: () => void;
-  downloadButtonRef: React.RefObject<HTMLAnchorElement>;
   handleOpenFileInput: () => void;
 };
 
