@@ -65,7 +65,7 @@ function App() {
       setBuffers([...buffers, data]);
       saveToLocalStorage("blobs", [...buffers, data]);
     },
-    []
+    [buffers]
   );
   //for the properties
   const spritesProperties = React.useMemo(() => {
@@ -124,8 +124,8 @@ function App() {
     },
     [
       buffers,
-      // localState.loading,
-      // spritesProperties
+      //  localState.loading,
+      //   spritesProperties
     ]
   );
   //clear buffers
@@ -153,7 +153,7 @@ function App() {
   const handleOpenFileInput = React.useCallback(() => {
     refs.fileInput.current?.click();
   }, []);
-
+  console.log(buffers);
   //runs in first render and reload
   React.useEffect(() => {
     //disable zoom in root element
