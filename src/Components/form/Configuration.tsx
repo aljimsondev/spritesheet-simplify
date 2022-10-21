@@ -13,30 +13,19 @@ import InputGroup from "../input/InputGroup";
 import TextInput from "../input/TextInput";
 
 const Configuration = () => {
-  const [openBorderOpt, setBorderOpt] = React.useState(true);
-  const [paddingOpen, setPaddingOpen] = React.useState(true);
   const { properties, onUpdateProperties } = React.useContext(Context);
   const [isPending, startTranstition] = React.useTransition();
   const [localState, setLocalState] = React.useState({
     borderColor: "#f3f3f3",
     canvasBackground: "#000000",
     borderWidth: 1,
-    borderLine: false,
     padding: 0,
   });
   const [backgroundProps, setBackGroundProps] = React.useState<{
-    open: boolean;
     display: boolean;
   }>({
-    open: true,
     display: true,
   });
-
-  const handleClickBgPropsOpen = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    setBackGroundProps({ ...backgroundProps, open: !backgroundProps.open });
-  };
 
   const memoizedLocalState = React.useMemo(() => {
     return localState;
@@ -54,6 +43,7 @@ const Configuration = () => {
       },
     };
   }, []);
+
   const memoizedIcons = React.useMemo(() => {
     return {
       activeIcon: <AiOutlinePlus size={20} />,
@@ -74,24 +64,16 @@ const Configuration = () => {
         onUpdateProperties("displayCanvasBackground", !backgroundProps.display);
       });
     },
-    [backgroundProps.display]
+    [properties]
   );
-
-  const handleToogleBorderOpt = React.useCallback(() => {
-    setBorderOpt((prevState) => !prevState);
-  }, [openBorderOpt]);
-
-  const handleOpenPaddingOption = React.useCallback(() => {
-    setPaddingOpen((prevState) => !prevState);
-  }, [paddingOpen]);
 
   const updateProperties = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val: any = parseFloat(e.target.value);
 
     if (!isNaN(val) && e.target.type === "number") {
-      onUpdateProperties([e.target.name] as any, val);
+      onUpdateProperties(e.target.name as any, val);
     } else {
-      onUpdateProperties([e.target.name] as any, e.target.value);
+      onUpdateProperties(e.target.name as any, e.target.value);
     }
   };
 
@@ -103,7 +85,6 @@ const Configuration = () => {
       });
       setLocalState({
         ...localState,
-        borderLine: properties.borderLine,
         borderColor: properties.borderColor,
         borderWidth: properties.borderWidth,
         padding: properties.padding,
@@ -119,25 +100,12 @@ const Configuration = () => {
         updateProperties(e);
       });
     },
-    [
-      localState.borderColor,
-      localState.borderLine,
-      localState.canvasBackground,
-      localState.padding,
-      localState.borderWidth,
-    ]
+    [properties]
   );
 
   return (
     <>
-      <Accordion
-        activeIcon={memoizedIcons.activeIcon}
-        inactiveIcon={memoizedIcons.inActiveIcon}
-        hidden
-        open={openBorderOpt}
-        title="BORDERLINE"
-        toogle={handleToogleBorderOpt}
-      >
+      <Accordion isOpen={true} title="BORDERLINE">
         <figure className="note-base">
           <span className="note-icon">{memoizedIcons.question}</span>
           <p className="note-text">
@@ -148,6 +116,7 @@ const Configuration = () => {
           <input
             type="checkbox"
             className="input-check mr-3"
+            name="borderLine"
             checked={properties.borderLine}
             onChange={(e) => onUpdateProperties("borderLine", e.target.checked)}
           />
@@ -160,11 +129,10 @@ const Configuration = () => {
             <p className="text-title">BORDER WIDTH</p>
           </div>
           <TextInput
+            onChange={handleChangeState}
             type="number"
             name="borderWidth"
-            placeholder="Border Width"
             value={memoizedLocalState.borderWidth}
-            onChange={handleChangeState}
             min={1}
           />
         </div>
@@ -179,14 +147,7 @@ const Configuration = () => {
           />
         </div>
       </Accordion>
-      <Accordion
-        activeIcon={memoizedIcons.activeIcon}
-        inactiveIcon={memoizedIcons.inActiveIcon}
-        hidden
-        open={backgroundProps.open}
-        title="BACKGROUND"
-        toogle={handleClickBgPropsOpen}
-      >
+      <Accordion hidden title="BACKGROUND">
         <div className="bg-color-picker-base">
           <ColorPickerInput
             colorValue={memoizedLocalState.canvasBackground}
@@ -200,14 +161,7 @@ const Configuration = () => {
           </button>
         </div>
       </Accordion>
-      <Accordion
-        activeIcon={memoizedIcons.activeIcon}
-        inactiveIcon={memoizedIcons.inActiveIcon}
-        hidden
-        open={paddingOpen}
-        title="SPRITESHEET PADDING"
-        toogle={handleOpenPaddingOption}
-      >
+      <Accordion hidden title="SPRITESHEET PADDING">
         <div className="flex-1 mt-2">
           <TextInput
             onChange={handleChangeState}

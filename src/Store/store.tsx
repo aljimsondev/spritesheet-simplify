@@ -71,16 +71,26 @@ const Store: Child<StoreProps> = ({ children }) => {
     }, 3000);
   }, [reloadApp]);
 
-  const onChangeBorderline = () => {
+  const onChangeBorderline = React.useCallback(() => {
     setProperties({ ...properties, borderLine: !properties.borderLine });
-  };
+  }, []);
 
-  function onUpdateProperties<AppProperties>(
-    key: keyof AppProperties,
-    value: any
-  ) {
-    setProperties({ ...properties, [key]: value });
-  }
+  // function onUpdateProperties<AppProperties>(
+  //   key: keyof AppProperties,
+  //   value: any
+  // ) {
+  //   setProperties({ ...properties, [key]: value });
+  // }
+  const onUpdateProperties = React.useCallback(
+    (key: keyof AppProperties, value: any) => {
+      setProperties({ ...properties, [key]: value });
+    },
+    [properties]
+  );
+
+  const memoizedProperties = React.useMemo(() => {
+    return properties;
+  }, [properties]);
 
   React.useEffect(() => {
     return () => {
@@ -91,7 +101,7 @@ const Store: Child<StoreProps> = ({ children }) => {
   return (
     <Context.Provider
       value={{
-        properties: properties,
+        properties: memoizedProperties,
         setProperties: setProperties,
         notification,
         notificationDispatch,

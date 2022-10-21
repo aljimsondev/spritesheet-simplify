@@ -124,11 +124,7 @@ function App() {
         });
       });
     },
-    [
-      buffers,
-      //  localState.loading,
-      //   spritesProperties
-    ]
+    [buffers, loading, spritesProperties]
   );
   //clear buffers
   const clearSelection = React.useCallback(() => {

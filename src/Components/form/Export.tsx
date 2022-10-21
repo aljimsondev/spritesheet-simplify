@@ -10,13 +10,8 @@ const Export: React.FC<{
   const [isPending, startTransition] = React.useTransition();
   const { properties, onUpdateProperties } = React.useContext(Context);
   const [exportingProps, setOpenExporting] = React.useState({
-    open: true,
     fileName: "spritesheet.png",
   });
-
-  const handleToogleExporting = () => {
-    setOpenExporting({ ...exportingProps, open: !exportingProps.open });
-  };
 
   const handleChangeState = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOpenExporting({ ...exportingProps, [e.target.name]: e.target.value });
@@ -36,14 +31,7 @@ const Export: React.FC<{
   }
 
   return (
-    <Accordion
-      activeIcon={<AiOutlinePlus size={20} />}
-      inactiveIcon={<AiOutlineMinus size={20} />}
-      hidden
-      open={exportingProps.open}
-      title="EXPORT SPRITESHEET"
-      toogle={handleToogleExporting}
-    >
+    <Accordion title="EXPORT SPRITESHEET" isOpen={true}>
       <div className="flex-1 flex flex-col mt-3">
         <div className="flex-1 my-2">
           <p className="text-title">SPRITESHEET FILENAME</p>

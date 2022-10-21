@@ -2,12 +2,7 @@ import React from "react";
 import Tabs from "../Tabs";
 import { Tab } from "../Tabs/Tab";
 import { Context } from "../../Store/store";
-import {
-  AiOutlineMinus,
-  AiOutlinePlus,
-  AiOutlineEye,
-  AiOutlineEyeInvisible,
-} from "react-icons/ai";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import Configuration from "../form/Configuration";
 import Export from "../form/Export";
 import Accordion from "../accordion";
@@ -24,7 +19,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const { buffers, sidebarRef } = React.useContext(Context);
   const [backgroundProps, setBackGroundProps] = React.useState({
-    open: true,
     display: true,
     color: "#BFBFBF",
   });
@@ -42,12 +36,6 @@ const Sidebar: React.FC<SidebarProps> = ({
     },
     [deferredColorValue]
   );
-
-  const handleClickBgPropsOpen = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    setBackGroundProps({ ...backgroundProps, open: !backgroundProps.open });
-  };
 
   const handleClickBgPropsDisplay = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -81,14 +69,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       <Tabs defaultTabIndex={1}>
         <Tab tabLabel="Preview">
           <div className="preview-base" ref={previewBaseRef}>
-            <Accordion
-              activeIcon={<AiOutlinePlus size={20} />}
-              inactiveIcon={<AiOutlineMinus size={20} />}
-              hidden
-              open={backgroundProps.open}
-              toogle={handleClickBgPropsOpen}
-              title="PREVIEW BACKGROUND"
-            >
+            <Accordion isOpen title="PREVIEW BACKGROUND">
               <div className="bg-color-picker-base">
                 <ColorPickerInput
                   onColorChange={handleChangeBgPropsColor}

@@ -1,24 +1,29 @@
+import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import React from "react";
 
 const Accordion: React.FC<{
-  open: boolean;
-  toogle: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  hidden: boolean;
-  activeIcon: JSX.Element;
+  hidden?: boolean;
+  isOpen?: boolean;
+  activeIcon?: JSX.Element;
   label?: string;
   title: string;
-  inactiveIcon: JSX.Element;
+  inactiveIcon?: JSX.Element;
   children: JSX.Element[] | JSX.Element;
 }> = ({
-  open = false,
-  toogle,
-  activeIcon,
-  inactiveIcon,
-  hidden,
+  activeIcon = <AiOutlinePlus size={20} />,
+  inactiveIcon = <AiOutlineMinus size={20} />,
+  isOpen = false,
+  hidden = true,
   label,
   title,
   children,
 }) => {
+  const [open, setOpen] = React.useState(isOpen);
+
+  const toogle = React.useCallback(() => {
+    setOpen((prevState) => !prevState);
+  }, [open]);
+
   return (
     <div className="configuration-base outline-b">
       <div className="flex-1 flex items-center justify-between">
@@ -29,7 +34,7 @@ const Accordion: React.FC<{
       </div>
       <details open={open}>
         <summary className={hidden ? "hidden" : label}></summary>
-        {children}
+        {open && children}
       </details>
     </div>
   );
