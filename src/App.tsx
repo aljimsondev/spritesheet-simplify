@@ -27,7 +27,6 @@ function App() {
     reloadApp,
     buffers,
     setBuffers,
-    onUpdateProperties,
   } = React.useContext(Context);
 
   const refs = {
@@ -39,7 +38,6 @@ function App() {
   const [localState, setLocalState] = React.useState<LocalStates>({
     loading: true,
     spritesheets: [],
-    update: false,
   });
   const [loading, setLoading] = React.useState(true);
   const deferredCanvasBg = useDeferredObject(properties, "canvasBackground");
@@ -147,10 +145,12 @@ function App() {
       },
     });
   }, [buffers]);
+
   //handling file input programmatically
   const handleOpenFileInput = React.useCallback(() => {
     refs.fileInput.current?.click();
   }, []);
+
   //runs in first render and reload
   React.useEffect(() => {
     //disable zoom in root element
@@ -160,11 +160,13 @@ function App() {
     CanvasZoomDrag(refs.canvasWrapper.current!);
     //fetch blobs to localstorage
     const localBlobs = fetchToLocalStorage("blobs");
+
     (async () => {
       if (localBlobs) {
         setBuffers(localBlobs);
       }
     })();
+
     const timer = setTimeout(() => {
       if (!reloadApp) {
         setLoading(false);
@@ -215,7 +217,6 @@ function App() {
     load();
     return () => {
       //clean up function
-      setLocalState({ ...localState, update: false });
       document.getElementById("renderer-canvas")?.remove(); //remove the canvas on rerender
     };
   }, [
@@ -223,7 +224,6 @@ function App() {
     loading, //whenever is reload activated
     spritesProperties, //whenever sprites props
     deferredCanvasBg, //whenever canvas bg changes
-    localState.update,
   ]);
 
   //TODO add dialog
@@ -278,7 +278,6 @@ function App() {
             handleRemoveColumn={handleRemoveColumn}
           />
         </div>
-
         <Modal open={openModal}>
           <ModalContent toogleState={updateModalState} />
         </Modal>
