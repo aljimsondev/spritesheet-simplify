@@ -179,6 +179,7 @@ class Renderer {
     });
   }
   downloadDataJSON(fileName: string) {
+    if (!this.canvas) return;
     let result: any = {};
     let name = "";
     result.frames = this.#spritesheetsRowData.reduce((obj, cur, i) => {
@@ -206,6 +207,7 @@ class Renderer {
         },
       };
     }, {});
+
     result.meta = {
       web: "https://aljimsondev.github.io/spritesheet-simplify/",
       version: "1.0",
@@ -224,7 +226,7 @@ class Renderer {
     this.#createLink({ fileName: fileName + ".json", link: href }).click();
   }
   /**
-   *
+   *  Update column data images of spritesheets
    * @param index - index of the array which changes will be applied to
    */
   updateColumnData(index: number, width: number, height: number) {
@@ -252,6 +254,7 @@ class Renderer {
       throw new Error(e.message);
     }
   }
+
   /**
    * Clone images with new given properties
    * @param props

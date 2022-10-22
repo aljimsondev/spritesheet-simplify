@@ -29,6 +29,7 @@ const PreviewCard: React.FC<PreviewCardProps> = (
     backgroundColor,
     displayBackgroundColor,
     updateSpritesheetColumn,
+    handleRemoveColumn,
     height,
     width,
     y,
@@ -37,7 +38,6 @@ const PreviewCard: React.FC<PreviewCardProps> = (
   },
   ref
 ) => {
-  const [fps, setFps] = React.useState<number>(60);
   const frameXRenderRef = React.useRef<HTMLInputElement>(null);
   const defaultScreen = { height: 150, width: 120 };
   const canvasWrapperRef = React.useRef<HTMLDivElement>(null);
@@ -179,7 +179,10 @@ const PreviewCard: React.FC<PreviewCardProps> = (
           </div>
         </div>
         <div className="preview-controller-base">
-          <PreviewCardDropdown />
+          <PreviewCardDropdown
+            sourceIndex={sourceIndex}
+            handleRemoveColumn={handleRemoveColumn}
+          />
           <PreviewCardTitle
             text={JSON.parse(buffer?.dataset?.props || "Spritesheet").name}
           />

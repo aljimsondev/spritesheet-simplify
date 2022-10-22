@@ -54,8 +54,11 @@ export type ExportSpritesheetType = (
   options: { withJSON: boolean }
 ) => Promise<void>;
 
+export type HandleRemoveColumnType = (index: number) => void;
+
 export type SidebarProps = {
   exportSpritesheet: ExportSpritesheetType;
   spritesheets: HTMLImageElement[];
   updateSpritesheetColumn: UpdateSpritesheetColumn;
+  handleRemoveColumn: HandleRemoveColumnType;
 };

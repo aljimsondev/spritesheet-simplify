@@ -7,6 +7,7 @@ const RenderList: React.FC<RenderListProps> = ({
   backgroundColor,
   displayBackgroundColor,
   updateSpritesheetColumn,
+  handleRemoveColumn,
 }) => {
   return (
     <React.Fragment>
@@ -25,6 +26,7 @@ const RenderList: React.FC<RenderListProps> = ({
             displayBackgroundColor={displayBackgroundColor}
             buffer={spritesheet}
             updateSpritesheetColumn={updateSpritesheetColumn}
+            handleRemoveColumn={handleRemoveColumn}
             height={props.height}
             width={props.width}
             y={props.posY}

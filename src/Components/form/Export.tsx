@@ -28,11 +28,6 @@ const Export: React.FC<{
       //clean up
     };
   }, []);
-  // async function _export() {
-  //   await exportSpritesheet(exportingProps.fileName, {
-  //     withJSON: exportingProps.includeJSON,
-  //   });
-  // }
   const _export = React.useCallback(async () => {
     await exportSpritesheet(exportingProps.fileName, {
       withJSON: exportingProps.includeJSON,

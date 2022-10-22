@@ -2,11 +2,22 @@ import React from "react";
 import InlineGroup from "../group/InlineGroup";
 import DropdownMenu from "./DropdownMenu";
 import { AiOutlineEllipsis } from "react-icons/ai";
+import { HandleRemoveColumnType } from "../../types/types";
 
-const PreviewCardDropdown = () => {
+const PreviewCardDropdown: React.FC<{
+  handleRemoveColumn: HandleRemoveColumnType;
+  sourceIndex: number;
+}> = ({ handleRemoveColumn, sourceIndex }) => {
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const [openDropdown, setOpenDropdown] = React.useState(false);
-  console.log("renders in preview card");
+
+  const toogleClose = () => {
+    setOpenDropdown(false);
+  };
+
+  const handleRemove = async () => {
+    await handleRemoveColumn(sourceIndex);
+  };
   return (
     <div className="relative flex-grow flex items-center justify-end">
       <div ref={dropdownRef}>
@@ -23,8 +34,12 @@ const PreviewCardDropdown = () => {
             </div>
             <p className="note-text">Are you sure you want to remove?</p>
             <InlineGroup className="justify-between p-2">
-              <button className="outline-btn">Remove</button>
-              <button className="cancel-btn">Close</button>
+              <button className="outline-btn" onClick={handleRemove}>
+                Remove
+              </button>
+              <button className="cancel-btn" onClick={toogleClose}>
+                Close
+              </button>
             </InlineGroup>
           </div>
         </DropdownMenu>

@@ -16,6 +16,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   exportSpritesheet,
   spritesheets,
   updateSpritesheetColumn,
+  handleRemoveColumn,
 }) => {
   const { buffers, sidebarRef } = React.useContext(Context);
   const [backgroundProps, setBackGroundProps] = React.useState({
@@ -98,6 +99,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     backgroundColor={deferredColorValue}
                     displayBackgroundColor={backgroundProps.display}
                     updateSpritesheetColumn={updateSpritesheetColumn}
+                    handleRemoveColumn={handleRemoveColumn}
                   />
                 </div>
               </React.Fragment>

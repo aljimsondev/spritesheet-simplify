@@ -1,4 +1,5 @@
 import { UpdateSpritesheetColumn } from "../../types/main";
+import { HandleRemoveColumnType } from "../../types/types";
 
 export type SpritePreviewCardProps = {
   sprites: HTMLImageElement[][];
@@ -20,4 +21,5 @@ export type PreviewCardProps = {
   y: number;
   name: string;
   sourceIndex: number;
+  handleRemoveColumn: HandleRemoveColumnType;
 };

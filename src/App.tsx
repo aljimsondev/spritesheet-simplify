@@ -3,7 +3,6 @@ import FabComponent from "./Components/button/FabComponent";
 import Sidebar from "./Components/sidebar/Sidebar";
 import Modal from "./Components/modal";
 import ModalContent from "./Components/modal/ModalContent";
-import Navbar from "./Components/navbar/Navbar";
 import Notification from "./Components/notification/Notification";
 import { Context } from "./Store/store";
 import {
@@ -18,7 +17,6 @@ import { useDeferredObject } from "./helpers/UseDeferredObject";
 import AnimatedLoader from "./Components/Loader/AnimatedLoader";
 import { CanvasZoomDrag } from "./EventHandler/CanvasZoomDrag";
 import { LocalStates, UpdateSpritesheetColumn } from "./types/main";
-import Logo from "./Components/logo/Logo";
 import NavbarMain from "./Components/navbar";
 
 function App() {
@@ -217,6 +215,7 @@ function App() {
     load();
     return () => {
       //clean up function
+      setLocalState({ ...localState, update: false });
       document.getElementById("renderer-canvas")?.remove(); //remove the canvas on rerender
     };
   }, [
@@ -226,9 +225,17 @@ function App() {
     deferredCanvasBg, //whenever canvas bg changes
     localState.update,
   ]);
+
   //TODO add dialog
   //TODO optimize performance
-  //tODO add export in json
+  const handleRemoveColumn = React.useCallback(
+    (index: number) => {
+      buffers.splice(index, 1);
+      setBuffers([...buffers]);
+      saveToLocalStorage("blobs", buffers);
+    },
+    [buffers]
+  );
   return (
     <>
       <div className="main-container">
@@ -268,6 +275,7 @@ function App() {
             exportSpritesheet={download}
             spritesheets={localState.spritesheets}
             updateSpritesheetColumn={updateSpritesheetColumnHandler}
+            handleRemoveColumn={handleRemoveColumn}
           />
         </div>
 
