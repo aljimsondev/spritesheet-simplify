@@ -11,6 +11,13 @@ const RenderList: React.FC<RenderListProps> = ({
   return (
     <React.Fragment>
       {sprites.map((spritesheet, index) => {
+        const props: {
+          name: string;
+          height: number;
+          width: number;
+          posY: number;
+          arrayIndex: number;
+        } = JSON.parse(spritesheet.dataset?.props!);
         return (
           <PreviewCard
             key={`${spritesheet.dataset.props! + index}`}
@@ -18,6 +25,11 @@ const RenderList: React.FC<RenderListProps> = ({
             displayBackgroundColor={displayBackgroundColor}
             buffer={spritesheet}
             updateSpritesheetColumn={updateSpritesheetColumn}
+            height={props.height}
+            width={props.width}
+            y={props.posY}
+            name={props.name}
+            sourceIndex={props.arrayIndex}
           />
         );
       })}

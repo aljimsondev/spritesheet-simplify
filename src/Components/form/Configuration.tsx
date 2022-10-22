@@ -9,6 +9,7 @@ import {
 import { Context } from "../../Store/store";
 import Accordion from "../accordion";
 import ColorPickerInput from "../input/ColorPickerInput";
+import InputChecked from "../input/InputChecked";
 import InputGroup from "../input/InputGroup";
 import TextInput from "../input/TextInput";
 
@@ -112,18 +113,12 @@ const Configuration = () => {
             Note: Turn this off when exporting the spritesheets.
           </p>
         </figure>
-        <div className="flex-1 flex items-center">
-          <input
-            type="checkbox"
-            className="input-check mr-3"
-            name="borderLine"
-            checked={properties.borderLine}
-            onChange={(e) => onUpdateProperties("borderLine", e.target.checked)}
-          />
-          <label className="text-sm text-gray-800 dark:text-gray-300">
-            Show borderline
-          </label>
-        </div>
+        <InputChecked
+          checked={properties.borderLine}
+          label="Show borderline"
+          onChange={(e) => onUpdateProperties("borderLine", e.target.checked)}
+          ref={React.createRef()}
+        />
         <div className="flex-1 flex flex-col mt-3">
           <div className="flex-1 my-2">
             <p className="text-title">BORDER WIDTH</p>

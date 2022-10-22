@@ -1,16 +1,18 @@
 import React from "react";
-import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import { Context } from "../../Store/store";
+import { ExportSpritesheetType } from "../../types/types";
 import Accordion from "../accordion";
+import InputChecked from "../input/InputChecked";
 import TextInput from "../input/TextInput";
 
 const Export: React.FC<{
-  exportSpritesheet: (fileName: string) => Promise<void>;
+  exportSpritesheet: ExportSpritesheetType;
 }> = ({ exportSpritesheet }) => {
   const [isPending, startTransition] = React.useTransition();
   const { properties, onUpdateProperties } = React.useContext(Context);
   const [exportingProps, setOpenExporting] = React.useState({
     fileName: "spritesheet.png",
+    includeJSON: true,
   });
 
   const handleChangeState = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,13 +28,29 @@ const Export: React.FC<{
       //clean up
     };
   }, []);
-  async function _export() {
-    await exportSpritesheet(exportingProps.fileName);
-  }
+  // async function _export() {
+  //   await exportSpritesheet(exportingProps.fileName, {
+  //     withJSON: exportingProps.includeJSON,
+  //   });
+  // }
+  const _export = React.useCallback(async () => {
+    await exportSpritesheet(exportingProps.fileName, {
+      withJSON: exportingProps.includeJSON,
+    });
+  }, [exportingProps]);
+
+  const toogleJSONInclusion = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setOpenExporting({ ...exportingProps, includeJSON: e.target.checked });
+  };
 
   return (
     <Accordion title="EXPORT SPRITESHEET" isOpen={true}>
       <div className="flex-1 flex flex-col mt-3">
+        <InputChecked
+          checked={exportingProps.includeJSON}
+          onChange={toogleJSONInclusion}
+          label="Include JSON file"
+        />
         <div className="flex-1 my-2">
           <p className="text-title">SPRITESHEET FILENAME</p>
         </div>

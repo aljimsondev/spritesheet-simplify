@@ -15,4 +15,9 @@ export type PreviewCardProps = {
   backgroundColor: string;
   displayBackgroundColor: boolean;
   updateSpritesheetColumn: UpdateSpritesheetColumn;
+  height: number;
+  width: number;
+  y: number;
+  name: string;
+  sourceIndex: number;
 };

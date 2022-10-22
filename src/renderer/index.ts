@@ -178,20 +178,51 @@ class Renderer {
       });
     });
   }
-  donwloadDataJSON() {
-    let prevName = "";
+  downloadDataJSON(fileName: string) {
+    let result: any = {};
     let name = "";
-    const result = this.#spritesheetsRowData.reduce((obj, cur, i) => {
-      name = cur.name.split(".png")[0];
-      if (name === prevName) {
-        name = `${name}(${i + 1})`;
-      }
-      prevName = name;
+    result.frames = this.#spritesheetsRowData.reduce((obj, cur, i) => {
+      name =
+        cur.name.split(".png")[0] +
+        (Math.random() * 0xffffff).toString(16).split(".")[0] +
+        ".png";
+
       return {
         ...obj,
-        [name]: { height: cur.height, width: cur.width, posY: cur.posY },
+        [name]: {
+          fileName: name + ".png",
+          frame: {
+            x: 0,
+            y: cur.posY,
+            w: cur.width,
+            h: cur.height,
+          },
+          rotated: false,
+          trimmed: false,
+          sourceSize: {
+            w: cur.width,
+            h: cur.height,
+          },
+          frames: this.#buffers[i].length,
+        },
       };
     }, {});
+    result.meta = {
+      web: "https://aljimsondev.github.io/spritesheet-simplify/",
+      version: "1.0",
+      image: fileName + ".png",
+      format: "RGBA8888",
+      size: {
+        w: this.getCanvasWidth(),
+        h: this.getCanvasHeight(),
+      },
+      scale: "1",
+    };
+
+    const d_json = JSON.stringify(result);
+    const blob = new Blob([d_json], { type: "application/json" });
+    const href = URL.createObjectURL(blob);
+    this.#createLink({ fileName: fileName + ".json", link: href }).click();
   }
   /**
    *
@@ -250,6 +281,13 @@ class Renderer {
       height
     );
     return { data: canvas.toDataURL(), name: image.alt };
+  }
+  #createLink(options: { link: string; fileName: string }) {
+    const a = document.createElement("a");
+    a.href = options.link;
+    a.download = options.fileName;
+
+    return a;
   }
   getYPositions() {
     return this.#posYArray;
@@ -341,16 +379,19 @@ class Renderer {
    * @param fileName
    * @returns
    */
-  async download(fileName: string) {
+  async download(fileName: string, options: { withJSON: boolean }) {
     return new Promise<boolean>((resolve, reject) => {
       try {
         if (this.#images.length > 0) {
           const blob = this.canvas.toDataURL("image/png");
-          const a = document.createElement("a");
-          a.download = `${fileName || "spritesheet"}.png`;
-          a.href = blob;
-          a.click();
-
+          //create download link
+          this.#createLink({
+            fileName: `${fileName || "spritesheet"}.png`,
+            link: blob,
+          }).click();
+          if (options.withJSON) {
+            this.downloadDataJSON(fileName);
+          }
           return resolve(true);
         }
         return resolve(false);

@@ -92,11 +92,27 @@ function App() {
 
   //download of spritesheet
   const download = React.useCallback(
-    async (fileName: string) => {
-      await renderer.download(fileName).then((data) => {
-        if (!data) {
-          //dispatch notification
-          return notificationDispatch({
+    async (fileName: string, options: { withJSON: boolean }) => {
+      await renderer
+        .download(fileName, { withJSON: options.withJSON })
+        .then((data) => {
+          if (!data) {
+            //dispatch notification
+            return notificationDispatch({
+              type: "ADD_NOTIFICATION",
+              payload: {
+                dismissable: true,
+                onClose: () => {
+                  notificationDispatch({ type: "RESET_NOTIFICATION" });
+                },
+                open: true,
+                text: "Opss, looks like you have not created any Spritesheet yet!",
+                type: "warning",
+              },
+            });
+          }
+          //success
+          notificationDispatch({
             type: "ADD_NOTIFICATION",
             payload: {
               dismissable: true,
@@ -104,25 +120,11 @@ function App() {
                 notificationDispatch({ type: "RESET_NOTIFICATION" });
               },
               open: true,
-              text: "Opss, looks like you have not created any Spritesheet yet!",
-              type: "warning",
+              text: "Generating Spritesheet success!",
+              type: "success",
             },
           });
-        }
-        //success
-        notificationDispatch({
-          type: "ADD_NOTIFICATION",
-          payload: {
-            dismissable: true,
-            onClose: () => {
-              notificationDispatch({ type: "RESET_NOTIFICATION" });
-            },
-            open: true,
-            text: "Generating Spritesheet success!",
-            type: "success",
-          },
         });
-      });
     },
     [buffers, loading, spritesProperties]
   );

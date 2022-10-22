@@ -11,14 +11,14 @@ const InputGroup = React.forwardRef<
     label: string;
   }
 >(({ inputProps, width = 40, label }, ref) => {
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const uniq_id = React.useId();
   return (
-    <label htmlFor={inputRef.current?.id} className="input-group-base">
+    <label htmlFor={uniq_id} className="input-group-base">
       <p className="input-group-label">{label}</p>
       <input
         ref={ref}
         {...inputProps}
-        id={inputRef.current?.id}
+        id={uniq_id}
         style={{ maxWidth: width }}
         className="input-group-input --o-n-input"
       />
