@@ -184,8 +184,7 @@ class Renderer {
     result.frames = this.#spritesheetsRowData.reduce((obj, cur, i) => {
       name =
         cur.name.split(".png")[0] +
-        (Math.random() * 0xffffff).toString(16).split(".")[0] +
-        ".png";
+        (Math.random() * 0xffffff).toString(16).split(".")[0];
 
       return {
         ...obj,
@@ -194,7 +193,7 @@ class Renderer {
           frame: {
             x: 0,
             y: cur.posY,
-            w: cur.width,
+            w: this.#getTotalWidth(this.#images[i]),
             h: cur.height,
           },
           rotated: false,
