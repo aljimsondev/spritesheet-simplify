@@ -180,6 +180,17 @@ class Renderer {
   }
   downloadDataJSON(fileName: string) {
     if (!this.canvas) return;
+    //TODO add this
+    /**
+     * {
+    "frame": {"x":89,"y":2,"w":32,"h":32},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+    "sourceSize": {"w":32,"h":32},
+    "pivot": {"x":0.5,"y":0.5}
+  },
+     */
     let result: any = {};
     let name = "";
     result.frames = this.#spritesheetsRowData.reduce((obj, cur, i) => {
@@ -203,6 +214,7 @@ class Renderer {
             w: cur.width,
             h: cur.height,
           },
+          pivot: { x: 0.5, y: 0.5 },
           frames: this.#buffers[i].length,
         },
       };
@@ -421,7 +433,9 @@ class Renderer {
           name: this.#images[row][0].alt,
           posY: currentPositionY,
         };
-        this.#imageCache.set(this.#images[row][0].alt, this.#images[row]);
+        if (!this.#imageCache.has(this.#images[row][0].alt)) {
+          this.#imageCache.set(this.#images[row][0].alt, this.#images[row]);
+        }
         this.#loadColumnData(
           this.#images[row],
           this.#context!,

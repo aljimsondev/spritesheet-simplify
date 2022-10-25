@@ -1,6 +1,9 @@
 import Zoomify from "../Zoomify";
 
-export function CanvasZoomDrag(targetEl: HTMLDivElement) {
+export function CanvasZoomDrag(
+  targetEl: HTMLDivElement,
+  options: { resetParentEl: HTMLElement }
+) {
   const container = targetEl;
   if (container) {
     const instance = Zoomify({
@@ -18,7 +21,7 @@ export function CanvasZoomDrag(targetEl: HTMLDivElement) {
         });
       }
     });
-    container.addEventListener("dblclick", () => {
+    options.resetParentEl.addEventListener("dblclick", () => {
       instance.panTo({
         originX: 0,
         originY: 0,

@@ -19,6 +19,13 @@ import { CanvasZoomDrag } from "./EventHandler/CanvasZoomDrag";
 import { LocalStates, UpdateSpritesheetColumn } from "./types/main";
 import NavbarMain from "./Components/navbar";
 
+/**
+ * !TODO double click on screen reset canvas size to default
+ * add pivot functionality
+ * get every sprites properties in JSON
+ * add crop/trimmed
+ * add dropdown pivot properties
+ */
 function App() {
   const {
     properties,
@@ -157,15 +164,14 @@ function App() {
     disableZoom(document.getElementById("root")!);
     //set draggable element
     //enable zoom drag
-    CanvasZoomDrag(refs.canvasWrapper.current!);
+    CanvasZoomDrag(refs.canvasWrapper.current!, {
+      resetParentEl: document.getElementById("canvas-wrapper")!,
+    });
     //fetch blobs to localstorage
     const localBlobs = fetchToLocalStorage("blobs");
-
-    (async () => {
-      if (localBlobs) {
-        setBuffers(localBlobs);
-      }
-    })();
+    if (localBlobs) {
+      setBuffers(localBlobs);
+    }
 
     const timer = setTimeout(() => {
       if (!reloadApp) {
@@ -246,7 +252,7 @@ function App() {
         />
         <div className="container-grow">
           {loading && <AnimatedLoader />}
-          <div className="canvas-wrapper">
+          <div id="canvas-wrapper" className="canvas-wrapper">
             <div
               ref={refs.canvasWrapper}
               id="canvas-root"
