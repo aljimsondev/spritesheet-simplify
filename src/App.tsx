@@ -20,7 +20,6 @@ import { LocalStates, UpdateSpritesheetColumn } from "./types/main";
 import NavbarMain from "./Components/navbar";
 
 /**
- * !TODO double click on screen reset canvas size to default
  * add pivot functionality
  * get every sprites properties in JSON
  * add crop/trimmed
