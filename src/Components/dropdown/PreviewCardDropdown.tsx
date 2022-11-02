@@ -29,18 +29,12 @@ const PreviewCardDropdown: React.FC<{
           open={openDropdown}
         >
           <div className="dropdown-c-content-base">
-            <div className="border-b-[1px] border-b-white my-2">
-              <h1 className="px-2 text-white font-semibold">Remove</h1>
+            <div>
+              <p>Edit Pivot </p>
             </div>
-            <p className="note-text">Are you sure you want to remove?</p>
-            <InlineGroup className="justify-between p-2">
-              <button className="outline-btn" onClick={handleRemove}>
-                Remove
-              </button>
-              <button className="cancel-btn" onClick={toogleClose}>
-                Close
-              </button>
-            </InlineGroup>
+            <div>
+              <p>Remove</p>
+            </div>
           </div>
         </DropdownMenu>
       </div>
@@ -49,3 +43,25 @@ const PreviewCardDropdown: React.FC<{
 };
 
 export default React.memo(PreviewCardDropdown);
+
+const RemoveColumnCard: React.FC<{
+  handleRemove: () => void;
+  toogleClose: () => void;
+}> = ({ handleRemove, toogleClose }) => {
+  return (
+    <>
+      <div className="border-b-[1px] border-b-white my-2">
+        <h1 className="px-2 text-white font-semibold">Remove</h1>
+      </div>
+      <p className="note-text">Are you sure you want to remove?</p>
+      <InlineGroup className="justify-between p-2">
+        <button className="outline-btn" onClick={handleRemove}>
+          Remove
+        </button>
+        <button className="cancel-btn" onClick={toogleClose}>
+          Close
+        </button>
+      </InlineGroup>
+    </>
+  );
+};
