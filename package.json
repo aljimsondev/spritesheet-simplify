@@ -8,8 +8,7 @@
     "build": "tsc && vite build",
     "buildcss": "npx tailwind build -i ./src/css/main.css -o ./src/tailwindcss/tailwind.css",
     "preview": "vite preview",
-    "watch": "npx tailwind build -i ./src/css/main.css -o ./src/tailwindcss/tailwind.css -w",
-    "install": "npm install"
+    "watch": "npx tailwind build -i ./src/css/main.css -o ./src/tailwindcss/tailwind.css -w"
   },
   "dependencies": {
     "react": "^18.2.0",
