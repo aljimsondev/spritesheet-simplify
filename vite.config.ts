@@ -5,6 +5,10 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   base: "/spritesheet-simplify/",
   plugins: [react()],
+  build: {
+    outDir: "dist",
+    emptyOutDir: true,
+  },
   assetsInclude: [
     "png",
     "jpe?g",
